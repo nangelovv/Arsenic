@@ -1,0 +1,41 @@
+.primary-light {
+    background-color: rgb(246, 247, 251);
+}
+
+.secondary-light {
+    background-color: rgb(238, 227, 221);
+}
+
+.tertiary-light {
+    background-color: rgb(255, 229, 216);
+}
+
+.quaternary-light {
+    background-color: rgb(228, 199, 188);
+}
+
+.font-light {
+    color: rgb(0, 0, 0);
+}
+
+.borders-light {
+    border: 2px solid silver;
+}
+
+.overDiv:hover {
+    opacity: 40%;
+    -webkit-transition: .4s;
+    transition: .4s;
+    cursor: pointer;
+}
+
+.overButton:hover {
+    opacity: 65%;
+    -webkit-transition: .4s;
+    transition: .4s;
+    cursor: pointer;
+}
+
+.hrLines-light {
+    border: 1px solid gray;
+}
