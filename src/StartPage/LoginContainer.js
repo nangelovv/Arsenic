@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { API_URL } from '../config';
+
 
 export default function LoginContainer() {
   function useInput({ type, placeholder, required }) {
@@ -35,7 +37,7 @@ export default function LoginContainer() {
 
     if (!credentials || !pass) return
 
-    const response = await fetch("http://127.0.0.1:8000/users/", {
+    const response = await fetch(API_URL + "/users/", {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

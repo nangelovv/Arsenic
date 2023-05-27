@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 
 export default function EditProfile({ profileData, setProfileData }) {
@@ -43,7 +44,7 @@ export default function EditProfile({ profileData, setProfileData }) {
 
         var textResponse = null
         if (newValue != profileData.profile_description) {
-            textResponse = await fetch('http://127.0.0.1:8000/users/profile_description', {
+            textResponse = await fetch(API_URL + '/users/profile_description', {
                 method: 'POST',
                 body: JSON.stringify({ txt: textInput }),
                 headers: {
@@ -59,7 +60,7 @@ export default function EditProfile({ profileData, setProfileData }) {
         
         var imageResponse = null
         if (imageInput != profileData.profile_image) {
-            imageResponse = await fetch('http://127.0.0.1:8000/users/profile_picture', {
+            imageResponse = await fetch(API_URL + '/users/profile_picture', {
                 method: 'POST',
                 body: formDataImage,
                 headers: {

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import noUserImage from './noUser.jpg';
 import EditProfile from './EditProfile';
+import { API_URL } from '../config';
+
 
 export default function MyProfile() {
   const [profileData, setProfileData] = useState(null);
@@ -27,7 +29,7 @@ export default function MyProfile() {
     var bearer = 'Bearer ' + token;
     
 
-    const response = await fetch('http://127.0.0.1:8000/users/is_profile', {
+    const response = await fetch(API_URL + '/users/is_profile', {
       method: 'GET',
       headers: {
         Authorization: bearer,

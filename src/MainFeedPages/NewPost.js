@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { API_URL } from '../config';
+
 
 export default function NewPost() {
   const [imagePreview, setImagePreview] = useState('');
@@ -39,7 +41,7 @@ export default function NewPost() {
     formData.append('image_one', imageInput);
 
 
-    const response = await fetch('http://127.0.0.1:8000/posts/', {
+    const response = await fetch(API_URL + '/posts/', {
       method: 'POST',
       body: formData,
       headers: {

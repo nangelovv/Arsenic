@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { API_URL } from '../config';
+
 
 function useInput({ type, id, placeholder, required }) {
   const [value, setValue] = React.useState('');
@@ -31,7 +33,7 @@ export default function RegisterContainer() {
       return;
     }
 
-    const response = await fetch('http://127.0.0.1:8000/users/register', {
+    const response = await fetch(API_URL + '/users/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
