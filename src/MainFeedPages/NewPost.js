@@ -23,16 +23,7 @@ export default function NewPost() {
       return alert('No content to upload.')
     }
 
-    const cookies = document.cookie.split(';');
-    let token; // Declare variable for token cookie
-    cookies.forEach(cookie => {
-      const [name, value] = cookie.split('='); // Split cookie into name and value
-      if (name.trim() === 'token') {
-        // Check if name is "token"
-        token = decodeURIComponent(value); // Decode the token value
-        token = token.replace(/^"(.*)"$/, '$1'); // Remove quotes from token string
-      }
-    });
+    let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
 

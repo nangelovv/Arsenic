@@ -16,15 +16,7 @@ export default function MyProfile() {
 
     if (profileData) {return}
 
-    const cookies = document.cookie.split(';');
-    let token;
-    cookies.forEach(cookie => {
-      const [name, value] = cookie.split('=');
-      if (name.trim() === 'token') {
-        token = decodeURIComponent(value);
-        token = token.replace(/^"(.*)"$/, '$1');
-      }
-    });
+    let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
     
