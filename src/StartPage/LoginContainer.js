@@ -51,13 +51,9 @@ export default function LoginContainer() {
 
     if (response.ok) {
       const token = await response.json();
-      // if (!isChecked) {
-      //   const date = new Date();
-      //   date.setTime(date.getTime() + 600 * 1000);
-      //   document.cookie = `token=${JSON.stringify(token)}; expires=${date.toUTCString()}`;
-      // }
-      // else{}
-      document.cookie = `token=${JSON.stringify(token)}`;
+      const date = new Date();
+      date.setTime(date.getTime() + 600 * 1000000);
+      document.cookie = `token=${JSON.stringify(token)}; expires=${date.toUTCString()}`;
       window.location.reload(false);
     }
     else {
