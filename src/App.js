@@ -6,16 +6,18 @@ import MainFeed from './MainFeed';
 
 
 function App() {
-  const cookies = document.cookie.split(";"); // Get all cookies
-  let token; // Declare variable for token cookie
-  cookies.forEach((cookie) => {
-    const [name, value] = cookie.split("="); // Split cookie into name and value
-    if (name.trim() === "token") { // Check if name is "token"
-      token = decodeURIComponent(value); // Decode the token value
-    }
-  });
+  const token = localStorage.getItem("ArsenicToken");
+  const date = new Date(localStorage.getItem("ArsenicExpiration"));
 
-  if (!token) {
+  let ExpiredToken = true
+  if (token && date) {
+    const currentDate = new Date();
+    if (currentDate < date) {
+      ExpiredToken = false;
+    }
+  }
+
+  if (ExpiredToken) {
     return (
     <>
       <StartButtons/>

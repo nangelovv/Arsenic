@@ -126,7 +126,11 @@ useEffect(() => {
                   </div>
                   <hr className='hrLines-light'></hr>
                   <div className='overDiv rounded-4 text-center'>
-                    <a href="#logOut" className="nav-link overDiv" onClick={() => {console.log(document.cookie); document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; console.log(document.cookie); window.location.reload();}}>
+                    <a href="#logOut" className="nav-link overDiv" onClick={() => {
+                      const date = new Date();
+                      date.setTime(date.getTime() - 60000 * 99999999);
+                      localStorage.setItem("ArsenicExpiration", date);
+                      window.location.reload();}}>
                       <span className='font-light'>Log out</span>
                     </a>
                   </div>

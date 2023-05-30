@@ -53,8 +53,9 @@ export default function LoginContainer() {
     if (response.ok) {
       const token = await response.json();
       const date = new Date();
-      date.setTime(date.getTime() + 600 * 1000000);
-      document.cookie = `token=${JSON.stringify(token)}; expires=${date.toUTCString()}`;
+      date.setTime(date.getTime() + 600 * 100);
+      localStorage.setItem("ArsenicToken", token);
+      localStorage.setItem("ArsenicExpiration", date);
       window.location.reload(false);
     }
     else {
