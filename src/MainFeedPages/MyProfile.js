@@ -97,7 +97,6 @@ export default function MyProfile() {
                       className='rounded-5 borders-light'
                       style={{ width: '60px', height: '60px' }}
                       src={profile_image}
-                      alt='Profile'
                     />
                   </div>
                   <div className='col-8 d-flex align-items-center h5'>
@@ -110,7 +109,6 @@ export default function MyProfile() {
                     <img
                       className='img-fluid col-12 rounded-3 borders-light'
                       src={`data:image/png;base64,${post.image_one}`}
-                      alt={`Post ${index}`}
                     />
                   )}
                 </div>
