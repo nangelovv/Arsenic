@@ -77,7 +77,7 @@ export default function MyProfile() {
             </div>
           {showOverlay && (
             <div className='overlay'>
-              <EditProfile profileData={profileData} setProfileData={setProfileData} />
+              <EditProfile profileData={profileData} removeOverlay={handleToggleOverlay} />
             </div>
           )}
           </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 
 
-export default function EditProfile({ profileData, setProfileData }) {
+export default function EditProfile({ profileData, removeOverlay }) {
     const [imagePreview, setImagePreview] = useState('');
     const [newValue, setNewValue] = useState('');
 
@@ -78,10 +78,13 @@ export default function EditProfile({ profileData, setProfileData }) {
             return alert('Failed to edit profile');
         }
     }
-  
+
     return (
       <>
         <div className='col-8 my-4 secondary-light rounded-5 borders-light p-3'>
+          <div className="close-button position-absolute top-0 end-0 m-3 rounded-5 h4 px-3 tertiary-light borders-light overButton py-2" onClick={removeOverlay}>
+            X
+          </div>
           <div className="row rounded-5 mb-3">
             <div className="col-6 d-flex justify-content-start">
                 <input type="file" id="fileInput" onChange={handleFileChange} />
