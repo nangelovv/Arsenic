@@ -48,7 +48,7 @@ export default function MyProfile() {
   }, [profileData]);
 
   if (!profileData || !profileData.posts) {
-    return <div className='text-center'>Loading...</div>;
+    return <div className='text-center my-5 py-5'>Loading...</div>;
   }
 
   function transformTime (milliseconds) {
@@ -58,7 +58,7 @@ export default function MyProfile() {
     const month = date.getUTCMonth() + 1; // January is month 0
     const year = date.getUTCFullYear();
 
-    return `${day}.${month}.${year}`;
+    return `${day}/${month}/${year}`;
   }
 
   const { username, profile_image, profile_description, posts } = profileData;
@@ -92,7 +92,7 @@ export default function MyProfile() {
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
             posts.map((post, index) => (
-              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light'>
+              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light' key={post.id}>
                 <div className='row'>
                   <div className='col-2 text-end'>
                     <img
@@ -101,11 +101,11 @@ export default function MyProfile() {
                       src={profile_image}
                     />
                   </div>
-                  <div className="row col-10 d-flex align-items-center">
+                  <div className="row col-8 d-flex align-items-center">
                     <div className='row h5'>
                       {username}
                     </div>
-                    <div className='row col-8 d-flex align-items-center h6 fw-normal'>
+                    <div className='row h6 fw-normal'>
                       {transformTime(post.date)}
                     </div>
                   </div>

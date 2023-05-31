@@ -43,7 +43,7 @@ export default function NewPost() {
     });
 
     if (response.ok) {
-      return alert('File uploaded successfully');
+      return alert('Post uploaded successfully');
     } else {
       return alert('Failed to upload file');
     }
