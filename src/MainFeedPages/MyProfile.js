@@ -51,6 +51,16 @@ export default function MyProfile() {
     return <div className='text-center'>Loading...</div>;
   }
 
+  function transformTime (milliseconds) {
+    const date = new Date(parseInt(milliseconds, 10));
+
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1; // January is month 0
+    const year = date.getUTCFullYear();
+
+    return `${day}.${month}.${year}`;
+  }
+
   const { username, profile_image, profile_description, posts } = profileData;
 
   return (
@@ -91,8 +101,13 @@ export default function MyProfile() {
                       src={profile_image}
                     />
                   </div>
-                  <div className='col-8 d-flex align-items-center h5'>
-                    {username}
+                  <div className="row col-10 d-flex align-items-center">
+                    <div className='row h5'>
+                      {username}
+                    </div>
+                    <div className='row col-8 d-flex align-items-center h6 fw-normal'>
+                      {transformTime(post.date)}
+                    </div>
                   </div>
                   <div className='col-8 mx-auto my-2 h6 fw-normal'>{post.caption}</div>
                 </div>

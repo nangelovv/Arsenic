@@ -30,6 +30,7 @@ export default function NewPost() {
     const formData = new FormData();
     formData.append('text', textInput);
     formData.append('image_one', imageInput);
+    formData.append('date', Date.now());
 
 
     const response = await fetch(API_URL + '/posts/', {
