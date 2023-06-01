@@ -4,8 +4,7 @@ import EditProfile from './EditProfile';
 import { API_URL } from '../config';
 
 
-export default function MyProfile() {
-  const [profileData, setProfileData] = useState(null);
+export default function MyProfile({profileData, setProfileData, setIsRendered}) {
   const [showOverlay, setShowOverlay] = useState(false);
 
   const handleToggleOverlay = () => {
@@ -15,7 +14,7 @@ export default function MyProfile() {
   async function getProfile() {
 
     if (profileData) {return}
-
+    
     let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
@@ -41,6 +40,7 @@ export default function MyProfile() {
       data.profile_image = img
     }
     setProfileData(data);
+    setIsRendered(Math.random())
   }
 
   useEffect(() => {
@@ -48,17 +48,7 @@ export default function MyProfile() {
   }, [profileData]);
 
   if (!profileData || !profileData.posts) {
-    return <div className='text-center my-5 py-5'>Loading...</div>;
-  }
-
-  function transformTime (milliseconds) {
-    const date = new Date(parseInt(milliseconds, 10));
-
-    const day = date.getUTCDate();
-    const month = date.getUTCMonth() + 1; // January is month 0
-    const year = date.getUTCFullYear();
-
-    return `${day}/${month}/${year}`;
+    return <div className='text-center font-light my-5 py-5'>Loading...</div>;
   }
 
   const { username, profile_image, profile_description, posts } = profileData;
@@ -74,7 +64,7 @@ export default function MyProfile() {
             {username}
           </div>
           <div className='col-4 d-flex align-items-center text-center mt-3 h5'>
-            <div className='tertiary-light borders-light rounded-4 p-2 overDiv' onClick={handleToggleOverlay}>
+            <div className='tertiary-light borders-light rounded-4 p-2 overButton' onClick={handleToggleOverlay}>
               Edit Profile
             </div>
           {showOverlay && (
@@ -92,7 +82,7 @@ export default function MyProfile() {
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
             posts.map((post, index) => (
-              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light' key={post.id}>
+              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light'>
                 <div className='row'>
                   <div className='col-2 text-end'>
                     <img
@@ -101,15 +91,12 @@ export default function MyProfile() {
                       src={profile_image}
                     />
                   </div>
-                  <div className="row col-8 d-flex align-items-center">
-                    <div className='row h5'>
-                      {username}
-                    </div>
-                    <div className='row h6 fw-normal'>
-                      {transformTime(post.date)}
-                    </div>
+                  <div className='col-8 d-flex align-items-center h5'>
+                    {username}
                   </div>
-                  <div className='col-8 mx-auto my-2 h6 fw-normal'>{post.caption}</div>
+                  <div className='col-10 offset-1 mx-auto my-2 h6 fw-normal'>
+                    {post.caption}
+                  </div>
                 </div>
                 <div key={index} className='col-10 mx-auto'>
                   {post.image_one && (

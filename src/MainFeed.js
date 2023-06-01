@@ -8,6 +8,8 @@ import Messages from './MainFeedPages/Messages';
 
 export default function MainFeed() {
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem("activeComponent") || "Home");
+  const [profileData, setProfileData] = useState(null);
+  const [isRendered, setIsRendered] = useState(null);
 
 // Get the last active component from localStorage
 useEffect(() => {
@@ -27,7 +29,7 @@ useEffect(() => {
       case "Home":
         return <Home/>;
       case "MyProfile":
-        return <MyProfile/>;
+        return <MyProfile setProfileData={setProfileData} profileData={profileData} setIsRendered={setIsRendered}/>;
       case "NewPost":
         return <NewPost/>;
       case "Messages":
@@ -73,7 +75,7 @@ useEffect(() => {
       const elements = Array.from(document.getElementsByClassName(`${classes[i]}-${current_theme}`));
       replaceClass(elements, classes[i]);
     }
-  }, [darkMode]);
+  }, [darkMode, activeComponent, isRendered]);
 
   return (
     <>
