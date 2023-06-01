@@ -53,6 +53,16 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
 
   const { username, profile_image, profile_description, posts } = profileData;
 
+  function transformTime (milliseconds) {
+    const date = new Date(parseInt(milliseconds, 10));
+
+    const day = date.getUTCDate();
+    const month = date.getUTCMonth() + 1; // January is month 0
+    const year = date.getUTCFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
   return (
     <>
       <div className='col-8 offset-3 font-light'>
@@ -91,8 +101,13 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
                       src={profile_image}
                     />
                   </div>
-                  <div className='col-8 d-flex align-items-center h5'>
-                    {username}
+                  <div className="row col-8 d-flex align-items-center">
+                    <div className='row h5'>
+                      {username}
+                    </div>
+                    <div className='row h6 fw-normal'>
+                      {transformTime(post.date)}
+                    </div>
                   </div>
                   <div className='col-10 offset-1 mx-auto my-2 h6 fw-normal'>
                     {post.caption}
