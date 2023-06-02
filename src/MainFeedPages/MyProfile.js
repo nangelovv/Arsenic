@@ -6,6 +6,15 @@ import { API_URL } from '../config';
 
 export default function MyProfile({profileData, setProfileData, setIsRendered}) {
   const [showOverlay, setShowOverlay] = useState(false);
+  const [postMenuVisibility, setPostMenuVisibility] = useState([]);
+
+  const toggleMenu = (index) => {
+    setPostMenuVisibility((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = !updatedState[index];
+      return updatedState;
+    });
+  };
 
   const handleToggleOverlay = () => {
     setShowOverlay(!showOverlay);
@@ -40,10 +49,15 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
       data.profile_image = img
     }
     setProfileData(data);
-    setIsRendered(Math.random())
+    setIsRendered(Math.random());
   }
 
+
+
   useEffect(() => {
+    if (profileData && profileData.posts) {
+      setPostMenuVisibility(Array(profileData.posts.length).fill(false));
+    }
     getProfile();
   }, [profileData]);
 
@@ -93,6 +107,34 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
           ) : (
             posts.map((post, index) => (
               <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light'>
+                <div className='float-end'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16"  onClick={() => toggleMenu(index)}>
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                  </svg>
+                  {postMenuVisibility[index] && (
+                    <div className='dropdown-menu tertiary-light borders-light rounded-4' style={{ display: 'block' }}>
+                      <ul className="nav flex-column">
+                            <div className="row justify-content-start align-items-center" id="dark-theme-switch-container">
+                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                              Delete posts
+                            </div>
+                            </div>
+                            <hr className='hrLines-light m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                              Edit caption
+                            </div>
+                            <hr className='hrLines-light m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                              Hide comments
+                            </div>
+                            <hr className='hrLines-light m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                              Hide like count
+                            </div>
+                          </ul>
+                    </div>
+                  )}
+                </div>
                 <div className='row'>
                   <div className='col-2 text-end'>
                     <img
