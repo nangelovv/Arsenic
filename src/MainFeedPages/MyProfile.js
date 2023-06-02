@@ -108,7 +108,7 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
             posts.map((post, index) => (
               <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light'>
                 <div className='float-end'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16"  onClick={() => toggleMenu(index)}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16" onClick={() => toggleMenu(index)}>
                     <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                   </svg>
                   {postMenuVisibility[index] && (
