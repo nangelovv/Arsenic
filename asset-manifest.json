@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/Arsenic/static/js/main.60fea11d.js",
+    "main.js": "/Arsenic/static/js/main.0f5a77b6.js",
     "index.html": "/Arsenic/index.html",
-    "main.60fea11d.js.map": "/Arsenic/static/js/main.60fea11d.js.map"
+    "main.0f5a77b6.js.map": "/Arsenic/static/js/main.0f5a77b6.js.map"
   },
   "entrypoints": [
-    "static/js/main.60fea11d.js"
+    "static/js/main.0f5a77b6.js"
   ]
 }
