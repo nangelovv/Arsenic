@@ -8,7 +8,7 @@ export default function LoginContainer() {
     const input = (
       <input 
         value={value} 
-        className='rounded-4 borders-light h5' 
+        className='rounded-4 borders-color h5' 
         placeholder={placeholder} 
         onChange={e => setValue(e.target.value)} 
         type={type}
@@ -53,7 +53,7 @@ export default function LoginContainer() {
     if (response.ok) {
       const token = await response.json();
       const date = new Date();
-      date.setTime(date.getTime() + 600 * 10000);
+      date.setTime(date.getTime() + 600 * 1000000);
       localStorage.setItem("ArsenicToken", token);
       localStorage.setItem("ArsenicExpiration", date);
       window.location.reload(false);
@@ -64,7 +64,7 @@ export default function LoginContainer() {
   }
 
   return (
-    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-light borders-light' id='LoginForm'>
+    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-color borders-color' id='LoginForm'>
       <form>
           <div className='col-12 my-3'>
               {usernameInput}
@@ -73,7 +73,7 @@ export default function LoginContainer() {
               {passwordInput}
           </div>
       </form>
-      <button className='m-2 p-3 h5 tertiary-light rounded-4 borders-light overButton' type="submit" onClick={try_login}>
+      <button className='m-2 p-3 h5 tertiary-color rounded-4 borders-color overButton' type="submit" onClick={try_login}>
         Enter
       </button>
       {/* <div className="d-flex align-items-center  justify-content-center">

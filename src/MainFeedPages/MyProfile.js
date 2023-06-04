@@ -4,7 +4,7 @@ import EditProfile from './EditProfile';
 import { API_URL } from '../config';
 
 
-export default function MyProfile({profileData, setProfileData, setIsRendered}) {
+export default function MyProfile({profileData, setProfileData}) {
   const [showOverlay, setShowOverlay] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
 
@@ -49,7 +49,6 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
       data.profile_image = img
     }
     setProfileData(data);
-    setIsRendered(Math.random());
   }
 
 
@@ -62,7 +61,7 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
   }, [profileData]);
 
   if (!profileData || !profileData.posts) {
-    return <div className='text-center font-light my-5 py-5'>Loading...</div>;
+    return <div className='text-center font-color my-5 py-5'>Loading...</div>;
   }
 
   const { username, profile_image, profile_description, posts } = profileData;
@@ -79,16 +78,16 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
 
   return (
     <>
-      <div className='col-8 offset-3 font-light'>
+      <div className='col-8 offset-3 font-color'>
         <div className='row'>
           <div className='col-4 justify-content-center align-items-center text-center mt-3'>
-            <img className='borders-light' style={{width: "150px", height: "150px", borderRadius: "150px"}} src={profile_image} />
+            <img className='borders-color' style={{width: "150px", height: "150px", borderRadius: "150px"}} src={profile_image} />
           </div>
           <div className='col-4 d-flex align-items-center mt-3 h3 text-break'>
             {username}
           </div>
           <div className='col-4 d-flex align-items-center text-center mt-3 h5'>
-            <div className='tertiary-light borders-light rounded-4 p-2 overButton' onClick={handleToggleOverlay}>
+            <div className='tertiary-color borders-color rounded-4 p-2 overButton' onClick={handleToggleOverlay}>
               Edit Profile
             </div>
           {showOverlay && (
@@ -106,29 +105,29 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
             posts.map((post, index) => (
-              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-light borders-light'>
+              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-color borders-color'>
                 <div className='float-end'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16" onClick={() => toggleMenu(index)}>
                     <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
                   </svg>
                   {postMenuVisibility[index] && (
-                    <div className='dropdown-menu tertiary-light borders-light rounded-4' style={{ display: 'block' }}>
+                    <div className='dropdown-menu tertiary-color borders-color rounded-4' style={{ display: 'block' }}>
                       <ul className="nav flex-column">
                             <div className="row justify-content-start align-items-center" id="dark-theme-switch-container">
-                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                            <div className='overButton rounded-4 py-1 text-center font-color'>
                               Delete posts
                             </div>
                             </div>
-                            <hr className='hrLines-light m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                            <hr className='hrLines-color m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-color'>
                               Edit caption
                             </div>
-                            <hr className='hrLines-light m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                            <hr className='hrLines-color m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-color'>
                               Hide comments
                             </div>
-                            <hr className='hrLines-light m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-light'>
+                            <hr className='hrLines-color m-1'></hr>
+                            <div className='overButton rounded-4 py-1 text-center font-color'>
                               Hide like count
                             </div>
                           </ul>
@@ -138,7 +137,7 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
                 <div className='row'>
                   <div className='col-2 text-end'>
                     <img
-                      className='rounded-5 borders-light'
+                      className='rounded-5 borders-color'
                       style={{ width: '60px', height: '60px' }}
                       src={profile_image}
                     />
@@ -158,7 +157,7 @@ export default function MyProfile({profileData, setProfileData, setIsRendered}) 
                 <div key={index} className='col-10 mx-auto'>
                   {post.image_one && (
                     <img
-                      className='img-fluid col-12 rounded-3 borders-light'
+                      className='img-fluid col-12 rounded-3 borders-color'
                       src={`data:image/png;base64,${post.image_one}`}
                     />
                   )}

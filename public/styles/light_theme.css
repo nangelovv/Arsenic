@@ -1,24 +1,24 @@
-.primary-light {
+.primary-color {
     background-color: rgb(246, 247, 251);
 }
 
-.secondary-light {
+.secondary-color {
     background-color: rgb(238, 227, 221);
 }
 
-.tertiary-light {
+.tertiary-color {
     background-color: rgb(255, 229, 216);
 }
 
-.quaternary-light {
+.quaternary-color {
     background-color: rgb(228, 199, 188);
 }
 
-.font-light {
+.font-color {
     color: rgb(0, 0, 0);
 }
 
-.borders-light {
+.borders-color {
     border: 2px solid silver;
 }
 
@@ -36,6 +36,6 @@
     cursor: pointer;
 }
 
-.hrLines-light {
+.hrLines-color {
     border: 1px solid gray;
 }

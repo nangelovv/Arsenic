@@ -6,7 +6,7 @@ function useInput({ type, id, placeholder, required }) {
   const [value, setValue] = React.useState('');
   const input = (
     <input
-      className='rounded-4 borders-light h5'
+      className='rounded-4 borders-color h5'
       type={type}
       placeholder={placeholder}
       name={id}
@@ -70,7 +70,7 @@ export default function RegisterContainer() {
   }, [email, username, firstName, lastName, password1, password2]);
 
   return (
-    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-light borders-light' id='RegisterForm'>
+    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-color borders-color' id='RegisterForm'>
       <form>
         <div className='col-12 my-3'>{emailInput}</div>
         <div className='col-12 my-3'>{usernameInput}</div>
@@ -79,7 +79,7 @@ export default function RegisterContainer() {
         <div className='col-12 my-3'>{password1Input}</div>
         <div className='col-12 my-3'>{password2Input}</div>
       </form>
-      <button className='m-2 p-3 h5 tertiary-light rounded-4 borders-light overButton' type='submit' onClick={() => try_register()}>
+      <button className='m-2 p-3 h5 tertiary-color rounded-4 borders-color overButton' type='submit' onClick={() => try_register()}>
         Submit
       </button>
     </div>

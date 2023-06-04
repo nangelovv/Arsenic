@@ -30,7 +30,6 @@ export default function NewPost() {
     const formData = new FormData();
     formData.append('text', textInput);
     formData.append('image_one', imageInput);
-    formData.append('date', Date.now());
 
 
     const response = await fetch(API_URL + '/posts/', {
@@ -43,7 +42,7 @@ export default function NewPost() {
     });
 
     if (response.ok) {
-      return alert('Post uploaded successfully');
+      return alert('File uploaded successfully');
     } else {
       return alert('Failed to upload file');
     }
@@ -52,30 +51,30 @@ export default function NewPost() {
   return (
     <>
       <div className='col-8 offset-3 my-4'>
-        <div className="row secondary-light borders-light rounded-5 mb-3">
+        <div className="row secondary-color borders-color rounded-5 mb-3">
           <div className="col-4">
               <input type="file" id="fileInput" onChange={handleFileChange} />
-              <label htmlFor="fileInput" className="h5 rounded-3 borders-light tertiary-light overButton m-3 p-2 font-light fw-normal">
+              <label htmlFor="fileInput" className="h5 rounded-3 borders-color tertiary-color overButton m-3 p-2 font-color fw-normal">
                   Choose an image
               </label>
           </div>
           <div className='col-4 d-flex justify-content-center'>
-            <div className="h5 rounded-3 borders-light tertiary-light overButton m-3 p-2 font-light fw-normal">
+            <div className="h5 rounded-3 borders-color tertiary-color overButton m-3 p-2 font-color fw-normal">
               <span onClick={resetImage}>Reset</span>
             </div>
           </div>
           <div className='col-4 d-flex justify-content-end'>
-            <div className="h5 rounded-3 borders-light tertiary-light overButton m-3 p-2 font-light fw-normal">
+            <div className="h5 rounded-3 borders-color tertiary-color overButton m-3 p-2 font-color fw-normal">
               <span onClick={uploadFile}>Upload</span>
             </div>
           </div>
         </div>
         <div className='row'>
           <div className="col-8 rounded-4 d-flex align-items-center">
-            {imagePreview && <img src={imagePreview} className='img-fluid rounded-4 borders-light' alt="Preview"/>}
+            {imagePreview && <img src={imagePreview} className='img-fluid rounded-4 borders-color' alt="Preview"/>}
           </div>
           <div className="col-4 my-auto">
-            <textarea className="form-control rounded-4 borders-light" placeholder='Write a caption' rows="24" style={{width: "100%", height: "42vh", resize: "none", boxShadow: "none"}} id="caption"></textarea>
+            <textarea className="form-control rounded-4 borders-color" placeholder='Write a caption' rows="24" style={{width: "100%", height: "42vh", resize: "none", boxShadow: "none"}} id="caption"></textarea>
           </div>
         </div>
       </div>

@@ -21,11 +21,11 @@ export default function StartButtons() {
     <div className="container-fluid">
         <div className="row justify-content-between">
             <div className="col-3">
-                <button className="m-4 p-3 h4 rounded-4 tertiary-light borders-light overButton" onClick={() => show_stack_card('RegisterForm', 'LoginForm')}>Register</button>
+                <button className="m-4 p-3 h4 rounded-4 tertiary-color borders-color overButton" onClick={() => show_stack_card('RegisterForm', 'LoginForm')}>Register</button>
             </div>
             <div className="col-6" id="SignContainer"> </div>
             <div className="col-3 text-end">
-                <button className="m-4 p-3 h4 rounded-4 tertiary-light borders-light overButton" onClick={() => show_stack_card('LoginForm', 'RegisterForm')}>Login</button>
+                <button className="m-4 p-3 h4 rounded-4 tertiary-color borders-color overButton" onClick={() => show_stack_card('LoginForm', 'RegisterForm')}>Login</button>
             </div>
         </div>
     </div>
