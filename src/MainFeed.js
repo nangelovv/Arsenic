@@ -55,27 +55,34 @@ useEffect(() => {
   
   
   useEffect(() => {
+    console.log("Entered useEffect.")
     if (darkMode) {
+      console.log("Entered Dark.")
       // Add dark theme CSS file
       const darkThemeLink = document.createElement('link');
       darkThemeLink.rel = 'stylesheet';
       darkThemeLink.href = './styles/dark_theme.css';
       document.head.appendChild(darkThemeLink);
+      console.log(darkThemeLink)
 
       // Remove light theme CSS file if it exists
       const lightThemeLink = document.querySelector('link[href="./styles/light_theme.css"]');
+      console.log(lightThemeLink)
       if (lightThemeLink) {
         lightThemeLink.remove();
       }
     } else {
+      console.log("Entered Light.")
       // Add light theme CSS file
       const lightThemeLink = document.createElement('link');
       lightThemeLink.rel = 'stylesheet';
       lightThemeLink.href = './styles/light_theme.css';
       document.head.appendChild(lightThemeLink);
+      console.log(lightThemeLink)
 
       // Remove dark theme CSS file if it exists
       const darkThemeLink = document.querySelector('link[href="./styles/dark_theme.css"]');
+      console.log(darkThemeLink)
       if (darkThemeLink) {
         darkThemeLink.remove();
       }
