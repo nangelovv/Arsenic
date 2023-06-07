@@ -28,8 +28,6 @@ export default function LoginContainer() {
   const [username, usernameInput] = useInput({ type: "text", placeholder: "Username", required: true });
   const [password, passwordInput] = useInput({ type: "password", placeholder: "Password", required: true });
 
-  console.log("Rendered.")
-
   // const handleCheckboxChange = (event) => {setIsChecked(event.target.checked);}
   
   async function try_login() {

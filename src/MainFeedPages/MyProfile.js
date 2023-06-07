@@ -105,7 +105,7 @@ export default function MyProfile({profileData, setProfileData}) {
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
             posts.map((post, index) => (
-              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-color borders-color'>
+              <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-color borders-color' key={post.id}>
                 <div className='float-end'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16" onClick={() => toggleMenu(index)}>
                     <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
@@ -154,7 +154,7 @@ export default function MyProfile({profileData, setProfileData}) {
                     {post.caption}
                   </div>
                 </div>
-                <div key={index} className='col-10 mx-auto'>
+                <div className='col-10 mx-auto'>
                   {post.image_one && (
                     <img
                       className='img-fluid col-12 rounded-3 borders-color'
