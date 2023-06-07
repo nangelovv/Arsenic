@@ -48,3 +48,17 @@ input[type="file"] {
   justify-content: center;
   align-items: center;
 }
+
+.overDiv:hover {
+  opacity: 40%;
+  -webkit-transition: .4s;
+  transition: .4s;
+  cursor: pointer;
+}
+
+.overButton:hover {
+  opacity: 65%;
+  -webkit-transition: .4s;
+  transition: .4s;
+  cursor: pointer;
+}

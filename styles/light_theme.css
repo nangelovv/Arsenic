@@ -22,20 +22,6 @@
     border: 2px solid silver;
 }
 
-.overDiv:hover {
-    opacity: 40%;
-    -webkit-transition: .4s;
-    transition: .4s;
-    cursor: pointer;
-}
-
-.overButton:hover {
-    opacity: 65%;
-    -webkit-transition: .4s;
-    transition: .4s;
-    cursor: pointer;
-}
-
 .hrLines-color {
     border: 1px solid gray;
 }
