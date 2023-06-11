@@ -52,9 +52,6 @@ export default function MyProfile({profileData, setProfileData}) {
   }
 
   async function handleDeletePost (postId) {
-    // Send a delete request to your backend API
-    console.log(postId)
-
     let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
