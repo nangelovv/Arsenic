@@ -1,3 +1,4 @@
+import imageCompression from 'browser-image-compression';
 import React, { useState } from 'react';
 import { API_URL } from '../config';
 
@@ -27,9 +28,17 @@ export default function NewPost() {
 
     var bearer = 'Bearer ' + token;
 
+    const options = {
+      maxSizeMB: 2,
+      maxWidthOrHeight: 7680
+    }
+
+    const compressedFile = await imageCompression(imageInput, options);
+
     const formData = new FormData();
     formData.append('text', textInput);
-    formData.append('image_one', imageInput);
+    formData.append('image_one', compressedFile);
+    formData.append('date', Date.now());
 
 
     const response = await fetch(API_URL + '/posts/', {
@@ -42,7 +51,7 @@ export default function NewPost() {
     });
 
     if (response.ok) {
-      return alert('File uploaded successfully');
+      return alert('Post uploaded successfully');
     } else {
       return alert('Failed to upload file');
     }

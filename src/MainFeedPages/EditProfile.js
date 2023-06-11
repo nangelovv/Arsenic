@@ -1,3 +1,4 @@
+import imageCompression from 'browser-image-compression';
 import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 
@@ -43,9 +44,15 @@ export default function EditProfile({ profileData, removeOverlay }) {
                 },
             });
         }
+        const options = {
+          maxSizeMB: 2,
+          maxWidthOrHeight: 7680
+        }
+    
+        const compressedFile = await imageCompression(imageInput, options);
 
         const formDataImage = new FormData();
-        formDataImage.append('profile_image', imageInput);
+        formDataImage.append('profile_image', compressedFile);
         
         var imageResponse = null
         if (imageInput != profileData.profile_image) {

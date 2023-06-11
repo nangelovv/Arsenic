@@ -51,7 +51,29 @@ export default function MyProfile({profileData, setProfileData}) {
     setProfileData(data);
   }
 
+  async function handleDeletePost (postId) {
+    // Send a delete request to your backend API
+    console.log(postId)
 
+    let token = localStorage.getItem("ArsenicToken");
+
+    var bearer = 'Bearer ' + token;
+
+    const response = await fetch(API_URL + '/posts/' + postId, {
+      method: 'DELETE',
+      headers: {
+          Authorization: bearer,
+          Accept: 'application/json'
+      },
+  });
+
+    if (response.ok){
+      return alert('Post deleted successfully.');
+    }
+    else {
+      return alert('Failed to delete post.');
+    }
+  };
 
   useEffect(() => {
     if (profileData && profileData.posts) {
@@ -113,8 +135,11 @@ export default function MyProfile({profileData, setProfileData}) {
                   {postMenuVisibility[index] && (
                     <div className='dropdown-menu tertiary-color borders-color rounded-4' style={{ display: 'block' }}>
                       <ul className="nav flex-column">
-                            <div className="row justify-content-start align-items-center" id="dark-theme-switch-container">
-                            <div className='overButton rounded-4 py-1 text-center font-color'>
+                            <div className="row justify-content-start align-items-center">
+                            <div 
+                              className='overButton rounded-4 py-1 text-center font-color'
+                              onClick={() => handleDeletePost(post.id)}
+                            >
                               Delete posts
                             </div>
                             </div>
