@@ -4,7 +4,7 @@ import EditProfile from './EditProfile';
 import { API_URL } from '../config';
 
 
-export default function MyProfile({profileData, setProfileData}) {
+export default function MyProfile({ profileData, setProfileData }) {
   const [showOverlay, setShowOverlay] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
 
@@ -22,12 +22,12 @@ export default function MyProfile({profileData, setProfileData}) {
 
   async function getProfile() {
 
-    if (profileData) {return}
-    
+    if (profileData) { return }
+
     let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
-    
+
 
     const response = await fetch(API_URL + '/users/is_profile', {
       method: 'GET',
@@ -44,14 +44,11 @@ export default function MyProfile({profileData, setProfileData}) {
     if (!data.profile_image) {
       data.profile_image = noUserImage
     }
-    else {
-      const img = `data:image/png;base64,${data.profile_image}`
-      data.profile_image = img
-    }
     setProfileData(data);
   }
 
-  async function handleDeletePost (postId) {
+  async function handleDeletePost(postId) {
+
     let token = localStorage.getItem("ArsenicToken");
 
     var bearer = 'Bearer ' + token;
@@ -59,12 +56,12 @@ export default function MyProfile({profileData, setProfileData}) {
     const response = await fetch(API_URL + '/posts/' + postId, {
       method: 'DELETE',
       headers: {
-          Authorization: bearer,
-          Accept: 'application/json'
+        Authorization: bearer,
+        Accept: 'application/json'
       },
-  });
+    });
 
-    if (response.ok){
+    if (response.ok) {
       return alert('Post deleted successfully.');
     }
     else {
@@ -85,7 +82,7 @@ export default function MyProfile({profileData, setProfileData}) {
 
   const { username, profile_image, profile_description, posts } = profileData;
 
-  function transformTime (milliseconds) {
+  function transformTime(milliseconds) {
     const date = new Date(parseInt(milliseconds, 10));
 
     const day = date.getUTCDate();
@@ -100,7 +97,7 @@ export default function MyProfile({profileData, setProfileData}) {
       <div className='col-8 offset-3 font-color'>
         <div className='row'>
           <div className='col-4 justify-content-center align-items-center text-center mt-3'>
-            <img className='borders-color' style={{width: "150px", height: "150px", borderRadius: "150px"}} src={profile_image} />
+            <img className='borders-color' style={{ width: "150px", height: "150px", borderRadius: "150px" }} src={profile_image} />
           </div>
           <div className='col-4 d-flex align-items-center mt-3 h3 text-break'>
             {username}
@@ -109,11 +106,11 @@ export default function MyProfile({profileData, setProfileData}) {
             <div className='tertiary-color borders-color rounded-4 p-2 overButton' onClick={handleToggleOverlay}>
               Edit Profile
             </div>
-          {showOverlay && (
-            <div className='overlay'>
-              <EditProfile profileData={profileData} removeOverlay={handleToggleOverlay} />
-            </div>
-          )}
+            {showOverlay && (
+              <div className='overlay'>
+                <EditProfile profileData={profileData} removeOverlay={handleToggleOverlay} />
+              </div>
+            )}
           </div>
         </div>
         <div className='text-center m-3 border-bottom'>
@@ -123,36 +120,36 @@ export default function MyProfile({profileData, setProfileData}) {
           {posts.length === 0 ? (
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
-            posts.map((post, index) => (
+            posts.map((post, index) => (console.log(posts),
               <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-color borders-color' key={post.id}>
                 <div className='float-end'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16" onClick={() => toggleMenu(index)}>
-                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                   </svg>
                   {postMenuVisibility[index] && (
                     <div className='dropdown-menu tertiary-color borders-color rounded-4' style={{ display: 'block' }}>
                       <ul className="nav flex-column">
-                            <div className="row justify-content-start align-items-center">
-                            <div 
-                              className='overButton rounded-4 py-1 text-center font-color'
-                              onClick={() => handleDeletePost(post.id)}
-                            >
-                              Delete posts
-                            </div>
-                            </div>
-                            <hr className='hrLines-color m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-color'>
-                              Edit caption
-                            </div>
-                            <hr className='hrLines-color m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-color'>
-                              Hide comments
-                            </div>
-                            <hr className='hrLines-color m-1'></hr>
-                            <div className='overButton rounded-4 py-1 text-center font-color'>
-                              Hide like count
-                            </div>
-                          </ul>
+                        <div className="row justify-content-start align-items-center">
+                          <div
+                            className='overButton rounded-4 py-1 text-center font-color'
+                            onClick={() => handleDeletePost(post.id)}
+                          >
+                            Delete posts
+                          </div>
+                        </div>
+                        <hr className='hrLines-color m-1'></hr>
+                        <div className='overButton rounded-4 py-1 text-center font-color'>
+                          Edit caption
+                        </div>
+                        <hr className='hrLines-color m-1'></hr>
+                        <div className='overButton rounded-4 py-1 text-center font-color'>
+                          Hide comments
+                        </div>
+                        <hr className='hrLines-color m-1'></hr>
+                        <div className='overButton rounded-4 py-1 text-center font-color'>
+                          Hide like count
+                        </div>
+                      </ul>
                     </div>
                   )}
                 </div>
@@ -180,7 +177,7 @@ export default function MyProfile({profileData, setProfileData}) {
                   {post.image_one && (
                     <img
                       className='img-fluid col-12 rounded-3 borders-color'
-                      src={`data:image/png;base64,${post.image_one}`}
+                      src={post.image_one}
                     />
                   )}
                 </div>
