@@ -41,6 +41,7 @@ export default function MyProfile({ profileData, setProfileData }) {
     const data = JSON.parse(json);
     const reversed_data = data.posts.reverse()
     data.posts = reversed_data
+
     if (!data.profile_image) {
       data.profile_image = noUserImage
     }
@@ -120,7 +121,7 @@ export default function MyProfile({ profileData, setProfileData }) {
           {posts.length === 0 ? (
             <div className='text-center my-5 py-5'>No posts</div>
           ) : (
-            posts.map((post, index) => (console.log(posts),
+            posts.map((post, index) => (
               <div className='col-8 mx-auto my-3 py-3 rounded-4 secondary-color borders-color' key={post.id}>
                 <div className='float-end'>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-three-dots-vertical overDiv" viewBox="0 0 16 16" onClick={() => toggleMenu(index)}>
@@ -131,7 +132,7 @@ export default function MyProfile({ profileData, setProfileData }) {
                       <ul className="nav flex-column">
                         <div className="row justify-content-start align-items-center">
                           <div
-                            className='overButton rounded-4 py-1 text-center font-color'
+                            className='overButton rounded-4 py-1 text-center fw-bold'
                             onClick={() => handleDeletePost(post.id)}
                           >
                             Delete posts
@@ -170,16 +171,18 @@ export default function MyProfile({ profileData, setProfileData }) {
                     </div>
                   </div>
                   <div className='col-10 offset-1 mx-auto my-2 h6 fw-normal'>
-                    {post.caption}
+                    {post.caption ? (post.caption) : (null)}
                   </div>
                 </div>
                 <div className='col-10 mx-auto'>
-                  {post.image_one && (
-                    <img
-                      className='img-fluid col-12 rounded-3 borders-color'
-                      src={post.image_one}
-                    />
-                  )}
+                {post.image_one ? (
+                  <img
+                    className='img-fluid col-12 rounded-3 borders-color'
+                    src={post.image_one}
+                  />
+                ) : (
+                  null
+                )}
                 </div>
               </div>
             ))
