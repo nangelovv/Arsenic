@@ -1,25 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { API_URL } from '../config';
 
 
 function useInput({ type, id, placeholder, required }) {
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
   const input = (
-    <input
+    <md-outlined-text-field 
       className='rounded-4 borders-color h5'
       type={type}
-      placeholder={placeholder}
+      label={placeholder}
+      minLength={8}
       name={id}
       id={id}
       value={value}
       required={required}
-      onChange={e => setValue(e.target.value)}
-    />
+      onInput={e => setValue(e.target.value)}
+    ></md-outlined-text-field>
   );
   return [value, input];
 }
 
-export default function RegisterContainer() {
+export default function RegisterContainer({setShowRegister, showRegister}) {
   const [email, emailInput] = useInput({ type: 'email', id: 'email_box', placeholder: 'E-mail', required: true });
   const [username, usernameInput] = useInput({ type: 'text', id: 'username_box', placeholder: 'Username', required: true });
   const [firstName, firstNameInput] = useInput({ type: 'text', id: 'first_name_box', placeholder: 'First name', required: true });
@@ -27,7 +28,7 @@ export default function RegisterContainer() {
   const [password1, password1Input] = useInput({ type: 'password', id: 'password_box1', placeholder: 'Password', required: true });
   const [password2, password2Input] = useInput({ type: 'password', id: 'password_box2', placeholder: 'Repeat password', required: true });
 
-  async function try_register() {
+  async function tryRegister() {
     if (password1 !== password2) {
       alert('Passwords do not match.');
       return;
@@ -49,8 +50,8 @@ export default function RegisterContainer() {
     window.history.pushState({}, '', urlWithoutParams);
 
     if (response.ok) {
-      document.getElementById('RegisterForm').classList.add('d-none');
-      document.getElementById('LoginForm').classList.remove('d-none');
+      console.log("Here", showRegister)
+      setShowRegister(false)
     } else {
       alert('Invalid register data, please try again.');
     }
@@ -60,7 +61,7 @@ export default function RegisterContainer() {
     function handleKeyDown(e) {
       if (e.keyCode === 13) { // enter key
         e.preventDefault();
-        try_register();
+        tryRegister();
       }
     }
     document.addEventListener('keydown', handleKeyDown);
@@ -70,18 +71,30 @@ export default function RegisterContainer() {
   }, [email, username, firstName, lastName, password1, password2]);
 
   return (
-    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-color borders-color' id='RegisterForm'>
+    <div className='text-center col-sm-4 container py-3 rounded-3 borders-color centerLoginRegister'>
+      <img
+        style={{ width: '60px', height: '60px' }}
+        src={"./logo.png"}
+      />
       <form>
-        <div className='col-12 my-3'>{emailInput}</div>
-        <div className='col-12 my-3'>{usernameInput}</div>
-        <div className='col-12 my-3'>{firstNameInput}</div>
-        <div className='col-12 my-3'>{lastNameInput}</div>
-        <div className='col-12 my-3'>{password1Input}</div>
-        <div className='col-12 my-3'>{password2Input}</div>
+        <div className='col-sm-10 mx-auto my-3'>{emailInput}</div>
+        <div className='col-sm-10 mx-auto my-3'>{usernameInput}</div>
+        <div className='col-sm-10 mx-auto my-3'>{firstNameInput}</div>
+        <div className='col-sm-10 mx-auto my-3'>{lastNameInput}</div>
+        <div className='col-sm-10 mx-auto my-3'>{password1Input}</div>
+        <div className='col-sm-10 mx-auto my-3'>{password2Input}</div>
       </form>
-      <button className='m-2 p-3 h5 tertiary-color rounded-4 borders-color overButton' type='submit' onClick={() => try_register()}>
+      <md-text-button
+        onClick={e => {setShowRegister(false)}}
+      >
+        Already have an account?
+      </md-text-button>
+      <md-filled-button
+        type="submit"
+        onClick={tryRegister}
+      >
         Submit
-      </button>
+      </md-filled-button>
     </div>
   );
 }

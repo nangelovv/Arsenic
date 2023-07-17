@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <div className='col-8 offset-3'>Home</div>
   )
 }

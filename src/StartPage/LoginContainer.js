@@ -2,46 +2,43 @@ import React, { useState } from 'react';
 import { API_URL } from '../config';
 
 
-export default function LoginContainer() {
-  function useInput({ type, placeholder, required }) {
+export default function LoginContainer({setShowRegister}) {
+
+  function useInput({ type, placeholder, required}) {
+
     const [value, setValue] = useState("");
+
     const input = (
-      <input 
-        value={value} 
-        className='rounded-4 borders-color h5' 
-        placeholder={placeholder} 
-        onChange={e => setValue(e.target.value)} 
+      <md-outlined-text-field 
+        value={value}
+        label={placeholder} 
+        onInput={e => setValue(e.target.value)} 
         type={type}
         required={required}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {
             event.preventDefault();
-            try_login();
+            tryLogin();
           }
-        }}
-      />
+        }}></md-outlined-text-field>
     );
+
     return [value, input];
   }
 
-  // const [isChecked, setIsChecked] = useState(false);
-  const [username, usernameInput] = useInput({ type: "text", placeholder: "Username", required: true });
-  const [password, passwordInput] = useInput({ type: "password", placeholder: "Password", required: true });
-
-  // const handleCheckboxChange = (event) => {setIsChecked(event.target.checked);}
+  const [username, usernameInput] = useInput({ type: "text", placeholder: "Username or email", required: true});
+  const [password, passwordInput] = useInput({ type: "password", placeholder: "Password", required: true});
   
-  async function try_login() {
-    const credentials = username;
-    const pass = password;
+  async function tryLogin() {
 
-    if (!credentials || !pass) return
+    if (!username || !password) return
 
     const response = await fetch(API_URL + "/users/", {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email_username: credentials,
-        password: pass
+        email_username: username,
+        password: password
       })
     })
 
@@ -62,26 +59,30 @@ export default function LoginContainer() {
   }
 
   return (
-    <div className='text-center d-none col-4 offset-4 p-3 my-6 rounded-5 secondary-color borders-color' id='LoginForm'>
+    <div className='text-center col-sm-4 container py-3 rounded-3 borders-color centerLoginRegister'>
+      <img
+        style={{ width: '60px', height: '60px' }}
+        src={"./logo.png"}
+      />
       <form>
-          <div className='col-12 my-3'>
-              {usernameInput}
-          </div>
-          <div className='col-12 my-3'>
-              {passwordInput}
-          </div>
-      </form>
-      <button className='m-2 p-3 h5 tertiary-color rounded-4 borders-color overButton' type="submit" onClick={try_login}>
-        Enter
-      </button>
-      {/* <div className="d-flex align-items-center  justify-content-center">
-        <div className="form-check">
-          <input className="form-check-input" type="checkbox" value={isChecked} onChange={handleCheckboxChange} id="stayLogged" style={{boxShadow: "none"}}/>
-          <label className="form-check-label h6" htmlFor="flexCheckDefault">
-            Stay logged in
-          </label>
+        <div className='col-sm-10 mx-auto my-3'>
+        {usernameInput}
         </div>
-      </div> */}
+        <div className='col-sm-10 mx-auto my-3'>
+        {passwordInput}
+        </div>
+      </form>
+      <md-text-button
+      onClick={e => {setShowRegister(true)}}
+      >
+        Don't have an account?
+      </md-text-button>
+      <md-filled-button
+        type="submit"
+        onClick={tryLogin}
+      >
+        Enter
+      </md-filled-button>
     </div>
   )
 }
