@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import LoginContainer from './StartPage/LoginContainer';
-import RegisterContainer from './StartPage/RegisterContainer';
+import TestComponent from './LoginRegisterComponent';
 import MainFeed from './MainFeed';
 
 
 function App() {
-  const [showRegister, setShowRegister] = useState(false);
-  const token = localStorage.getItem("ArsenicToken");
-  const date = new Date(localStorage.getItem("ArsenicExpiration"));
+
+  // Access the token and date value from the localStorage
+  const token = localStorage.getItem('ArsenicToken');
+  const date = new Date(localStorage.getItem('ArsenicExpiration'));
 
   let ExpiredToken = true
 
+  // If a token and date are present in the localStorage, the current date and the token date are compared, 
+  // if it is expired, nothing happens, if the current date is smaller than the token date, the variable 
+  // 'ExpiredToken' is set to false, so that the user can log in down below
   if (token) {
     if (date) {
       const currentDate = new Date();
@@ -20,11 +22,11 @@ function App() {
     }
   }
 
+  // If the date in the localStorage token is expired, the Login/Register container is shown, 
+  // else the MainFeed pages are rendered
   if (ExpiredToken) {
     return (
-      <>
-        {showRegister ? <RegisterContainer showRegister={showRegister} setShowRegister={setShowRegister} /> : <LoginContainer setShowRegister={setShowRegister} />}
-      </>
+      <TestComponent/>
     );
   }
   else {

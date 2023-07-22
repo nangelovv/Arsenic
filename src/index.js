@@ -69,11 +69,8 @@ import '@material/web/tabs/tabs';
 import '@material/web/textfield/filled-text-field';
 import '@material/web/textfield/outlined-text-field';
 
-import '@material/web/tokens/v0_172/index.test.css';
-import '@material/web/tokens/v0_172/lib.test.css';
 
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <App/>

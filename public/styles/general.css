@@ -3,14 +3,14 @@
   --md-outlined-text-field-container-shape-start-end:	4px;
   --md-outlined-text-field-container-shape-end-start:	4px;
   --md-outlined-text-field-container-shape-end-end:	4px;
-  --md-text-button-label-text-type: 1.5rem;
+  --md-text-button-label-text-type: 2rem;
   --md-outlined-segmented-button-shape-start-start: 100px;
   --md-outlined-segmented-button-shape-start-end: 100px;
   --md-outlined-segmented-button-shape-end-end: 100px;
   --md-outlined-segmented-button-shape-end-start: 100px;
-  --md-outlined-segmented-button-label-text-type: 1.5rem;
-  --md-dialog-container-max-block-size: "1000px";
-  --md-dialog-container-max-inline-size: "1000px";
+  --md-outlined-segmented-button-label-text-type: 50px;
+  --md-dialog-container-color: var(--primary-color);
+  --md-navigation-bar-container-color: var(--primary-color);
   #navButtons {
     --md-text-button-container-shape: 6px;
   }

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 
 
 export default function Messages() {
@@ -10,8 +10,9 @@ export default function Messages() {
 // console.log(possibleKeys)
 
   return (
-    <div className='col-8 offset-3'>
-    </div>
+    <>
+      Messages
+    </>
 
   )
 }
