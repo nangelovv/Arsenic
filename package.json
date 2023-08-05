@@ -1,10 +1,10 @@
 {
   "homepage": "http://nangelovv.github.io/Arsenic",
   "name": "react-code",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "private": true,
   "dependencies": {
-    "@material/web": "^1.0.0-pre.13",
+    "@material/web": "^1.0.0-pre.14",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",

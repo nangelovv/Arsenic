@@ -16,8 +16,6 @@ import '@material/web/chips/suggestion-chip';
 
 import '@material/web/checkbox/checkbox';
 
-import '@material/web/circularprogress/circular-progress';
-
 import '@material/web/dialog/dialog';
 
 import '@material/web/divider/divider';
@@ -30,7 +28,7 @@ import '@material/web/fab/fab';
 import '@material/web/field/filled-field';
 import '@material/web/field/outlined-field';
 
-import '@material/web/focus/focus-ring';
+import '@material/web/focus/md-focus-ring';
 
 import '@material/web/icon/icon';
 
@@ -46,12 +44,13 @@ import '@material/web/labs/navigationtab/navigation-tab';
 import '@material/web/labs/segmentedbutton/outlined-segmented-button';
 import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set';
 
-import '@material/web/linearprogress/linear-progress'
-
 import '@material/web/menu/menu';
 import '@material/web/menu/menu-item';
 import '@material/web/menu/menu-item-link';
 import '@material/web/menu/sub-menu-item';
+
+import '@material/web/progress/circular-progress'
+import '@material/web/progress/linear-progress'
 
 import '@material/web/radio/radio';
 

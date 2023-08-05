@@ -1,4 +1,4 @@
-import { handleFileChange } from './profileFunctions'
+import { handleFileChange } from './MyProfileFunctions'
 
 // This function is called from the myProfile components and are used when the Edit Profile 
 // button or New Post buttons are pressed

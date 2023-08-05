@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { APIBody } from '../common/APICalls';
 import { debounce } from 'lodash';
-import { transformTime } from './profileFunctions';
-import { APIBody } from './APICalls';
+import { MainFeedContext, HomeContext } from '../MainFeed';
+import RenderPosts from '../renderComponentParts/RenderPosts';
 
 
-export default function Home({windowWidth}) {
+export default function Home() {
+  
+  const {
+    windowWidth, setWindowWidth,
+    activeComponent, setActiveComponent
+  } = useContext(MainFeedContext)
 
-  // Holds whether the first API request has been send, important to know so the value of noPosts can be changed to 2000
-  const [firstRequest, setFirstRequest] = useState(false)
+  const {
+    noPosts, setNoPosts,
+    posts, setPosts
+  } = useContext(HomeContext)
 
   // Gets the last active side from the localStorage and sets it as the current one, if there is nothing 
   // in Storage, its set as '0'/'Recommended'
   const [activeSide, setActiveSide] = useState(parseInt(localStorage.getItem('activeSide')) || 0)
-
-  // Sets the noPosts variable to 2000, if there are no more posts to be displayed, variable is changed to 
-  // 99999999999, thus making it impossible to send API requests
-  const [noPosts, setNoPosts] = useState(2000)
-
-  // Holds all of the information for all posts that has been thus far received
-  const [posts, setPosts] = useState([]);
 
   // Holds the state of whether a request is currently in progress
   const [isFetching, setIsFetching] = useState(false);
@@ -106,14 +107,12 @@ export default function Home({windowWidth}) {
   
         for (const post of Object.values(json)) {
           if (!uniquePosts.some((p) => p.post_id === post.post_id)) {
+            // Check if the `profile_image` property is missing or null/undefined
             uniquePosts.push(post);
           }
         }
-  
-        setPosts(uniquePosts)
 
-        // Sets the interval between API request after the first call to 2 seconds
-        if (!firstRequest) {setFirstRequest(true); setNoPosts(2000)}
+        setPosts(uniquePosts)
         }
 
     }
@@ -123,7 +122,7 @@ export default function Home({windowWidth}) {
   // Checks if the user has reached the bottom of the page, if so 'callFetchData' is called
   function handleScroll() {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 20) {
+    if (scrollTop + clientHeight >= scrollHeight * 0.7) {
       callFetchData();
     }
   };
@@ -154,62 +153,10 @@ export default function Home({windowWidth}) {
         <div>
 
           {/* Iterate through all of the the posts that have been received and render each one in its own container */}
-          {posts.map((post) => (
-
-            // Show the container in different dimensions depending on how big the screen of the user is
-            <div key={post.post_id} className={windowWidth > 900 ? 'col-10 mx-auto my-3 py-3 rounded-4 border' : 'col-12 py-3 border-bottom'}>
-              
-              {/* Contains the post details like username, date, profile image so they are on the same container */}
-              <div className='row'>
-
-                {/* Profile image div for each post*/}
-                <div className='col-2 text-end'>
-                  <img
-                    className='rounded-5'
-                    style={{ width: '60px', height: '60px' }}
-                    src={post.profile_image}
-                    alt='Profile'
-                  />
-                </div>
-
-                {/* Holds both username and date div so that they are on one row */}
-                <div className='row col-8 mx-1 d-flex align-items-center'>
-                  {/* Username div, data is being retrieved from function getProfile above */}
-                  <div className='container h5'>
-                    <span>{post.username}</span>
-                  </div>
-
-                  {/* Date div, first its being transformed into human readable time as this is in milliseconds */}
-                  <div className='container h6 fw-normal'>
-                    <span>{transformTime(post.date)}</span>
-                  </div>
-                </div>
-
-                {/* Post caption div, a check is made if there is a caption provided in the post, if not, nothing is rendered */}
-                <div className='col-10 offset-1 mx-auto my-2 h6 fw-normal'>
-                  <span>{post.caption ? (post.caption) : (null)}</span>
-                </div>
-              </div>
-
-              {/* Post image div, it checks if the post has an image, if not, nothing is rendered */}
-              <div className='col-10 mx-auto'>
-                {post.image ? 
-                (
-                  <img
-                    alt='Post profile'
-                    className='img-fluid col-12 rounded-3 border'
-                    src={post.image}
-                  />
-                ) : 
-                (
-                  null
-                )}
-              </div>
-            </div>
-          ))}
+          {<RenderPosts posts={posts}/>}
 
           {/* Notifies the user if there are no more posts to show in the bottom of the page */}
-          {noPosts != 2000 &&
+          {noPosts == 99999999999 &&
           <div className='text-center my-3 py-3'>
             <span>
               No more posts to show

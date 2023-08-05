@@ -1,35 +1,19 @@
-import { APINoAuth } from './Pages/APICalls';
+import { useInput } from './common/elemFuncs';
+import { APINoAuth } from './common/APICalls';
 import React, { useState, useEffect } from 'react';
+import logo from './common/logo.png'
 
 
 export default function LoginRegisterComponent() {
   const [showRegister, setShowRegister] = useState(false)
 
-  // This function is called from the below variables, first its sets the value of the input field as null 
-  // and then returns both the value and the field element itself
-  function useInput({ type, placeholder}) {
-
-    const [value, setValue] = useState(null);
-
-    const input = (
-    <md-outlined-text-field 
-      className='rounded-4 borders-color h5'
-      type={type}
-      label={placeholder}
-      value={value}
-      onInput={e => setValue(e.target.value)}
-    ></md-outlined-text-field>
-    );
-    return [value, input];
-  }
-
   // The below variables call the above function 'useInput' where the each of these text fields is initiated
-  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail'});
-  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username'});
-  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name'});
-  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name'});
-  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password'});
-  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password'});
+  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null});
+  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters'});
+  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null});
+  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null});
+  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters'});
+  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password'});
 
   // This function makes the call to the server with the necessary login or register data
   async function sendData() {
@@ -80,10 +64,12 @@ export default function LoginRegisterComponent() {
         // If the response from the server is successful (200), the user token along with the current date 
         // are saved in the localStorage and the page is reloaded to display the Feed, else an alert message is shown
         if (response.ok) {
-          const token = await response.json();
+          const json = await response.json();
+          const data = JSON.parse(json);
           const date = new Date();
           date.setTime(date.getTime() + 600 * 1000000);
-          localStorage.setItem('ArsenicToken', token);
+          localStorage.setItem('ArsenicToken', data.token);
+          localStorage.setItem('ArsenicUserID', data.user_id);
           localStorage.setItem('ArsenicExpiration', date);
           window.location.reload(false);
         }
@@ -122,7 +108,7 @@ export default function LoginRegisterComponent() {
     <div className='text-center col-sm-4 container py-3 rounded-3 borders-color centerLoginRegister'>
       <img
         style={{ width: '60px', height: '60px' }}
-        src={'./logo.png'}
+        src={logo}
       />
       <form>
 

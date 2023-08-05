@@ -1,18 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Home from './Pages/Home';
-import MyProfile from './Pages/MyProfile';
-import Messages from './Pages/Messages';
-import Discover from './Pages/Discover';
+import React, { useState, useEffect, useRef, createContext } from 'react';
+import Home from './Home/Home';
+import MyProfile from './MyProfile/MyProfile';
+import Messages from './Messages/Messages';
+import Discover from './Discover/Discover';
+import logo from './common/logo.png'
 
 
 // WHOLE MAIN FEED WILL BE REDESIGNED VISUALLY ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
 
 
+export const OpenProfileContext = createContext();
+export const MyProfileContext = createContext();
+export const DiscoverContext = createContext();
+export const MainFeedContext = createContext();
+export const HomeContext = createContext();
+
+
 export default function MainFeed() {
+
+  const [postMenuVisibility, setPostMenuVisibility] = useState([]);
+  const [profile, setProfile] = useState(null)
+  const [profiles, setProfiles] = useState([])
+  const [noPosts, setNoPosts] = useState(500)
+  const [posts, setPosts] = useState([]);
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true');
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [profileData, setProfileData] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Menu and Menu;s button ref hooks
   var dialogRef = useRef();
@@ -73,16 +88,16 @@ export default function MainFeed() {
   }
 
   // Renders the correct component depending on which one is set in 'activeComponent'
-  const renderComponent = () => {
+  function renderComponent() {
     switch (activeComponent) {
       case 'Home':
-        return <Home  windowWidth={windowWidth}/>;
+        return <Home/>;
       case 'Discover':
-        return <Discover  windowWidth={windowWidth}/>;
+        return <Discover/>;
       case 'MyProfile':
-        return <MyProfile profileData={profileData} setProfileData={setProfileData} windowWidth={windowWidth}/>;
+        return <MyProfile/>;
       case 'Messages':
-        return <Messages profileData={profileData} setProfileData={setProfileData} windowWidth={windowWidth}/>;
+        return <Messages/>;
       default:
         return <Home/>;
     }
@@ -146,7 +161,23 @@ export default function MainFeed() {
 
 
   return (
-    <>
+    <OpenProfileContext.Provider value={{profile, setProfile}}>
+    <MyProfileContext.Provider value={{
+      profileData, setProfileData,
+      postMenuVisibility, setPostMenuVisibility
+      }}>
+    <DiscoverContext.Provider value={{
+      profiles, setProfiles,
+      showModal, setShowModal
+    }}>
+    <HomeContext.Provider value={{
+      posts, setPosts,
+      noPosts, setNoPosts
+    }}>
+    <MainFeedContext.Provider value={{
+      windowWidth, setWindowWidth,
+      activeComponent, setActiveComponent
+    }}>
       {/* In a future version, there would only be a Nav Drawer for the site, once the element in MD3 is functional */}
       {/* Based on the size of the screen the page is being viewed on, either the Nav Drawer shows up or the Nav Bar */}
       {windowWidth > 900 ?
@@ -160,7 +191,7 @@ export default function MainFeed() {
             <img
               alt='Logo'
               style={{ width: '50px', height: '50px' }}
-              src={'./logo.png'}
+              src={logo}
             />
             <span>Arsenic</span>
           </div>
@@ -168,40 +199,37 @@ export default function MainFeed() {
           {/* Each of the below divs hold a button for a component, which when pressed renders that component, 
           except for 'Settings', which opens the settings dialog. The divs keep all of the buttons centered 
           and equally spaced */}
-          <div className='text-center col-12 my-3'>
+          <div className='text-center my-3'>
             <md-text-button id='navButtons' onClick={() => setActiveComponent('Home')}>
             <md-icon slot='icon'>home</md-icon>
               Home
             </md-text-button>
           </div>
-          <div className='text-center col-12 my-3'>
-            <md-text-button id='navButtons' disabled onClick={() => setActiveComponent('Discover')}>
+          <div className='text-center my-3'>
+            <md-text-button id='navButtons' onClick={() => {setActiveComponent('Discover'); setShowModal(false)}}>
               <md-icon slot='icon'>search</md-icon>
               Discover
             </md-text-button>
           </div>
-          <div className='text-center col-12 my-3'>
+          <div className='text-center my-3'>
             <md-text-button id='navButtons' onClick={() => setActiveComponent('MyProfile')}>
               <md-icon slot='icon'>person</md-icon>
               My Profile
             </md-text-button>
           </div>
-          <div className='text-center col-12 my-3'>
-            <md-text-button id='navButtons' disabled onClick={() => setActiveComponent('Messages')}>
+          <div className='text-center my-3'>
+            <md-text-button id='navButtons' onClick={() => setActiveComponent('Messages')}>
               <md-icon slot='icon'>message</md-icon>
               Messages
             </md-text-button>
           </div>
-          <div className='text-center col-12 my-3'>
+          <div className='text-center my-3'>
             <md-text-button id='navButtons' onClick={() => {dialogRef.current.show()}}>
               <md-icon slot='icon'>settings</md-icon>
               Settings
             </md-text-button>
           </div>
         </div>
-        {/* Depending on the whether the navBar or navDrawer is currently the other component will be 
-        either 'fullscreen' or only partial */}
-        <div className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12'}>{renderComponent()}</div>
       </div>
       :
       <>
@@ -217,7 +245,7 @@ export default function MainFeed() {
               <md-icon slot='inactiveIcon'>home</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'Discover'} disabled onClick={() => setActiveComponent('Discover')}>
+            <md-navigation-tab label={'Discover'} onClick={() => {setActiveComponent('Discover'); setShowModal(false)}}>
               <md-icon slot='activeIcon'>search</md-icon>
               <md-icon slot='inactiveIcon'>search</md-icon>
             </md-navigation-tab>
@@ -227,7 +255,7 @@ export default function MainFeed() {
               <md-icon slot='inactiveIcon'>person</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'Messages'} disabled onClick={() => setActiveComponent('Messages')}>
+            <md-navigation-tab label={'Messages'} onClick={() => setActiveComponent('Messages')}>
               <md-icon slot='activeIcon'>message</md-icon>
               <md-icon slot='inactiveIcon'>message</md-icon>
             </md-navigation-tab>
@@ -240,8 +268,6 @@ export default function MainFeed() {
           </md-navigation-bar>
         </div>
 
-        {/* Renders the other component which needs to be on screen */}
-        {renderComponent()}
       </>
       }
 
@@ -291,6 +317,14 @@ export default function MainFeed() {
           <md-text-button id='navButtons' dialog-action onClick={() => {logOut()}}>Log out</md-text-button>
         </div>
       </md-dialog>
-    </>
+
+      {/* Depending on the whether the navBar or navDrawer is currently shown the other component will be 
+      either 'fullscreen' or only partial */}
+      <div className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>{renderComponent()}</div>
+    </MainFeedContext.Provider>
+    </HomeContext.Provider>
+    </DiscoverContext.Provider>
+    </MyProfileContext.Provider>
+    </OpenProfileContext.Provider>
   )
 }
