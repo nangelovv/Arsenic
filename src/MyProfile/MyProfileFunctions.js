@@ -37,30 +37,6 @@ export async function handleDeletePost(postId) {
 };
 
 
-// This function is called when one of the 3 dots buttons from any post is pressed, it takes as a parameter 
-// the index of the post in the posts variable
-export function ToggleMenu(index) {
-  const {
-    profileData, setProfileData,
-    postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext);
-
-  // The open state of the menu is changed here by accessing its value in the list by the index, 
-  // depending on its current state, it will either be null for closed or any other value, 
-  // in this case true for open
-  setPostMenuVisibility((prevState) => {
-    const updatedState = [...prevState];
-    if (updatedState[index]) {
-      updatedState[index] = null
-    }
-    else {
-      updatedState[index] = true
-    }
-    return updatedState;
-  });
-};
-
-
 // Function to crop the image to a square and return the cropped file
 export async function cropToSquare(imageUrl, setImagePreview) {
   return new Promise((resolve, reject) => {

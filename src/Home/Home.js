@@ -3,6 +3,7 @@ import { APIBody } from '../common/APICalls';
 import { debounce } from 'lodash';
 import { MainFeedContext, HomeContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
+import Following from './Following';
 
 
 export default function Home() {
@@ -146,7 +147,7 @@ export default function Home() {
       {activeSide == 0 ? 
       
         // Following side, to be changed once functionality is added
-        null
+        <Following/>
       :
 
         // Recommended side, render the data received from the back-end for this side

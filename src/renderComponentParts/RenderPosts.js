@@ -3,14 +3,31 @@ import { transformTime } from '../common/postFuncs';
 import { handleDeletePost } from '../MyProfile/MyProfileFunctions';
 import noUserImage from '../common/noUser.jpg';
 import { MyProfileContext } from '../MainFeed';
-import { ToggleMenu } from '../MyProfile/MyProfileFunctions';
 
 
 export default function RenderPosts({ posts = {}, myProfile = false}) {
   
   const {
+    profileData, setProfileData,
     postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext)
+  } = useContext(MyProfileContext);
+
+  function toggleMenu(index) {
+  
+    // The open state of the menu is changed here by accessing its value in the list by the index, 
+    // depending on its current state, it will either be null for closed or any other value, 
+    // in this case true for open
+    setPostMenuVisibility((prevState) => {
+      const updatedState = [...prevState];
+      if (updatedState[index]) {
+        updatedState[index] = null
+      }
+      else {
+        updatedState[index] = true
+      }
+      return updatedState;
+    });
+  };
 
   return (
     posts.map((post, index) => (
@@ -39,7 +56,7 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
                     id={post.date}
                     onClick={() => {
                       document.getElementById(post.id).anchor = document.getElementById(post.date);
-                      ToggleMenu(index)}
+                      toggleMenu(index)}
                     }>
                     <md-icon>more_vert</md-icon>
                   </md-standard-icon-button>

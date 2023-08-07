@@ -7,7 +7,7 @@ export default function RenderProfile({ renderProfile }) {
   const { windowWidth, setWindowWidth } = useContext(MainFeedContext)
 
   const myProfile = renderProfile.user_id == localStorage.getItem('ArsenicUserID');
-
+  
   return (
     // Shows the container in different dimensions depending on how big the screen of the user is
     <div>
