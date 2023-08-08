@@ -2,15 +2,29 @@ import React, { useContext } from 'react';
 import { transformTime } from '../common/postFuncs';
 import { handleDeletePost } from '../MyProfile/MyProfileFunctions';
 import noUserImage from '../common/noUser.jpg';
-import { MyProfileContext } from '../MainFeed';
+import { DiscoverContext, RenderProfileContext, MainFeedContext, MyProfileContext } from '../MainFeed';
+import { getProfile } from '../common/profileFuncs';
 
 
 export default function RenderPosts({ posts = {}, myProfile = false}) {
   
-  const {
+  const { 
     profileData, setProfileData,
     postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext);
+  } = useContext(MyProfileContext)
+
+  const { 
+    windowWidth, setWindowWidth,
+    activeComponent, setActiveComponent,
+    fetchingProfile, setFetchingProfile
+  } = useContext(MainFeedContext)
+
+  const { profile, setProfile } = useContext(RenderProfileContext)
+
+  const {
+    profiles, setProfiles,
+    showModal, setShowModal
+  } = useContext(DiscoverContext)
 
   function toggleMenu(index) {
   
@@ -96,10 +110,17 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
             {/* The container holds the profile image which is displayed as a small rounded circle */}
             <div className='col-2 text-end'>
               <img
-                className='rounded-5'
+                className='rounded-5 clickable'
                 style={{ width: '60px', height: '60px' }}
                 src={post.profile_image ? post.profile_image : noUserImage}
                 alt='Profile'
+                onClick={() => {getProfile({
+                  user_id: post.user_id,
+                  setFetchingProfile: setFetchingProfile,
+                  setProfile: setProfile,
+                  setShowModal: setShowModal,
+                  setShowModal}
+                )}}
               />
             </div>
 
@@ -107,7 +128,15 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
             <div className='row col-8 mx-1 d-flex align-items-center'>
 
               {/* The container holds the username*/}
-              <div className='container h5'>
+              <div
+              className='container h5 clickable'
+              onClick={() => {getProfile({
+                user_id: post.user_id,
+                setFetchingProfile: setFetchingProfile,
+                setProfile: setProfile,
+                setShowModal: setShowModal,
+                setShowModal}
+              )}}>
                 <span>{post.username}</span>
               </div>
 

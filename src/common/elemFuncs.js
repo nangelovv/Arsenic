@@ -3,7 +3,7 @@ import React, { useState} from 'react';
 
 // This function is called from the below variables, first its sets the value of the input field as null 
 // and then returns both the value and the field element itself
-export function useInput({ placeholder = '', id = 'NoID', type = 'text', supportingText = null,func = () => {} }) {
+export function useInput({ placeholder = '', id = 'NoID', type = 'text', supportingText = null, required = null, func = () => {} }) {
 
 const [value, setValue] = useState(null);
 
@@ -14,7 +14,7 @@ const input = (
     value={value}
     label={placeholder} 
     id={id}
-    required
+    required={required}
     supporting-text={supportingText}
     onKeyPress={() => {func()}}
     onInput={e => setValue(e.target.value)}

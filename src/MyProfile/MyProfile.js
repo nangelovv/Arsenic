@@ -1,23 +1,32 @@
 import imageCompression from 'browser-image-compression';
 import React, { useEffect, useState, useContext } from 'react';
-import noUserImage from '../common/noUser.jpg';
-import { APIBody, APINoBody } from '../common/APICalls';
+import { APIBody } from '../common/APICalls';
 import { displayProfileDialogs } from './MyProfileDialogs';
 import { cropToSquare } from './MyProfileFunctions';
 import { useInput } from '../common/elemFuncs';
-import { MainFeedContext, MyProfileContext } from '../MainFeed';
+import { MainFeedContext, MyProfileContext, DiscoverContext, RenderProfileContext} from '../MainFeed';
 import RenderProfile from '../renderComponentParts/RenderProfile';
+import { getProfile } from '../common/profileFuncs';
 
 
 export default function MyProfile() {
-  const {
+  const { profile, setProfile } = useContext(RenderProfileContext)
+
+  const { 
     profileData, setProfileData,
     postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext);
+  } = useContext(MyProfileContext)
 
   const {
-    windowWidth, setWindowWidth
-  } = useContext(MainFeedContext);
+    profiles, setProfiles,
+    showModal, setShowModal
+  } = useContext(DiscoverContext)
+
+  const { 
+    windowWidth, setWindowWidth,
+    activeComponent, setActiveComponent,
+    fetchingProfile, setFetchingProfile
+  } = useContext(MainFeedContext)
 
   // This variable holds the preview url of the profile picture
   const [profileImagePreview, setProfileImagePreview] = useState(null);
@@ -38,44 +47,15 @@ export default function MyProfile() {
   const [newPostCaption, setNewPostCaption] = useInput({
     placeholder: 'Write a caption', 
     id:'postCaption',
-    type: 'textarea'
+    type: 'text'
   });
 
   const [editProfileDescription, setEditProfileDescription] = useInput({
     placeholder: 'Add or change profile description', 
     id:'profileDescription',
-    type: 'textarea'
+    type: 'text'
   });
 
-  // This function is called from the useEffect hook when profileData is first initiated 
-  // if profileData is already present, the function returns null
-  async function getProfile() {
-    if (profileData) {return}
-
-    // If an internal server error (500) occurs (the server is down), the try-catch block catches it
-    try {
-
-      const response = await APINoBody('/users/profile/' + localStorage.getItem('ArsenicUserID'), 'GET')
-  
-      if (response.ok) {
-  
-        const json = await response.json();
-        const data = JSON.parse(json);
-  
-        // Sort the list based on the 'date' attribute
-        if (data.posts.length != 0 ) {
-          data.posts.sort((a, b) => b.date - a.date);
-        }
-  
-        // Set a default profile image if user has no profile picture
-        if (!data.profile_image) {
-          data.profile_image = noUserImage
-        }
-        setProfileData(data);
-      }
-    }
-    catch(err) {return}
-  }
 
   // The useEffect hook is called when the status of profileData is changed
   useEffect(() => {
@@ -95,7 +75,16 @@ export default function MyProfile() {
     }
 
     // If no profile data is present in the profileData variable, the getProfile function is called
-    getProfile();
+    getProfile({
+      user_id: localStorage.getItem('ArsenicUserID'),
+      setFetchingProfile: setFetchingProfile,
+      setProfile: setProfile,
+      setShowModal: setShowModal,
+      showModal: showModal,
+      profileData: profileData,
+      setProfileData: setProfileData,
+      activeComponent: 'MyProfile'}
+    )
   }, [profileData]);
 
   // If neither the user profile has been retrieved and there are no posts, a circular progress element will show

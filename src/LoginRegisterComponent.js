@@ -8,12 +8,12 @@ export default function LoginRegisterComponent() {
   const [showRegister, setShowRegister] = useState(false)
 
   // The below variables call the above function 'useInput' where the each of these text fields is initiated
-  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null});
-  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters'});
-  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null});
-  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null});
-  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters'});
-  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password'});
+  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null, required: true});
+  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters', required: true});
+  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null, required: true});
+  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null, required: true});
+  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true});
+  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true});
 
   // This function makes the call to the server with the necessary login or register data
   async function sendData() {

@@ -30,3 +30,7 @@
 span {
   color: var(--md-sys-color-primary);
 }
+
+.clickable {
+  cursor: pointer;
+}

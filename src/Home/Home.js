@@ -1,17 +1,25 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { APIBody } from '../common/APICalls';
 import { debounce } from 'lodash';
-import { MainFeedContext, HomeContext } from '../MainFeed';
+import { HomeContext, DiscoverContext, RenderProfileContext, MainFeedContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
+import RenderProfile from '../renderComponentParts/RenderProfile';
 import Following from './Following';
 
-
 export default function Home() {
-  
-  const {
+
+  const { 
     windowWidth, setWindowWidth,
-    activeComponent, setActiveComponent
+    activeComponent, setActiveComponent,
+    fetchingProfile, setFetchingProfile
   } = useContext(MainFeedContext)
+
+  const { profile, setProfile } = useContext(RenderProfileContext)
+
+  const {
+    profiles, setProfiles,
+    showModal, setShowModal
+  } = useContext(DiscoverContext)
 
   const {
     noPosts, setNoPosts,
@@ -129,7 +137,11 @@ export default function Home() {
   };
 
   return (
-    <>
+    !showModal ?
+      fetchingProfile ?
+        <div className='text-center my-5 py-5'><md-circular-progress indeterminate four-color></md-circular-progress></div>
+      :
+      <>
 
       {/* Places the 2 buttons in the middle of the page, with equal spacing on both sides */}
       <div className='col-10 my-3 offset-1'>
@@ -167,6 +179,8 @@ export default function Home() {
         </div>
       }
     </>
+    :
+      <RenderProfile renderProfile={profile}/>
   );
 };
 

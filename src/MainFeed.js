@@ -9,7 +9,7 @@ import logo from './common/logo.png'
 // WHOLE MAIN FEED WILL BE REDESIGNED VISUALLY ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
 
 
-export const OpenProfileContext = createContext();
+export const RenderProfileContext = createContext();
 export const MyProfileContext = createContext();
 export const DiscoverContext = createContext();
 export const MainFeedContext = createContext();
@@ -18,6 +18,7 @@ export const HomeContext = createContext();
 
 export default function MainFeed() {
 
+  const [fetchingProfile, setFetchingProfile] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
   const [profile, setProfile] = useState(null)
   const [profiles, setProfiles] = useState([])
@@ -159,9 +160,14 @@ export default function MainFeed() {
     }
   }, [darkMode]);
 
+  function removeProfileOverlay(component) {
+    setActiveComponent(component);
+    setShowModal(false);
+    setFetchingProfile(false);
+  }
 
   return (
-    <OpenProfileContext.Provider value={{profile, setProfile}}>
+    <RenderProfileContext.Provider value={{profile, setProfile}}>
     <MyProfileContext.Provider value={{
       profileData, setProfileData,
       postMenuVisibility, setPostMenuVisibility
@@ -176,7 +182,8 @@ export default function MainFeed() {
     }}>
     <MainFeedContext.Provider value={{
       windowWidth, setWindowWidth,
-      activeComponent, setActiveComponent
+      activeComponent, setActiveComponent,
+      fetchingProfile, setFetchingProfile
     }}>
       {/* In a future version, there would only be a Nav Drawer for the site, once the element in MD3 is functional */}
       {/* Based on the size of the screen the page is being viewed on, either the Nav Drawer shows up or the Nav Bar */}
@@ -200,25 +207,25 @@ export default function MainFeed() {
           except for 'Settings', which opens the settings dialog. The divs keep all of the buttons centered 
           and equally spaced */}
           <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => setActiveComponent('Home')}>
+            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Home')}>
             <md-icon slot='icon'>home</md-icon>
               Home
             </md-text-button>
           </div>
           <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => {setActiveComponent('Discover'); setShowModal(false)}}>
+            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Discover')}>
               <md-icon slot='icon'>search</md-icon>
               Discover
             </md-text-button>
           </div>
           <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => setActiveComponent('MyProfile')}>
+            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('MyProfile')}>
               <md-icon slot='icon'>person</md-icon>
               My Profile
             </md-text-button>
           </div>
           <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => setActiveComponent('Messages')}>
+            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Messages')}>
               <md-icon slot='icon'>message</md-icon>
               Messages
             </md-text-button>
@@ -301,7 +308,7 @@ export default function MainFeed() {
             <span>Private mode</span>
           </div>
           <div className='d-inline'>
-            <md-switch onClick={makePrivate} disabled selected={darkMode ? true : null}></md-switch>
+            <md-switch onClick={makePrivate} disabled></md-switch>
           </div>
         </div>
 
@@ -325,6 +332,6 @@ export default function MainFeed() {
     </HomeContext.Provider>
     </DiscoverContext.Provider>
     </MyProfileContext.Provider>
-    </OpenProfileContext.Provider>
+    </RenderProfileContext.Provider>
   )
 }

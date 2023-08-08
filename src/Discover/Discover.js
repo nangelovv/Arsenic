@@ -3,16 +3,12 @@ import React, { useRef, useContext } from 'react';
 import noUserImage from '../common/noUser.jpg';
 import RenderProfile from '../renderComponentParts/RenderProfile';
 import { debounce } from 'lodash';
-import { OpenProfileContext, DiscoverContext, MyProfileContext, MainFeedContext } from '../MainFeed';
+import { RenderProfileContext, DiscoverContext, MainFeedContext } from '../MainFeed';
+import { getProfile } from '../common/profileFuncs';
 
 
 export default function Discover() {
-  const { profile, setProfile } = useContext(OpenProfileContext)
-
-  const { 
-    profileData, setProfileData,
-    postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext)
+  const { profile, setProfile } = useContext(RenderProfileContext)
 
   const {
     profiles, setProfiles,
@@ -21,43 +17,11 @@ export default function Discover() {
 
   const { 
     windowWidth, setWindowWidth,
-    activeComponent, setActiveComponent
+    activeComponent, setActiveComponent,
+    fetchingProfile, setFetchingProfile
   } = useContext(MainFeedContext)
 
   const searchField = useRef()
-
-  const handleModalToggle = () => {
-    setShowModal(!showModal);
-  };
-
-  // This function is called from the useEffect hook when profileData is first initiated 
-  // if profileData is already present, the function returns null
-  async function getProfile(user_id) {
-
-    // If an internal server error (500) occurs (the server is down), the try-catch block catches it
-    try {
-
-      const response = await APINoBody('/users/profile/' + user_id, 'GET')
-
-      if (response.ok) {
-
-        const json = await response.json();
-        const data = JSON.parse(json);
-
-        // Sort the list based on the 'date' attribute
-        data.posts.sort((a, b) => b.date - a.date);
-
-        // Set a default profile image if user has no profile picture
-        if (!data.profile_image) {
-          data.profile_image = noUserImage
-        }
-        setProfile(data);
-
-        handleModalToggle()
-      }
-    }
-    catch(err) {return}
-  }
 
   // Debounce the glimpseProfile function with 600 milliseconds
   const debouncedGlimpseProfile = useRef(debounce(glimpseProfile, 600)).current;
@@ -77,7 +41,10 @@ export default function Discover() {
 
   return (
     <>
-    {!showModal ?
+    {!showModal ? 
+        fetchingProfile ?
+          <div className='text-center my-5 py-5'><md-circular-progress indeterminate four-color></md-circular-progress></div>
+        :
       <>
         <div className='col-12 text-center my-3'>
           <md-outlined-text-field
@@ -99,7 +66,13 @@ export default function Discover() {
               className='position-relative rounded-4' 
               role='button' 
               key={index}
-              onClick={() => {getProfile(profile.user_id)}}
+              onClick={() => {getProfile({
+                user_id: profile.user_id,
+                setFetchingProfile: setFetchingProfile,
+                setProfile: setProfile,
+                setShowModal: setShowModal,
+                setShowModal}
+              )}}
             >
               <md-ripple></md-ripple>
               <div className='row'>
@@ -126,13 +99,7 @@ export default function Discover() {
         ))}
       </>
       : 
-        profile.user_id == localStorage.getItem('ArsenicUserID') ?
-          (
-            setActiveComponent('MyProfile'),
-            setProfileData(profile)
-          )
-        :
-          <RenderProfile renderProfile={profile}/>
+        <RenderProfile renderProfile={profile}/>
       }
     </>
   )

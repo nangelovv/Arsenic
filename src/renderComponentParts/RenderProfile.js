@@ -1,13 +1,26 @@
 import React, { useContext } from 'react';
-import { MainFeedContext } from '../MainFeed';
+import { MainFeedContext, MyProfileContext } from '../MainFeed';
 import RenderPosts from './RenderPosts';
-
+import noUserImage from '../common/noUser.jpg';
 
 export default function RenderProfile({ renderProfile }) {
-  const { windowWidth, setWindowWidth } = useContext(MainFeedContext)
+
+  const { 
+    profileData, setProfileData
+  } = useContext(MyProfileContext)
+
+  const {
+    windowWidth, setWindowWidth,
+    activeComponent, setActiveComponent
+  } = useContext(MainFeedContext)
 
   const myProfile = renderProfile.user_id == localStorage.getItem('ArsenicUserID');
   
+  if (renderProfile.user_id == localStorage.getItem('ArsenicUserID') && activeComponent != 'MyProfile') {
+    setProfileData(renderProfile)
+    return setActiveComponent('MyProfile');
+  }
+
   return (
     // Shows the container in different dimensions depending on how big the screen of the user is
     <div>
@@ -21,7 +34,7 @@ export default function RenderProfile({ renderProfile }) {
             alt='Profile'
             className='img-fluid col-12' 
             style={windowWidth > 600 ? { width: '150px', height: '150px', borderRadius: '150px' } : { width: '80px', height: '80px', borderRadius: '80px' }} 
-            src={renderProfile.profile_image} 
+            src={renderProfile.profile_image ? renderProfile.profile_image : noUserImage} 
           />
         </div>
 
@@ -37,7 +50,7 @@ export default function RenderProfile({ renderProfile }) {
             Edit Profile
             </md-filled-button>
           :
-            <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
+            <md-filled-button disabled>
                 {true ? "Follow" : "Unfollow"}
             </md-filled-button>
           }
