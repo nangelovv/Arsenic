@@ -4,7 +4,7 @@ import { debounce } from 'lodash';
 import { HomeContext, DiscoverContext, RenderProfileContext, MainFeedContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
 import RenderProfile from '../renderComponentParts/RenderProfile';
-import Following from './Following';
+
 
 export default function Home() {
 
@@ -28,7 +28,7 @@ export default function Home() {
 
   // Gets the last active side from the localStorage and sets it as the current one, if there is nothing 
   // in Storage, its set as '0'/'Recommended'
-  const [activeSide, setActiveSide] = useState(parseInt(localStorage.getItem('activeSide')) || 0)
+  const [activeSide, setActiveSide] = useState(parseInt(localStorage.getItem('activeSide')) || 1)
 
   // Holds the state of whether a request is currently in progress
   const [isFetching, setIsFetching] = useState(false);
@@ -159,7 +159,7 @@ export default function Home() {
       {activeSide == 0 ? 
       
         // Following side, to be changed once functionality is added
-        <Following/>
+        null
       :
 
         // Recommended side, render the data received from the back-end for this side
@@ -180,7 +180,6 @@ export default function Home() {
       }
     </>
     :
-      <RenderProfile renderProfile={profile}/>
+    <RenderProfile renderProfile={profile}/>
   );
 };
-

@@ -13,7 +13,7 @@ export async function getProfile({user_id, setFetchingProfile, setProfile, setSh
   // If an internal server error (500) occurs (the server is down), the try-catch block catches it
   try {
     
-    const response = await APINoBody('/users/profile/' + user_id, 'GET')
+    const response = await APINoBody('/users/' + user_id, 'GET')
 
     if (response.ok) {
 

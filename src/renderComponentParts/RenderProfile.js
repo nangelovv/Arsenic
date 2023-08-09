@@ -50,7 +50,7 @@ export default function RenderProfile({ renderProfile }) {
             Edit Profile
             </md-filled-button>
           :
-            <md-filled-button disabled>
+            <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
                 {true ? "Follow" : "Unfollow"}
             </md-filled-button>
           }
@@ -63,39 +63,47 @@ export default function RenderProfile({ renderProfile }) {
         <span>{renderProfile.profile_description}</span>
       </div>
       <md-divider inset></md-divider>
+      
+      {renderProfile.private == 0 || myProfile ? 
+        // The container holds all posts, if there are none, shows a texting stating so
+        <div className='row'>
+          {renderProfile.posts.length == 0 ? 
+          ( 
+            <>
+              <span className='text-center my-5 py-5'>
+                No posts
+              </span>
 
-      {/* The container holds all posts, if there are none, shows a texting stating so */}
-      <div className='row'>
-        {renderProfile.posts.length == 0 ? 
-        ( 
-          <>
-            <span className='text-center my-5 py-5'>
-              No posts
-            </span>
+              {/* When pressed, the newPost dialog is opened */}
+              {(myProfile) ? 
+                <a href='javascript:void(0);' 
+                  className='text-decoration-none text-center'
+                  onClick={() => {document.getElementById('newPost').show()}}
+                >
+                  Make a new post
+                </a>
+              :
+                null
+              }
+            </>
+          )
 
-            {/* When pressed, the newPost dialog is opened */}
-            {(myProfile) ? 
-              <a href='javascript:void(0);' 
-                className='text-decoration-none text-center'
-                onClick={() => {document.getElementById('newPost').show()}}
-              >
-                Make a new post
-              </a>
-            :
-              null
-            }
-          </>
-        )
+          :
 
-        :
+          (
 
-        (
-
-        // Iterate through all of the the profile posts (if there are any) that have been received 
-        // and render each one in its own container
-          <RenderPosts posts={renderProfile.posts} myProfile={myProfile}/>
-        )}
-      </div>
+          // Iterate through all of the the profile posts (if there are any) that have been received 
+          // and render each one in its own container
+            <RenderPosts posts={renderProfile.posts} myProfile={myProfile}/>
+          )}
+        </div>
+      :
+        <div className='row'>
+          <span className='text-center my-5 py-5'>
+            This account is private
+          </span>
+        </div>
+      }
     </div>
 
   );

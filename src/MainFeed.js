@@ -4,6 +4,8 @@ import MyProfile from './MyProfile/MyProfile';
 import Messages from './Messages/Messages';
 import Discover from './Discover/Discover';
 import logo from './common/logo.png'
+import { getProfile } from './common/profileFuncs';
+import { APINoBody } from './common/APICalls';
 
 
 // WHOLE MAIN FEED WILL BE REDESIGNED VISUALLY ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
@@ -25,10 +27,11 @@ export default function MainFeed() {
   const [noPosts, setNoPosts] = useState(500)
   const [posts, setPosts] = useState([]);
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
-  const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true');
+  const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [profileData, setProfileData] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(null);
 
   // Menu and Menu;s button ref hooks
   var dialogRef = useRef();
@@ -106,7 +109,7 @@ export default function MainFeed() {
 
   // Changes the state of 'newMode' variable to the opposite of what it was and sets the new darkMode state in the storage
   const handleThemeSwitch = () => {
-    const newMode = !darkMode;
+    const newMode = darkMode ? null : true
     setDarkMode(newMode);
 
     if (newMode) {
@@ -127,9 +130,34 @@ export default function MainFeed() {
   }
 
   // Will make the profile private once the functionality is added
-  async function makePrivate() {
-    return null
+  async function changePrivateSetting() {
+    try {
+      const response = await APINoBody('/users/profile_privacy', 'POST')
+      const json = await response.json();
+      setIsPrivate(json.private ? true : null)
+    }
+    catch(err) {return}
   }
+
+  // The useEffect hook is called when the status of profileData is changed
+  useEffect(() => {
+
+    // If no profile data is present in the profileData variable, the getProfile function is called
+    getProfile({
+      user_id: localStorage.getItem('ArsenicUserID'),
+      setFetchingProfile: setFetchingProfile,
+      setProfile: setProfile,
+      setShowModal: setShowModal,
+      showModal: showModal,
+      profileData: profileData,
+      setProfileData: setProfileData,
+      activeComponent: 'MyProfile'}
+    )
+
+    if (profileData) {
+      setIsPrivate(profileData.private ? true : null)
+    }
+  }, [profileData]);
 
   // Adds or removed the light or dark theme files
   useEffect(() => {
@@ -165,6 +193,7 @@ export default function MainFeed() {
     setShowModal(false);
     setFetchingProfile(false);
   }
+
 
   return (
     <RenderProfileContext.Provider value={{profile, setProfile}}>
@@ -294,7 +323,7 @@ export default function MainFeed() {
             <span>Dark theme</span>
           </div>
           <div className='d-inline'>
-            <md-switch onClick={handleThemeSwitch} selected={darkMode ? true : null}></md-switch>
+            <md-switch onClick={handleThemeSwitch} selected={darkMode}></md-switch>
           </div>
         </div>
 
@@ -308,7 +337,7 @@ export default function MainFeed() {
             <span>Private mode</span>
           </div>
           <div className='d-inline'>
-            <md-switch onClick={makePrivate} disabled></md-switch>
+            <md-switch onInput={() => {changePrivateSetting()}} selected={isPrivate}></md-switch>
           </div>
         </div>
 

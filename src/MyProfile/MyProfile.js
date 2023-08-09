@@ -73,18 +73,6 @@ export default function MyProfile() {
       // The profile image is set to the one received from the API call 
       setProfileImagePreview(profileData.profile_image);
     }
-
-    // If no profile data is present in the profileData variable, the getProfile function is called
-    getProfile({
-      user_id: localStorage.getItem('ArsenicUserID'),
-      setFetchingProfile: setFetchingProfile,
-      setProfile: setProfile,
-      setShowModal: setShowModal,
-      showModal: showModal,
-      profileData: profileData,
-      setProfileData: setProfileData,
-      activeComponent: 'MyProfile'}
-    )
   }, [profileData]);
 
   // If neither the user profile has been retrieved and there are no posts, a circular progress element will show

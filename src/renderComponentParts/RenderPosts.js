@@ -159,7 +159,7 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
             (
               <img
                 alt='Post profile'
-                className='img-fluid col-12 rounded-3 border'
+                className='img-fluid col-12 rounded-3'
                 src={post.image}
               />
             ) : 
