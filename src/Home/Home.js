@@ -4,6 +4,7 @@ import { debounce } from 'lodash';
 import { HomeContext, DiscoverContext, RenderProfileContext, MainFeedContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
 import RenderProfile from '../renderComponentParts/RenderProfile';
+import Following from './Following';
 
 
 export default function Home() {
@@ -159,7 +160,7 @@ export default function Home() {
       {activeSide == 0 ? 
       
         // Following side, to be changed once functionality is added
-        null
+        <Following/>
       :
 
         // Recommended side, render the data received from the back-end for this side
@@ -183,3 +184,4 @@ export default function Home() {
     <RenderProfile renderProfile={profile}/>
   );
 };
+

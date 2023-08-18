@@ -66,14 +66,14 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
                   with the 'index' parameter, where it updates the open state of the menu 
                   the ID of the button and menu below are important as this is how they get anchored
                   and thus the state of the menu gets updated*/}
-                  <md-standard-icon-button
+                  <md-icon-button
                     id={post.date}
                     onClick={() => {
                       document.getElementById(post.id).anchor = document.getElementById(post.date);
                       toggleMenu(index)}
                     }>
                     <md-icon>more_vert</md-icon>
-                  </md-standard-icon-button>
+                  </md-icon-button>
 
                   {/* The open state of the menu depends on the 'postMenuVisibility' index 
                   to which this post/menu correspond */}

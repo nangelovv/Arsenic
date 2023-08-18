@@ -7,9 +7,10 @@
   --md-outlined-segmented-button-shape-start-end: 100px;
   --md-outlined-segmented-button-shape-end-end: 100px;
   --md-outlined-segmented-button-shape-end-start: 100px;
-  --md-dialog-container-color: var(--primary-color);
+  --md-dialog-container-color: var(--secondary-color);
   --md-navigation-bar-container-color: var(--primary-color);
   --md-navigation-bar-container-height: 70px;
+  --md-outlined-segmented-button-container-height: 40px;
   #navButtons {
     --md-text-button-container-shape: 6px;
   }

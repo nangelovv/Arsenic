@@ -129,8 +129,8 @@ export default function MyProfile() {
       
     // Checks if the profile description that is currently in the text field is different from the one that
     // the profile already has, if its not, a request to the back-end is not send
-    if (editProfileDescription != profileData.profile_description) {
-        
+    if (document.getElementById('profileDescription').value != profileData.profile_description) {   
+      
       textResponse = await APIBody('/users/profile_description', 'POST', JSON.stringify({ txt: editProfileDescription }))
     }
 

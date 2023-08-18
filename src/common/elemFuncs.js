@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 
 
 // This function is called from the below variables, first its sets the value of the input field as null 
@@ -10,7 +10,7 @@ const [value, setValue] = useState(null);
 const input = (
     <md-outlined-text-field
     type={type}
-    dialog-focus
+    autofocus
     value={value}
     label={placeholder} 
     id={id}

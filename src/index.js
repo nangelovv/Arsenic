@@ -6,7 +6,7 @@ import '@material/web/button/filled-button';
 import '@material/web/button/outlined-button';
 import '@material/web/button/elevated-button';
 import '@material/web/button/text-button';
-import '@material/web/button/tonal-button';
+import '@material/web/button/filled-tonal-button';
 
 import '@material/web/chips/assist-chip';
 import '@material/web/chips/chip-set';
@@ -35,7 +35,7 @@ import '@material/web/icon/icon';
 import '@material/web/iconbutton/filled-icon-button';
 import '@material/web/iconbutton/filled-tonal-icon-button';
 import '@material/web/iconbutton/outlined-icon-button';
-import '@material/web/iconbutton/standard-icon-button';
+import '@material/web/iconbutton/icon-button';
 
 import '@material/web/labs/navigationbar/navigation-bar';
 import '@material/web/labs/navigationdrawer/navigation-drawer';
@@ -46,7 +46,6 @@ import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set';
 
 import '@material/web/menu/menu';
 import '@material/web/menu/menu-item';
-import '@material/web/menu/menu-item-link';
 import '@material/web/menu/sub-menu-item';
 
 import '@material/web/progress/circular-progress'

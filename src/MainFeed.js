@@ -307,51 +307,54 @@ export default function MainFeed() {
       </>
       }
 
+
       {/* Holds all of the settings that are currently and will be added eventually, will always open in 'fulscreen' */}
-      <md-dialog ref={dialogRef} fullscreen fullscreen-breakpoint={'(max-width: 10000px), (max-height: 400px)'}>
-        
-        {/* This button closes the dialog */}
-        <md-standard-icon-button dialog-action>
-          <md-icon>arrow_back</md-icon>
-        </md-standard-icon-button>
-
-        {/* This div holds the dark theme switch and label on the same row, equally spaced. 
-        When the switch is pressed, it changes its states and calls 'handleThemeSwitch' which 
-        changes the theme of the page */}
-        <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
-          <div className='d-inline'>
-            <span>Dark theme</span>
+      {/* When fullscreen is added back, add - fullscreen fullscreen-breakpoint={'(max-width: 10000px), (max-height: 400px)'} */}
+      <md-dialog ref={dialogRef}>
+        <form id='form' method='dialog' slot='content'>
+                  
+          {/* This button closes the dialog */}
+          <md-icon-button form='form' value='close'>
+            <md-icon>arrow_back</md-icon>
+          </md-icon-button>
+          {/* This div holds the dark theme switch and label on the same row, equally spaced. 
+          When the switch is pressed, it changes its states and calls 'handleThemeSwitch' which 
+          changes the theme of the page */}
+          <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
+            <div className='d-inline'>
+              <span>Dark theme</span>
+            </div>
+            <div className='d-inline'>
+              <md-switch onClick={handleThemeSwitch} selected={darkMode}></md-switch>
+            </div>
           </div>
-          <div className='d-inline'>
-            <md-switch onClick={handleThemeSwitch} selected={darkMode}></md-switch>
+
+          <md-divider></md-divider>
+
+          {/* This div holds the private mode switch and label on the same row, equally spaced. 
+          When the switch is pressed, it changes its states and calls 'makePrivate' which 
+          changes the theme of the page */}
+          <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
+            <div className='d-inline'>
+              <span>Private mode</span>
+            </div>
+            <div className='d-inline'>
+              <md-switch onInput={() => {changePrivateSetting()}} selected={isPrivate}></md-switch>
+            </div>
           </div>
-        </div>
 
-        <md-divider></md-divider>
-
-        {/* This div holds the private mode switch and label on the same row, equally spaced. 
-        When the switch is pressed, it changes its states and calls 'makePrivate' which 
-        changes the theme of the page */}
-        <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
-          <div className='d-inline'>
-            <span>Private mode</span>
+          <md-divider></md-divider>
+          <div className='py-3 text-center'>
+            <md-text-button id='navButtons' disabled>Delete profile</md-text-button>
           </div>
-          <div className='d-inline'>
-            <md-switch onInput={() => {changePrivateSetting()}} selected={isPrivate}></md-switch>
+
+          {/* When pressed, the 'logOut' function is called, which deleted the token and date from the 
+          localStorage and thus logging out the user */}
+          <md-divider></md-divider>
+          <div className='py-3 text-center'>
+            <md-text-button id='navButtons' onClick={() => {logOut()}}>Log out</md-text-button>
           </div>
-        </div>
-
-        <md-divider></md-divider>
-        <div className='py-3 text-center'>
-          <md-text-button id='navButtons' disabled>Delete profile</md-text-button>
-        </div>
-
-        {/* When pressed, the 'logOut' function is called, which deleted the token and date from the 
-        localStorage and thus logging out the user */}
-        <md-divider></md-divider>
-        <div className='py-3 text-center'>
-          <md-text-button id='navButtons' dialog-action onClick={() => {logOut()}}>Log out</md-text-button>
-        </div>
+        </form>
       </md-dialog>
 
       {/* Depending on the whether the navBar or navDrawer is currently shown the other component will be 
