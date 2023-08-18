@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/Arsenic/static/js/main.b21a3e1c.js",
+    "main.js": "/Arsenic/static/js/main.79376c75.js",
     "static/media/logo.png": "/Arsenic/static/media/logo.e3bd292d0b0250b5aa43.png",
     "index.html": "/Arsenic/index.html",
-    "main.b21a3e1c.js.map": "/Arsenic/static/js/main.b21a3e1c.js.map"
+    "main.79376c75.js.map": "/Arsenic/static/js/main.79376c75.js.map"
   },
   "entrypoints": [
-    "static/js/main.b21a3e1c.js"
+    "static/js/main.79376c75.js"
   ]
 }
