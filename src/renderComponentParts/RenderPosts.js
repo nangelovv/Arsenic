@@ -45,7 +45,7 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
 
   return (
     posts.map((post, index) => (
-    <div key={post.id}>
+    <div key={post.post_id}>
           
       {/* Shows the container in different dimensions depending on how big the screen of the user is           */}
       <div className={'col-12 py-3'}>
@@ -69,7 +69,7 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
                   <md-icon-button
                     id={post.date}
                     onClick={() => {
-                      document.getElementById(post.id).anchor = document.getElementById(post.date);
+                      document.getElementById(post.post_id).anchor = document.getElementById(post.date);
                       toggleMenu(index)}
                     }>
                     <md-icon>more_vert</md-icon>
@@ -77,7 +77,7 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
 
                   {/* The open state of the menu depends on the 'postMenuVisibility' index 
                   to which this post/menu correspond */}
-                  <md-menu id={post.id} open={postMenuVisibility[index]} menu-corner='START_END'>
+                  <md-menu id={post.post_id} open={postMenuVisibility[index]} menu-corner='START_END'>
 
                     {/* The below options, except for the last one, are currently inactive and have no functionality */}
                     <md-menu-item disabled
@@ -91,10 +91,10 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
                     </md-menu-item>
                   
                     {/* When pressed/the mouseUp event is triggered, the 'handleDeletePost' function is called
-                    with the only required parameter (post.id) where it sends an API call to the back-end 
+                    with the only required parameter (post.post_id) where it sends an API call to the back-end 
                     to delete the post and all of it related information */}
                     <md-menu-item
-                      onMouseUp={() => {handleDeletePost(post.id)}}
+                      onMouseUp={() => {handleDeletePost(post.post_id)}}
                       headline={'Delete post'}>
                     </md-menu-item>
                   </md-menu>
@@ -112,14 +112,14 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
               <img
                 className='rounded-5 clickable'
                 style={{ width: '60px', height: '60px' }}
-                src={post.profile_image ? post.profile_image : noUserImage}
+                src={post.profile_picture ? post.profile_picture : noUserImage}
                 alt='Profile'
                 onClick={() => {getProfile({
                   user_id: post.user_id,
                   setFetchingProfile: setFetchingProfile,
                   setProfile: setProfile,
                   setShowModal: setShowModal,
-                  setShowModal}
+                  showModal: showModal}
                 )}}
               />
             </div>
@@ -149,18 +149,18 @@ export default function RenderPosts({ posts = {}, myProfile = false}) {
 
             {/* Checks is the post has a caption to render, if not, nothing is rendered */}
             <div className='col-10 offset-1 mx-auto my-2 h6 fw-normal'>
-              <span>{post.caption && (post.caption)}</span>
+              <span>{post.text && (post.text)}</span>
             </div>
           </div>
 
           {/* Checks if the post has an image to render, if not, nothing is rendered*/}
           <div className='col-10 mx-auto'>
-            {post.image ? 
+            {post.image_one ? 
             (
               <img
                 alt='Post profile'
                 className='img-fluid col-12 rounded-3'
-                src={post.image}
+                src={post.image_one}
               />
             ) : 
             (

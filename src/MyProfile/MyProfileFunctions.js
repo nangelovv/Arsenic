@@ -1,6 +1,4 @@
 import { APINoBody } from '../common/APICalls';
-import { MyProfileContext } from '../MainFeed';
-import React, { useContext } from 'react';
 
 
 // This function takes as parameters an event from an input element and function which saves the state 

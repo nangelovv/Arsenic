@@ -134,7 +134,7 @@ export default function MainFeed() {
     try {
       const response = await APINoBody('/users/profile_privacy', 'POST')
       const json = await response.json();
-      setIsPrivate(json.private ? true : null)
+      setIsPrivate(json.privacy ? true : null)
     }
     catch(err) {return}
   }
@@ -142,20 +142,23 @@ export default function MainFeed() {
   // The useEffect hook is called when the status of profileData is changed
   useEffect(() => {
 
-    // If no profile data is present in the profileData variable, the getProfile function is called
-    getProfile({
-      user_id: localStorage.getItem('ArsenicUserID'),
-      setFetchingProfile: setFetchingProfile,
-      setProfile: setProfile,
-      setShowModal: setShowModal,
-      showModal: showModal,
-      profileData: profileData,
-      setProfileData: setProfileData,
-      activeComponent: 'MyProfile'}
-    )
-
     if (profileData) {
-      setIsPrivate(profileData.private ? true : null)
+      setIsPrivate(profileData.privacy ? true : null)
+    }
+    
+    // If no profile data is present in the profileData variable, the getProfile function is called
+    else {
+      getProfile({
+        user_id: localStorage.getItem('ArsenicUserID'),
+        setFetchingProfile: setFetchingProfile,
+        setProfile: setProfile,
+        setShowModal: setShowModal,
+        showModal: showModal,
+        profileData: profileData,
+        setProfileData: setProfileData,
+        activeComponent: activeComponent,
+        useEffectCall: true}
+      )
     }
   }, [profileData]);
 
@@ -276,22 +279,22 @@ export default function MainFeed() {
 
             {/* Each of the below navigation-tabs renders the component its connected to, except for 'Settings', 
             which opens the settings dialog. The divs keep all of the buttons centered and equally spaced */}
-            <md-navigation-tab label={'Home'} onClick={() => setActiveComponent('Home')}>
+            <md-navigation-tab label={'Home'} onClick={() => removeProfileOverlay('Home')}>
               <md-icon slot='activeIcon'>home</md-icon>
               <md-icon slot='inactiveIcon'>home</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'Discover'} onClick={() => {setActiveComponent('Discover'); setShowModal(false)}}>
+            <md-navigation-tab label={'Discover'} onClick={() => removeProfileOverlay('Discover')}>
               <md-icon slot='activeIcon'>search</md-icon>
               <md-icon slot='inactiveIcon'>search</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'My Profile'} onClick={() => setActiveComponent('MyProfile')}>
+            <md-navigation-tab label={'My Profile'} onClick={() => removeProfileOverlay('MyProfile')}>
               <md-icon slot='activeIcon'>person</md-icon>
               <md-icon slot='inactiveIcon'>person</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'Messages'} onClick={() => setActiveComponent('Messages')}>
+            <md-navigation-tab label={'Messages'} onClick={() => removeProfileOverlay('Messages')}>
               <md-icon slot='activeIcon'>message</md-icon>
               <md-icon slot='inactiveIcon'>message</md-icon>
             </md-navigation-tab>

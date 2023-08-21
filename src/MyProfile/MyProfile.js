@@ -6,7 +6,6 @@ import { cropToSquare } from './MyProfileFunctions';
 import { useInput } from '../common/elemFuncs';
 import { MainFeedContext, MyProfileContext, DiscoverContext, RenderProfileContext} from '../MainFeed';
 import RenderProfile from '../renderComponentParts/RenderProfile';
-import { getProfile } from '../common/profileFuncs';
 
 
 export default function MyProfile() {

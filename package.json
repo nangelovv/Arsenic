@@ -1,26 +1,24 @@
 {
-  "name": "testing",
-  "version": "0.5.3",
+  "homepage": "http://nangelovv.github.io/Arsenic",
+  "name": "react-code",
+  "version": "0.5.5",
   "private": true,
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^29.5.3",
-    "@types/node": "^20.4.1",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
     "browser-image-compression": "^2.0.2",
-    "dom": "^0.0.3",
-    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -42,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
   }
 }

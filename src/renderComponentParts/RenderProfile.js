@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
-import { MainFeedContext, MyProfileContext } from '../MainFeed';
+import React, { useContext, useReducer } from 'react';
+import { MainFeedContext, MyProfileContext, RenderProfileContext } from '../MainFeed';
 import RenderPosts from './RenderPosts';
 import noUserImage from '../common/noUser.jpg';
+import { followUnfollow } from '../common/profileFuncs';
+
 
 export default function RenderProfile({ renderProfile }) {
+  const { profile, setProfile } = useContext(RenderProfileContext)
+
+  const forceUpdate = useReducer(x => x + 1, 0)[1]
 
   const { 
     profileData, setProfileData
@@ -15,10 +20,11 @@ export default function RenderProfile({ renderProfile }) {
   } = useContext(MainFeedContext)
 
   const myProfile = renderProfile.user_id == localStorage.getItem('ArsenicUserID');
-  
+
   if (renderProfile.user_id == localStorage.getItem('ArsenicUserID') && activeComponent != 'MyProfile') {
-    setProfileData(renderProfile)
-    return setActiveComponent('MyProfile');
+    setProfileData(renderProfile);
+    setActiveComponent('MyProfile');
+    return
   }
 
   return (
@@ -33,8 +39,11 @@ export default function RenderProfile({ renderProfile }) {
           <img
             alt='Profile'
             className='img-fluid col-12' 
-            style={windowWidth > 600 ? { width: '150px', height: '150px', borderRadius: '150px' } : { width: '80px', height: '80px', borderRadius: '80px' }} 
-            src={renderProfile.profile_image ? renderProfile.profile_image : noUserImage} 
+            style={windowWidth > 600 
+              ? { width: '150px', height: '150px', borderRadius: '150px' } 
+              : { width: '80px', height: '80px', borderRadius: '80px' }
+            } 
+            src={renderProfile.profile_picture ? renderProfile.profile_picture : noUserImage} 
           />
         </div>
 
@@ -50,8 +59,13 @@ export default function RenderProfile({ renderProfile }) {
             Edit Profile
             </md-filled-button>
           :
-            <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
-                {true ? "Follow" : "Unfollow"}
+            <md-filled-button onClick={() => {
+              followUnfollow({ profile, setProfile }).then(() => {
+                forceUpdate()
+              }) 
+            }}
+            >
+                {renderProfile.following ? "Unfollow" : "Follow"}
             </md-filled-button>
           }
         </div>
@@ -64,7 +78,7 @@ export default function RenderProfile({ renderProfile }) {
       </div>
       <md-divider inset></md-divider>
       
-      {renderProfile.private == 0 || myProfile ? 
+      {renderProfile.privacy == 0 || myProfile || renderProfile.following ? 
         // The container holds all posts, if there are none, shows a texting stating so
         <div className='row'>
           {renderProfile.posts.length == 0 ? 
