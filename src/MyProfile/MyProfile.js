@@ -23,8 +23,6 @@ export default function MyProfile() {
 
   const { 
     windowWidth, setWindowWidth,
-    activeComponent, setActiveComponent,
-    fetchingProfile, setFetchingProfile
   } = useContext(MainFeedContext)
 
   // This variable holds the preview url of the profile picture

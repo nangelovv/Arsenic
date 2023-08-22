@@ -51,14 +51,14 @@ export async function getProfile({
 
 export async function followUnfollow({ profile, setProfile }) {
 
-  var verb = profile.following ? 'DELETE' : 'POST'
+  var verb = profile.follows ? 'DELETE' : 'POST'
 
   try {
     
     const response = await APINoBody('/follow/' + profile.user_id, verb)
 
     if (response.ok) {
-      profile.following = !profile.following
+      profile.follows = !profile.follows
       setProfile(profile)
       }
       

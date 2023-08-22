@@ -24,8 +24,11 @@ export default function MainFeed() {
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
   const [profile, setProfile] = useState(null)
   const [profiles, setProfiles] = useState([])
-  const [noPosts, setNoPosts] = useState(500)
-  const [posts, setPosts] = useState([]);
+  const [followingPage, setFollowingPage] = useState(1)
+  const [followingPosts, setFollowingPosts] = useState([]);
+  const [followingNoPosts, setFollowingNoPosts] = useState(500)
+  const [recommendedPosts, setRecommendedPosts] = useState([]);
+  const [recommendedNoPosts, setRecommendedNoPosts] = useState(500)
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -209,8 +212,11 @@ export default function MainFeed() {
       showModal, setShowModal
     }}>
     <HomeContext.Provider value={{
-      posts, setPosts,
-      noPosts, setNoPosts
+      followingPage, setFollowingPage,
+      followingPosts, setFollowingPosts,
+      followingNoPosts, setFollowingNoPosts,
+      recommendedPosts, setRecommendedPosts,
+      recommendedNoPosts, setRecommendedNoPosts
     }}>
     <MainFeedContext.Provider value={{
       windowWidth, setWindowWidth,

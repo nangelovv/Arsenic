@@ -46,39 +46,57 @@ export default function RenderProfile({ renderProfile }) {
             src={renderProfile.profile_picture ? renderProfile.profile_picture : noUserImage} 
           />
         </div>
+        
+        <div className='row col-8'>
+          <div className='row'>
+            {/* The containers holds the username, if the username is too long, breaks the text on the next line */}
+            <div className='col-8 d-flex align-items-center mt-3 h3 text-break'>
+              <span>{renderProfile.username}</span>
+            </div>
 
-        {/* The containers holds the username, if the username is too long, breaks the text on the next line */}
-        <div className='col-4 d-flex align-items-center mt-3 h3 text-break'>
-          <span>{renderProfile.username}</span>
-        </div>
-
-        {/* When pressed, the 'editProfile' dialog is opened */}
-        <div className='col-4 d-flex align-items-center text-center mt-3'>
-          {(myProfile) ?
-            <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
-            Edit Profile
-            </md-filled-button>
-          :
-            <md-filled-button onClick={() => {
-              followUnfollow({ profile, setProfile }).then(() => {
-                forceUpdate()
-              }) 
-            }}
+            {/* When pressed, the 'editProfile' dialog is opened */}
+            <div className='col-4 d-flex align-items-center text-center mt-3'>
+              {(myProfile) ?
+                <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
+                Edit Profile
+                </md-filled-button>
+              :
+                <md-filled-button onClick={() => {
+                  followUnfollow({ profile, setProfile }).then(() => {
+                    forceUpdate()
+                  }) 
+                }}
+                >
+                    {renderProfile.follows ? "Unfollow" : "Follow"}
+                </md-filled-button>
+              }
+            </div>
+          </div>
+          <div className='row'>
+            <span
+            className='col-6 d-flex justify-content-center align-items-center text-center mt-3 followTextSize clickable'
             >
-                {renderProfile.following ? "Unfollow" : "Follow"}
-            </md-filled-button>
-          }
+              {renderProfile.following ? renderProfile.following : 0}<br/>
+              Following
+            </span>
+            <span
+            className='col-6 d-flex align-items-center text-center mt-3 followTextSize clickable'
+            >
+            {renderProfile.followers ? renderProfile.followers : 0}<br/>
+              Followers
+            </span>
+          </div>
         </div>
       </div>
 
       {/* The container holds the profile description which it display on a seperate row from the
       username and profile picture */}
-      <div className='text-center my-2'>
-        <span>{renderProfile.profile_description}</span>
+      <div>
+        <span className='d-flex justify-content-center text-center my-2'>{renderProfile.profile_description}</span>
       </div>
       <md-divider inset></md-divider>
       
-      {renderProfile.privacy == 0 || myProfile || renderProfile.following ? 
+      {renderProfile.privacy == 0 || myProfile || renderProfile.follows ? 
         // The container holds all posts, if there are none, shows a texting stating so
         <div className='row'>
           {renderProfile.posts.length == 0 ? 

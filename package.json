@@ -1,7 +1,7 @@
 {
   "homepage": "http://nangelovv.github.io/Arsenic",
   "name": "react-code",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "private": true,
   "dependencies": {
     "@material/web": "^1.0.0-pre.15",

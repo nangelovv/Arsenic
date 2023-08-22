@@ -30,6 +30,7 @@ export async function APIBody(endpoint, methodVerb, form) {
     headers: {
       Authorization: bearer,
       Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
   });
 }
