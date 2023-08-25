@@ -29,12 +29,10 @@ export async function APIBody(endpoint, methodVerb, form) {
     body: form,
     headers: {
       Authorization: bearer,
-      Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      Accept: 'application/json'
     },
   });
 }
-
 
 // This function makes an API call which does not have an Authorizaion token in the request,
 // the necessary parameters are the endpoint of the API, verb of the method and body with data

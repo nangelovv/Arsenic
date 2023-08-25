@@ -67,7 +67,7 @@ export default function RenderProfile({ renderProfile }) {
                   }) 
                 }}
                 >
-                    {renderProfile.follows ? "Unfollow" : "Follow"}
+                  {renderProfile.follows ? "Unfollow" : "Follow"}
                 </md-filled-button>
               }
             </div>
@@ -95,7 +95,7 @@ export default function RenderProfile({ renderProfile }) {
         <span className='d-flex justify-content-center text-center my-2'>{renderProfile.profile_description}</span>
       </div>
       <md-divider inset></md-divider>
-      
+
       {renderProfile.privacy == 0 || myProfile || renderProfile.follows ? 
         // The container holds all posts, if there are none, shows a texting stating so
         <div className='row'>
@@ -112,7 +112,7 @@ export default function RenderProfile({ renderProfile }) {
                   className='text-decoration-none text-center'
                   onClick={() => {document.getElementById('newPost').show()}}
                 >
-                  Make a new post
+                  Create new post
                 </a>
               :
                 null

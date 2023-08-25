@@ -15,20 +15,24 @@ export const RenderProfileContext = createContext();
 export const MyProfileContext = createContext();
 export const DiscoverContext = createContext();
 export const MainFeedContext = createContext();
-export const HomeContext = createContext();
+export const FollowingContext = createContext();
+export const RecommendedContext = createContext();
 
 
 export default function MainFeed() {
 
   const [fetchingProfile, setFetchingProfile] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
-  const [profile, setProfile] = useState(null)
-  const [profiles, setProfiles] = useState([])
-  const [followingPage, setFollowingPage] = useState(1)
+
+  const [profile, setProfile] = useState(null);
+  const [profiles, setProfiles] = useState([]);
+
   const [followingPosts, setFollowingPosts] = useState([]);
-  const [followingNoPosts, setFollowingNoPosts] = useState(500)
+  const [followingNoPosts, setFollowingNoPosts] = useState(500);
+
   const [recommendedPosts, setRecommendedPosts] = useState([]);
-  const [recommendedNoPosts, setRecommendedNoPosts] = useState(500)
+  const [recommendedNoPosts, setRecommendedNoPosts] = useState(500);
+  
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -211,12 +215,13 @@ export default function MainFeed() {
       profiles, setProfiles,
       showModal, setShowModal
     }}>
-    <HomeContext.Provider value={{
-      followingPage, setFollowingPage,
-      followingPosts, setFollowingPosts,
-      followingNoPosts, setFollowingNoPosts,
+    <RecommendedContext.Provider value={{
       recommendedPosts, setRecommendedPosts,
       recommendedNoPosts, setRecommendedNoPosts
+    }}>
+    <FollowingContext.Provider value={{
+      followingPosts, setFollowingPosts,
+      followingNoPosts, setFollowingNoPosts,
     }}>
     <MainFeedContext.Provider value={{
       windowWidth, setWindowWidth,
@@ -370,7 +375,8 @@ export default function MainFeed() {
       either 'fullscreen' or only partial */}
       <div className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>{renderComponent()}</div>
     </MainFeedContext.Provider>
-    </HomeContext.Provider>
+    </FollowingContext.Provider>
+    </RecommendedContext.Provider>
     </DiscoverContext.Provider>
     </MyProfileContext.Provider>
     </RenderProfileContext.Provider>

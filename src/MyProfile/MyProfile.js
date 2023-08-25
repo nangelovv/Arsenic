@@ -4,13 +4,11 @@ import { APIBody } from '../common/APICalls';
 import { displayProfileDialogs } from './MyProfileDialogs';
 import { cropToSquare } from './MyProfileFunctions';
 import { useInput } from '../common/elemFuncs';
-import { MainFeedContext, MyProfileContext, DiscoverContext, RenderProfileContext} from '../MainFeed';
+import { MainFeedContext, MyProfileContext, DiscoverContext } from '../MainFeed';
 import RenderProfile from '../renderComponentParts/RenderProfile';
 
 
 export default function MyProfile() {
-  const { profile, setProfile } = useContext(RenderProfileContext)
-
   const { 
     profileData, setProfileData,
     postMenuVisibility, setPostMenuVisibility
@@ -68,7 +66,7 @@ export default function MyProfile() {
       }
 
       // The profile image is set to the one received from the API call 
-      setProfileImagePreview(profileData.profile_image);
+      setProfileImagePreview(profileData.profile_picture);
     }
   }, [profileData]);
 

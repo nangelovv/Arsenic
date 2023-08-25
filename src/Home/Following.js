@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { APINoBody } from '../common/APICalls';
 import { debounce } from 'lodash';
-import { HomeContext } from '../MainFeed';
+import { FollowingContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
+import { fetchData } from '../common/homeFuncs'
 
 
 export default function Following() {
   const {
-    followingPage, setFollowingPage,
     followingPosts, setFollowingPosts,
     followingNoPosts, setFollowingNoPosts
-  } = useContext(HomeContext)
+  } = useContext(FollowingContext)
 
   // Holds the state of whether a request is currently in progress
   const [isFetching, setIsFetching] = useState(false);
@@ -45,7 +44,15 @@ export default function Following() {
       // 'isFetching' is set to 'true' and the function 'fetchData' is called only if 2 seconds have 
       // passed since the last request, if an error occurs during the call 'isFetching' is set to false
       setIsFetching(true);
-      fetchData()
+      const endpoint = '/posts/following/'
+      fetchData({
+        posts: followingPosts,
+        postsSetter: setFollowingPosts,
+        timer: followingNoPosts,
+        timerSetter: setFollowingNoPosts,
+        endpoint: endpoint,
+        uniques: uniquePosts
+      })
         .then(() => {
           // Wait for 2 seconds before allowing a new request
           setTimeout(() => {
@@ -56,44 +63,6 @@ export default function Following() {
           return setIsFetching(false);
         });
     }
-  };
-
-  // This function makes the call to the API and sorts all the posts that have been received so far
-  async function fetchData() {
-    if (followingNoPosts > 5000) {return}
-    // If an internal server error (500) occur (the server is down), the try-catch block catches it
-    try {
-      const response = await APINoBody('/posts/following/' + followingPage, 'GET')
-  
-      if (response.ok) {
-        const json = await response.json();
-
-        const receivedJson = Object.entries(json)
-        const receivedDictionary = Object.fromEntries(receivedJson);
-        var page = parseInt(receivedDictionary.page) + 1
-        setFollowingPage(page)
-  
-        // If the server returns 0 unique posts, it sets the noPosts variable to '99999999999' 
-        // thus not allowing anymore future requests to be sent until the page is reloaded
-        if (Object.keys(receivedDictionary.posts).length == 0) {
-          setFollowingNoPosts(99999999999)
-          return
-        }
-  
-        // The new unique posts are added to the posts variable by iterating through the response returned from the server
-        uniquePosts = followingPosts
-
-        for (const post of Object.values(receivedDictionary.posts)) {
-          if (!uniquePosts.some((p) => p.post_id === post.post_id)) {
-            uniquePosts.push(post);
-          }
-        }
-
-        setFollowingPosts(uniquePosts)
-        }
-
-    }
-    catch(err) {}
   };
 
   // Checks if the user has reached the bottom of the page, if so 'callFetchData' is called
@@ -112,7 +81,7 @@ export default function Following() {
       {<RenderPosts posts={followingPosts}/>}
 
       {/* Notifies the user if there are no more posts to show in the bottom of the page */}
-      {followingNoPosts == 99999999999 &&
+      {followingNoPosts == 99999 &&
         <div className='text-center my-3 py-3'>
           <span>
             No more posts to show
