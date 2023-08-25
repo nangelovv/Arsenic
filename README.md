@@ -10,7 +10,7 @@ For v1.0.0 the following components will be finished and functional with no majo
 
 3) My Profile - here users will be able to edit their profiles and create and edit posts.
 
-4) Messages - here users will be able to exchange new messages with other users
+4) Messages - here users will be able to exchange messages with other users
 
 5) Settings - users shpuld be able to edit some basic setttings and manage their accounts.
 
@@ -22,12 +22,14 @@ For v1.0.0 the following components will be finished and functional with no majo
 CURRENR STATUS OF COMPONENTS
 
 🟥 - Not started (No working code is currently present in the repository)
+
 🟨 - In progress (Is working but everything could be revamped at any point)
+
 🟩 - Stable (Fully functuonal, no major or breakint changes will be introduced until v1.0.0)
 
 1) Home - 🟨
 2) Discover - 🟩
-3) Home - 🟨
+3) My profile - 🟨
 4) Messages - 🟥
 5) Settings - 🟨
 6) Login / Register - 🟩
