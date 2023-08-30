@@ -62,6 +62,7 @@ export default function RenderProfile({ renderProfile }) {
                 </md-filled-button>
               :
                 <md-filled-button onClick={() => {
+                  renderProfile.followers = renderProfile.follows ? renderProfile.followers - 1 : renderProfile.followers + 1
                   followUnfollow({ profile, setProfile }).then(() => {
                     forceUpdate()
                   }) 
@@ -99,25 +100,11 @@ export default function RenderProfile({ renderProfile }) {
       {renderProfile.privacy == 0 || myProfile || renderProfile.follows ? 
         // The container holds all posts, if there are none, shows a texting stating so
         <div className='row'>
-          {renderProfile.posts.length == 0 ? 
+          {renderProfile.posts.length == 0 ?
           ( 
-            <>
-              <span className='text-center my-5 py-5'>
-                No posts
-              </span>
-
-              {/* When pressed, the newPost dialog is opened */}
-              {(myProfile) ? 
-                <a href='javascript:void(0);' 
-                  className='text-decoration-none text-center'
-                  onClick={() => {document.getElementById('newPost').show()}}
-                >
-                  Create new post
-                </a>
-              :
-                null
-              }
-            </>
+            <span className='text-center my-5 py-5'>
+              No posts
+            </span>
           )
 
           :

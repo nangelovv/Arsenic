@@ -43,16 +43,10 @@ export function displayProfileDialogs(
             onChange={(e) => {handleFileChange(e, imageSetter)}}
           />
 
-          {/* Text field element which is being initiated in the 'setEditProfileDescription' or 
-          'setNewPostCaption' variable so that the value can be accessed successfully */}
-          <div className='text-center my-3'>
-            {captionDescription}
-          </div>
-
           {/* Previews the selected image (if one is selected), the height will always be no more 
           than 40% of the viewport height while maintaining the original width */}
           {inputPreview && (
-            <div className='text-center'>
+            <div className='text-center my-3'>
               <img
                 src={inputPreview}
                 style={{maxHeight: '40vh', maxWidth: '100%'}}
@@ -61,6 +55,12 @@ export function displayProfileDialogs(
               />
             </div>
           )}
+
+          {/* Text field element which is being initiated in the 'setEditProfileDescription' or 
+          'setNewPostCaption' variable so that the value can be accessed successfully */}
+          <div className='text-center my-3'>
+            {captionDescription}
+          </div>
         </form>
       </md-dialog>
     )

@@ -169,10 +169,7 @@ export default function MyProfile() {
       {<RenderProfile renderProfile={profileData}/>}
       {/* If there are no posts yet, the floanting button is not shown, 
       additionally, the position of the FAB button is dependant on what device the page is being viewed */}
-      <div
-        className={profileData.posts.length == 0 ? 'd-none' : windowWidth > 900 ? 'col-md-2 offset-md-9 col-lg-2 offset-lg-10' : 'float-end'}
-        style={windowWidth > 900 ? { bottom: '10px', left: '20px', position: 'sticky' } : { bottom: '100px', right: '20px', position: 'sticky' }}
-      >
+      <div className={windowWidth >900 ? 'newPostButton' : 'newPostButtonMobile'}>
         
         {/* When pressed, the newPost dialog is opened */}
         <md-branded-fab

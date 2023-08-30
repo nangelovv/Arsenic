@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, createContext } from 'react';
+import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
 import Home from './Home/Home';
 import MyProfile from './MyProfile/MyProfile';
 import Messages from './Messages/Messages';
@@ -26,6 +27,7 @@ export default function MainFeed() {
 
   const [profile, setProfile] = useState(null);
   const [profiles, setProfiles] = useState([]);
+  const [comments, setComments] = useState([]);
 
   const [followingPosts, setFollowingPosts] = useState([]);
   const [followingNoPosts, setFollowingNoPosts] = useState(500);
@@ -33,12 +35,22 @@ export default function MainFeed() {
   const [recommendedPosts, setRecommendedPosts] = useState([]);
   const [recommendedNoPosts, setRecommendedNoPosts] = useState(500);
   
+  const [basicColor, setBasicColor] = useState(localStorage.getItem('basicColor') || '#F6F7FB')
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [profileData, setProfileData] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isPrivate, setIsPrivate] = useState(null);
+
+  // Get the theme from a hex color
+  const theme = themeFromSourceColor(argbFromHex(basicColor), [
+    {
+      name: "custom-1",
+      value: argbFromHex("#ff0000"),
+      blend: true,
+    },
+  ]);
 
   // Menu and Menu;s button ref hooks
   var dialogRef = useRef();
@@ -64,10 +76,14 @@ export default function MainFeed() {
   // Get the last active component from localStorage
   useEffect(() => {
     const lastActiveComponent = localStorage.getItem('activeComponent');
+    const lastBasicColor = localStorage.getItem('basicColor');
     if (lastActiveComponent) {
       setActiveComponent(lastActiveComponent);
     }
-    handleActivetab()
+    if (lastBasicColor) {
+      setBasicColor(lastBasicColor);
+    }
+    handleActivetab();
   }, []);
 
   // Set the active component in localStorage whenever it changes
@@ -75,6 +91,13 @@ export default function MainFeed() {
     localStorage.setItem('activeComponent', activeComponent);
     handleActivetab()
   }, [activeComponent]);
+
+  // Set the active component in localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('basicColor', basicColor);
+    applyTheme(theme, {target: document.body, dark: darkMode ? true : false});
+  }, [basicColor]);
+
 
   // Changes the active index of the tabs to the one set in 'activeComponent'
   function handleActivetab() {
@@ -171,6 +194,7 @@ export default function MainFeed() {
 
   // Adds or removed the light or dark theme files
   useEffect(() => {
+    applyTheme(theme, {target: document.body, dark: darkMode ? true : false});
     if (darkMode) {
       // Add dark theme CSS file
       const darkThemeLink = document.createElement('link');
@@ -208,6 +232,7 @@ export default function MainFeed() {
   return (
     <RenderProfileContext.Provider value={{profile, setProfile}}>
     <MyProfileContext.Provider value={{
+      comments, setComments,
       profileData, setProfileData,
       postMenuVisibility, setPostMenuVisibility
       }}>
@@ -282,9 +307,7 @@ export default function MainFeed() {
         </div>
       </div>
       :
-      <>
-
-        {/* Keeps the navBar always at the bottom of the page */}
+        // Keeps the navBar always at the bottom of the page
         <div className='fixed-bottom'>
           <md-navigation-bar ref={navBar} className='navBar'>
 
@@ -317,20 +340,35 @@ export default function MainFeed() {
 
           </md-navigation-bar>
         </div>
-
-      </>
       }
 
 
       {/* Holds all of the settings that are currently and will be added eventually, will always open in 'fulscreen' */}
       {/* When fullscreen is added back, add - fullscreen fullscreen-breakpoint={'(max-width: 10000px), (max-height: 400px)'} */}
       <md-dialog ref={dialogRef}>
-        <form id='form' method='dialog' slot='content'>
+        <form method='dialog' slot='content'>
                   
           {/* This button closes the dialog */}
-          <md-icon-button form='form' value='close'>
-            <md-icon>arrow_back</md-icon>
-          </md-icon-button>
+            <md-icon-button>
+              <span>
+                <md-icon>arrow_back</md-icon>
+              </span>
+            </md-icon-button>
+
+            <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
+            <div className='d-inline'>
+            <span>Base color</span>
+            </div>
+            <div className='d-inline'>
+              <div className="color-picker">
+                <input type="color" id="colorInput" value={basicColor} onChange={() => {setBasicColor(document.getElementById('colorInput').value)}}/>
+                <div className="color-preview" value={basicColor}></div>
+              </div>
+            </div>
+          </div>
+
+          <md-divider></md-divider>
+
           {/* This div holds the dark theme switch and label on the same row, equally spaced. 
           When the switch is pressed, it changes its states and calls 'handleThemeSwitch' which 
           changes the theme of the page */}
@@ -338,8 +376,9 @@ export default function MainFeed() {
             <div className='d-inline'>
               <span>Dark theme</span>
             </div>
-            <div className='d-inline'>
-              <md-switch onClick={handleThemeSwitch} selected={darkMode}></md-switch>
+            <div className='d-inline' >
+            <md-switch onClick={() => {handleThemeSwitch()}} selected={darkMode}></md-switch>
+              
             </div>
           </div>
 

@@ -1,3 +1,6 @@
+import { APINoBody } from "./APICalls";
+
+
 // This function can be called from both MyProfile and Home components when there are posts to render
 //  and their date needs to be transformed into human readable time
 export function transformTime(milliseconds) {

@@ -13,8 +13,8 @@
   --md-outlined-segmented-button-container-height: 40px;
   --md-menu-container-color: var(--secondary-color);
   --md-menu-item-container-color: var(--secondary-color);
-  --md-fab-branded-container-color: var(--md-sys-color-primary);
-  --md-fab-branded-label-text-color: var(--md-sys-color-on-primary);
+  --md-fab-branded-container-color: var(--md-sys-color-secondary-container);
+  --md-fab-branded-label-text-color: black;
   #navButtons {
     --md-text-button-container-shape: 6px;
   }
@@ -42,4 +42,16 @@ span {
 
 .followTextSize {
   font-size: 1.1rem;
+}
+
+.newPostButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.newPostButtonMobile {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
 }

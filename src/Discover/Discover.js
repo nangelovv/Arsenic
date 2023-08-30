@@ -58,14 +58,21 @@ export default function Discover() {
               ref={searchField}
               type={'search'}
               id={'textFieldDiscover'}
-              label={"Search for a username"}
+              label={"Search by username"}
               onInput={() => {debouncedGlimpseProfile()}}
               ></md-outlined-text-field>
+            </div>
+            <div className='col-12 d-flex justify-content-center my-3'>
+              <md-chip-set type="filter" single-select>
+                <md-filter-chip label="Profiles" selected></md-filter-chip>
+                <md-filter-chip label="Hashtags" disabled></md-filter-chip>
+                <md-filter-chip label="Captions" disabled></md-filter-chip>
+              </md-chip-set>
             </div>
             {profiles.length == 0
             ?
               <div className='col-12 text-center my-5 py-5'>
-                <span onClick={() => {document.getElementById('textFieldDiscover').focused = true}}>
+                <span onClick={() => {searchField.current.focused = true}}>
                   Search for a profile
                 </span>
               </div>

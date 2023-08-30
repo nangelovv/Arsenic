@@ -16,25 +16,6 @@ export async function handleFileChange(event, imagePreviewFunction) {
 }
 
 
-// Location and functionality of this function may change and with that the comments going with it
-export async function handleDeletePost(postId) {
-
-  try {
-
-    const response = await APINoBody('/posts/' + postId, 'DELETE')
-  
-    if (response.ok) {
-      window.location.reload(false);
-      return alert('Post deleted successfully.');
-    }
-    else {
-      return alert('Failed to delete post.');
-    }
-  }
-  catch(err) {return}
-};
-
-
 // Function to crop the image to a square and return the cropped file
 export async function cropToSquare(imageUrl, setImagePreview) {
   return new Promise((resolve, reject) => {
