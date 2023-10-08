@@ -1,5 +1,7 @@
 Arsenic
+
 Arsenic is a new social media which will eventually combine all the best practises and features of all of the rest social medias.
+
 
 
 For v1.0.0 the following components will be finished and functional with no major bugs present:
@@ -18,7 +20,6 @@ For v1.0.0 the following components will be finished and functional with no majo
 
 
 
-
 CURRENR STATUS OF COMPONENTS
 
 🟥 - Not started (No working code is currently present in the repository)
@@ -27,9 +28,9 @@ CURRENR STATUS OF COMPONENTS
 
 🟩 - Stable (Fully functuonal, no major or breakint changes will be introduced until v1.0.0)
 
-1) Home - 🟨
+1) Home - 🟩
 2) Discover - 🟩
 3) My profile - 🟨
-4) Messages - 🟥
+4) Messages - 🟨
 5) Settings - 🟨
 6) Login / Register - 🟩
