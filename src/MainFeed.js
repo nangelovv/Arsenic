@@ -1,26 +1,30 @@
 import React, { useState, useEffect, useRef, createContext } from 'react';
-import { argbFromHex, themeFromSourceColor, applyTheme } from "@material/material-color-utilities";
+import { argbFromHex, themeFromSourceColor, applyTheme } from '@material/material-color-utilities';
 import Home from './Home/Home';
 import MyProfile from './MyProfile/MyProfile';
 import Messages from './Messages/Messages';
 import Discover from './Discover/Discover';
 import logo from './common/logo.png'
-import { getProfile } from './common/profileFuncs';
-import { APINoBody } from './common/APICalls';
+import { getProfile, getChats } from './common/profileFuncs';
+import { API_URL } from './config';
+import { token } from './common/APICalls';
+import Settings from './Settings';
+import { displayProfilesDialog } from './MyProfile/MyProfileFollows';
 
 
-// WHOLE MAIN FEED WILL BE REDESIGNED VISUALLY ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
+const afterProtocol = API_URL.split("://")[1];
+function openSocket() {
+  return new WebSocket('ws://' + afterProtocol + '/' + token);
+}
 
 
-export const RenderProfileContext = createContext();
-export const MyProfileContext = createContext();
-export const DiscoverContext = createContext();
-export const MainFeedContext = createContext();
-export const FollowingContext = createContext();
-export const RecommendedContext = createContext();
+// WHOLE MAIN FEED WILL BE REWRITTEN ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
 
+
+export const StateContext = createContext()
 
 export default function MainFeed() {
+  const [socket, setSocket] = useState(openSocket());
 
   const [fetchingProfile, setFetchingProfile] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
@@ -32,79 +36,149 @@ export default function MainFeed() {
   const [followingPosts, setFollowingPosts] = useState([]);
   const [followingNoPosts, setFollowingNoPosts] = useState(500);
 
+  const [messageIDs, setMessageIDs] = useState([]);
+  const [chatsGlimpse, setChatsGlimpse] = useState({});
+  const [allChatsMessages, setAllChatsMessages] = useState({});
+  const [currentChatInfo, setCurrentChatInfo] = useState({});
+
   const [recommendedPosts, setRecommendedPosts] = useState([]);
   const [recommendedNoPosts, setRecommendedNoPosts] = useState(500);
+
+  const [profileData, setProfileData] = useState(null);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [likes, setLikes] = useState([]);
   
   const [basicColor, setBasicColor] = useState(localStorage.getItem('basicColor') || '#F6F7FB')
   const [activeComponent, setActiveComponent] = useState(localStorage.getItem('activeComponent') || 'Home');
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [profileData, setProfileData] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [isPrivate, setIsPrivate] = useState(null);
 
   // Get the theme from a hex color
-  const theme = themeFromSourceColor(argbFromHex(basicColor), [
-    {
-      name: "custom-1",
-      value: argbFromHex("#ff0000"),
-      blend: true,
-    },
-  ]);
+  const theme = themeFromSourceColor(argbFromHex(basicColor), [{
+    name: 'custom-1',
+    value: argbFromHex('#ff0000'),
+    blend: true,
+  }]);
 
-  // Menu and Menu;s button ref hooks
-  var dialogRef = useRef();
   var navBar = useRef()
+
+  function reconnectSocket() {
+    if (socket.readyState == 3) {
+      const newSocket = openSocket();
+      setSocket(newSocket);
+    }
+  }
+
+  socket.onclose = (e) => {setTimeout(reconnectSocket, 2000);};
 
   // Sets the listener for the 'resize' event
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      handleActivetab()
+      handleActiveTab()
     };
 
     window.addEventListener('resize', handleResize);
-    handleActivetab()
+    handleActiveTab()
 
-    // Cleans up the event listener when the component is unmounted
-    return () => {
-      handleActivetab()
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Get the last active component from localStorage
-  useEffect(() => {
     const lastActiveComponent = localStorage.getItem('activeComponent');
     const lastBasicColor = localStorage.getItem('basicColor');
+
     if (lastActiveComponent) {
       setActiveComponent(lastActiveComponent);
     }
     if (lastBasicColor) {
       setBasicColor(lastBasicColor);
     }
-    handleActivetab();
+    if (chatsGlimpse.length == 0 || chatsGlimpse.length == undefined) {
+      getChats({setChatsGlimpse: setChatsGlimpse, chatsGlimpse: chatsGlimpse})
+    }
+
+    return () => {
+      handleActiveTab()
+      window.removeEventListener('resize', handleResize);
+      socket.close()
+    };
   }, []);
 
   // Set the active component in localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('activeComponent', activeComponent);
-    handleActivetab()
+    handleActiveTab()
   }, [activeComponent]);
 
-  // Set the active component in localStorage whenever it changes
+  // Set the basic color in localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('basicColor', basicColor);
     applyTheme(theme, {target: document.body, dark: darkMode ? true : false});
   }, [basicColor]);
 
+  useEffect(() => {
+
+    if (profileData) {
+      setIsPrivate(profileData.privacy ? true : null)
+    }
+    // If no profile data is present in the profileData variable, the getProfile function is called
+    else {
+      getProfile({
+        user_id: localStorage.getItem('ArsenicUserID'),
+        setFetchingProfile: setFetchingProfile,
+        setProfile: setProfile,
+        setShowProfileModal: setShowProfileModal,
+        showProfileModal: showProfileModal,
+        profileData: profileData,
+        setProfileData: setProfileData,
+        activeComponent: activeComponent,
+        useEffectCall: true}
+      )
+    }
+  }, [profileData]);
+
+  // Adds or removed the light or dark theme files
+  useEffect(() => {
+    applyTheme(theme, {target: document.body, dark: darkMode ? true : false});
+    if (darkMode) {
+      // Add dark theme CSS file
+      const darkThemeLink = document.createElement('link');
+      darkThemeLink.rel = 'stylesheet';
+      darkThemeLink.href = './styles/dark_theme.css';
+      document.head.appendChild(darkThemeLink);
+
+      // Remove light theme CSS file if it exists
+      const lightThemeLink = document.querySelector("link[href='./styles/light_theme.css']");
+      if (lightThemeLink) {
+        lightThemeLink.remove();
+      }
+    } else {
+      // Add light theme CSS file
+      const lightThemeLink = document.createElement('link');
+      lightThemeLink.rel = 'stylesheet';
+      lightThemeLink.href = './styles/light_theme.css';
+      document.head.appendChild(lightThemeLink);
+
+      // Remove dark theme CSS file if it exists
+      const darkThemeLink = document.querySelector("link[href='./styles/dark_theme.css']");
+      if (darkThemeLink) {
+        darkThemeLink.remove();
+      }
+    }
+  }, [darkMode]);
+
+  function removeProfileOverlay(component) {
+    setActiveComponent(component);
+    setShowProfileModal(false);
+    setFetchingProfile(false);
+  }
 
   // Changes the active index of the tabs to the one set in 'activeComponent'
-  function handleActivetab() {
+  function handleActiveTab() {
     if (navBar.current) {
       switch (activeComponent) {
         case 'Home':
-          navBar.current.activeIndex = 0
           break
         case 'Discover':
           navBar.current.activeIndex = 1
@@ -137,126 +211,38 @@ export default function MainFeed() {
     }
   };
 
-  // Changes the state of 'newMode' variable to the opposite of what it was and sets the new darkMode state in the storage
-  const handleThemeSwitch = () => {
-    const newMode = darkMode ? null : true
-    setDarkMode(newMode);
-
-    if (newMode) {
-      window.localStorage.setItem('dark_mode', true);
-      window.localStorage.removeItem('light_mode');
-    } else {
-      window.localStorage.setItem('light_mode', true);
-      window.localStorage.removeItem('dark_mode');
-    }
-  };
-  
-  // Deletes the token and date from the localStorage
-  async function logOut() {
-    const date = new Date();
-    date.setTime(date.getTime() - 60000 * 99999999);
-    localStorage.setItem('ArsenicExpiration', date);
-    window.location.reload();
-  }
-
-  // Will make the profile private once the functionality is added
-  async function changePrivateSetting() {
-    try {
-      const response = await APINoBody('/users/profile_privacy', 'POST')
-      const json = await response.json();
-      setIsPrivate(json.privacy ? true : null)
-    }
-    catch(err) {return}
-  }
-
-  // The useEffect hook is called when the status of profileData is changed
-  useEffect(() => {
-
-    if (profileData) {
-      setIsPrivate(profileData.privacy ? true : null)
-    }
-    
-    // If no profile data is present in the profileData variable, the getProfile function is called
-    else {
-      getProfile({
-        user_id: localStorage.getItem('ArsenicUserID'),
-        setFetchingProfile: setFetchingProfile,
-        setProfile: setProfile,
-        setShowModal: setShowModal,
-        showModal: showModal,
-        profileData: profileData,
-        setProfileData: setProfileData,
-        activeComponent: activeComponent,
-        useEffectCall: true}
-      )
-    }
-  }, [profileData]);
-
-  // Adds or removed the light or dark theme files
-  useEffect(() => {
-    applyTheme(theme, {target: document.body, dark: darkMode ? true : false});
-    if (darkMode) {
-      // Add dark theme CSS file
-      const darkThemeLink = document.createElement('link');
-      darkThemeLink.rel = 'stylesheet';
-      darkThemeLink.href = './styles/dark_theme.css';
-      document.head.appendChild(darkThemeLink);
-
-      // Remove light theme CSS file if it exists
-      const lightThemeLink = document.querySelector('link[href="./styles/light_theme.css"]');
-      if (lightThemeLink) {
-        lightThemeLink.remove();
-      }
-    } else {
-      // Add light theme CSS file
-      const lightThemeLink = document.createElement('link');
-      lightThemeLink.rel = 'stylesheet';
-      lightThemeLink.href = './styles/light_theme.css';
-      document.head.appendChild(lightThemeLink);
-
-      // Remove dark theme CSS file if it exists
-      const darkThemeLink = document.querySelector('link[href="./styles/dark_theme.css"]');
-      if (darkThemeLink) {
-        darkThemeLink.remove();
-      }
-    }
-  }, [darkMode]);
-
-  function removeProfileOverlay(component) {
-    setActiveComponent(component);
-    setShowModal(false);
-    setFetchingProfile(false);
-  }
-
-
   return (
-    <RenderProfileContext.Provider value={{profile, setProfile}}>
-    <MyProfileContext.Provider value={{
+    <StateContext.Provider value={{
+      socket, setSocket,
+      profile, setProfile,
+      followers, setFollowers,
+      following, setFollowing,
+      likes, setLikes,
       comments, setComments,
       profileData, setProfileData,
-      postMenuVisibility, setPostMenuVisibility
-      }}>
-    <DiscoverContext.Provider value={{
+      postMenuVisibility, setPostMenuVisibility,
       profiles, setProfiles,
-      showModal, setShowModal
-    }}>
-    <RecommendedContext.Provider value={{
+      showChatModal, setShowChatModal,
+      showProfileModal, setShowProfileModal,
       recommendedPosts, setRecommendedPosts,
-      recommendedNoPosts, setRecommendedNoPosts
-    }}>
-    <FollowingContext.Provider value={{
+      recommendedNoPosts, setRecommendedNoPosts,
       followingPosts, setFollowingPosts,
       followingNoPosts, setFollowingNoPosts,
-    }}>
-    <MainFeedContext.Provider value={{
       windowWidth, setWindowWidth,
+      isPrivate, setIsPrivate,
+      basicColor, setBasicColor,
+      darkMode, setDarkMode,
       activeComponent, setActiveComponent,
-      fetchingProfile, setFetchingProfile
-    }}>
+      fetchingProfile, setFetchingProfile,
+      messageIDs, setMessageIDs,
+      chatsGlimpse, setChatsGlimpse,
+      allChatsMessages, setAllChatsMessages,
+      currentChatInfo, setCurrentChatInfo
+      }}>
       {/* In a future version, there would only be a Nav Drawer for the site, once the element in MD3 is functional */}
       {/* Based on the size of the screen the page is being viewed on, either the Nav Drawer shows up or the Nav Bar */}
       {windowWidth > 900 ?
-      <div className='row'>
+      <nav className='row'>
 
         {/* Makes the NavDrawer only 2 columns of the whole screen, span to the bottom of the page and be always fixed on it */}
         <div className='col-2 fixed-top border-end vh-100'>
@@ -299,16 +285,16 @@ export default function MainFeed() {
             </md-text-button>
           </div>
           <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => {dialogRef.current.show()}}>
+            <md-text-button id='navButtons' onClick={() => {document.getElementById('settingsDialog').show()}}>
               <md-icon slot='icon'>settings</md-icon>
               Settings
             </md-text-button>
           </div>
         </div>
-      </div>
+      </nav>
       :
         // Keeps the navBar always at the bottom of the page
-        <div className='fixed-bottom'>
+        <nav className='fixed-bottom'>
           <md-navigation-bar ref={navBar} className='navBar'>
 
             {/* Each of the below navigation-tabs renders the component its connected to, except for 'Settings', 
@@ -333,91 +319,29 @@ export default function MainFeed() {
               <md-icon slot='inactiveIcon'>message</md-icon>
             </md-navigation-tab>
 
-            <md-navigation-tab label={'Settings'} onClick={() => {dialogRef.current.show()}}>
+            <md-navigation-tab label={'Settings'} onClick={() => {document.getElementById('settingsDialog').show()}}>
               <md-icon slot='activeIcon'>settings</md-icon>
               <md-icon slot='inactiveIcon'>settings</md-icon>
             </md-navigation-tab>
 
           </md-navigation-bar>
-        </div>
+        </nav>
       }
 
-
-      {/* Holds all of the settings that are currently and will be added eventually, will always open in 'fulscreen' */}
-      {/* When fullscreen is added back, add - fullscreen fullscreen-breakpoint={'(max-width: 10000px), (max-height: 400px)'} */}
-      <md-dialog ref={dialogRef}>
-        <form method='dialog' slot='content'>
-                  
-          {/* This button closes the dialog */}
-            <md-icon-button>
-              <span>
-                <md-icon>arrow_back</md-icon>
-              </span>
-            </md-icon-button>
-
-            <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
-            <div className='d-inline'>
-            <span>Base color</span>
-            </div>
-            <div className='d-inline'>
-              <div className="color-picker">
-                <input type="color" id="colorInput" value={basicColor} onChange={() => {setBasicColor(document.getElementById('colorInput').value)}}/>
-                <div className="color-preview" value={basicColor}></div>
-              </div>
-            </div>
-          </div>
-
-          <md-divider></md-divider>
-
-          {/* This div holds the dark theme switch and label on the same row, equally spaced. 
-          When the switch is pressed, it changes its states and calls 'handleThemeSwitch' which 
-          changes the theme of the page */}
-          <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
-            <div className='d-inline'>
-              <span>Dark theme</span>
-            </div>
-            <div className='d-inline' >
-            <md-switch onClick={() => {handleThemeSwitch()}} selected={darkMode}></md-switch>
-              
-            </div>
-          </div>
-
-          <md-divider></md-divider>
-
-          {/* This div holds the private mode switch and label on the same row, equally spaced. 
-          When the switch is pressed, it changes its states and calls 'makePrivate' which 
-          changes the theme of the page */}
-          <div className='d-inline col-12 py-3 d-flex align-items-center justify-content-between'>
-            <div className='d-inline'>
-              <span>Private mode</span>
-            </div>
-            <div className='d-inline'>
-              <md-switch onInput={() => {changePrivateSetting()}} selected={isPrivate}></md-switch>
-            </div>
-          </div>
-
-          <md-divider></md-divider>
-          <div className='py-3 text-center'>
-            <md-text-button id='navButtons' disabled>Delete profile</md-text-button>
-          </div>
-
-          {/* When pressed, the 'logOut' function is called, which deleted the token and date from the 
-          localStorage and thus logging out the user */}
-          <md-divider></md-divider>
-          <div className='py-3 text-center'>
-            <md-text-button id='navButtons' onClick={() => {logOut()}}>Log out</md-text-button>
-          </div>
-        </form>
-      </md-dialog>
+      <Settings/>
 
       {/* Depending on the whether the navBar or navDrawer is currently shown the other component will be 
       either 'fullscreen' or only partial */}
-      <div className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>{renderComponent()}</div>
-    </MainFeedContext.Provider>
-    </FollowingContext.Provider>
-    </RecommendedContext.Provider>
-    </DiscoverContext.Provider>
-    </MyProfileContext.Provider>
-    </RenderProfileContext.Provider>
+      <main className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>{renderComponent()}</main>
+
+      {displayProfilesDialog(
+        'viewLikes',
+        'Likes',
+        likes,
+        'This post has not been seen by anyone yet',
+        'This post has not been seen by anyone yet',
+        false
+      )}
+    </StateContext.Provider>
   )
 }

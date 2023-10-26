@@ -1,24 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { DiscoverContext, RenderProfileContext, MainFeedContext } from '../MainFeed';
+import { StateContext } from '../MainFeed';
 import RenderProfile from '../renderComponentParts/RenderProfile';
 import Following from './Following';
 import Recommended from './Recommended';
 
 
 export default function Home() {
-
   const { 
-    windowWidth, setWindowWidth,
-    activeComponent, setActiveComponent,
-    fetchingProfile, setFetchingProfile
-  } = useContext(MainFeedContext)
-
-  const { profile, setProfile } = useContext(RenderProfileContext)
-
-  const {
-    profiles, setProfiles,
-    showModal, setShowModal
-  } = useContext(DiscoverContext)
+    profile,
+    showProfileModal, 
+    fetchingProfile
+  } = useContext(StateContext)
 
   // Gets the last active side from the localStorage and sets it as the current one, if there is nothing 
   // in Storage, its set as '0'/'Recommended'
@@ -31,7 +23,7 @@ export default function Home() {
 
 
   return (
-    !showModal
+    !showProfileModal
     ?
       fetchingProfile
       ?

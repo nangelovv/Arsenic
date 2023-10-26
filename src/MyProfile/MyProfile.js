@@ -4,24 +4,16 @@ import { APIBody } from '../common/APICalls';
 import { displayProfileDialogs } from './MyProfileDialogs';
 import { cropToSquare } from './MyProfileFunctions';
 import { useInput } from '../common/elemFuncs';
-import { MainFeedContext, MyProfileContext, DiscoverContext } from '../MainFeed';
+import { StateContext } from '../MainFeed';
 import RenderProfile from '../renderComponentParts/RenderProfile';
 
 
 export default function MyProfile() {
-  const { 
-    profileData, setProfileData,
-    postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext)
-
   const {
-    profiles, setProfiles,
-    showModal, setShowModal
-  } = useContext(DiscoverContext)
+    profileData, setPostMenuVisibility,
+    windowWidth
+  } = useContext(StateContext)
 
-  const { 
-    windowWidth, setWindowWidth,
-  } = useContext(MainFeedContext)
 
   // This variable holds the preview url of the profile picture
   const [profileImagePreview, setProfileImagePreview] = useState(null);
@@ -169,7 +161,7 @@ export default function MyProfile() {
       {<RenderProfile renderProfile={profileData}/>}
       {/* If there are no posts yet, the floanting button is not shown, 
       additionally, the position of the FAB button is dependant on what device the page is being viewed */}
-      <div className={windowWidth >900 ? 'newPostButton' : 'newPostButtonMobile'}>
+      <div className={windowWidth > 900 ? 'newPostButton' : 'newPostButtonMobile'}>
         
         {/* When pressed, the newPost dialog is opened */}
         <md-branded-fab

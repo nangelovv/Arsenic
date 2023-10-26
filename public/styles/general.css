@@ -18,6 +18,17 @@
   #navButtons {
     --md-text-button-container-shape: 6px;
   }
+  #messageField {
+    width: 90%;
+    --md-outlined-text-field-caret-color: black;
+    --md-outlined-text-field-container-shape-start-start:	8px;
+    --md-outlined-text-field-container-shape-start-end:	8px;
+    --md-outlined-text-field-container-shape-end-start:	8px;
+    --md-outlined-text-field-container-shape-end-end:	8px;
+  }
+  #startPageFields {
+    width: 250px;
+  }
 }
 
 .bodyStyles {
@@ -32,7 +43,7 @@
   transform: translate(-50%, -50%);
 }
 
-span {
+span, time {
   color: var(--md-sys-color-primary);
 }
 
@@ -55,3 +66,8 @@ span {
   bottom: 80px;
   right: 20px;
 }
+
+.max-width-7-columns {
+  max-width: calc(100% / 1.5);
+}
+

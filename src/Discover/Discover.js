@@ -1,30 +1,17 @@
 import { APINoBody } from '../common/APICalls';
 import React, { useRef, useContext } from 'react';
-import noUserImage from '../common/noUser.jpg';
 import RenderProfile from '../renderComponentParts/RenderProfile';
 import { debounce } from 'lodash';
-import { RenderProfileContext, DiscoverContext, MainFeedContext, MyProfileContext } from '../MainFeed';
-import { getProfile } from '../common/profileFuncs';
+import { StateContext } from '../MainFeed';
+import RenderGlimpse from '../renderComponentParts/RenderGlimpse';
 
 
 export default function Discover() {
-  const { profile, setProfile } = useContext(RenderProfileContext)
-
-  const { 
-    profileData, setProfileData,
-    postMenuVisibility, setPostMenuVisibility
-  } = useContext(MyProfileContext)
-
   const {
+    profile,
     profiles, setProfiles,
-    showModal, setShowModal
-  } = useContext(DiscoverContext)
-
-  const { 
-    windowWidth, setWindowWidth,
-    activeComponent, setActiveComponent,
-    fetchingProfile, setFetchingProfile
-  } = useContext(MainFeedContext)
+    showProfileModal, fetchingProfile
+  } = useContext(StateContext)
 
   const searchField = useRef()
 
@@ -34,7 +21,7 @@ export default function Discover() {
   async function glimpseProfile() {
     if (searchField.current.value) {
       try {
-        const response = await APINoBody('/users/profile_glimpse/' + searchField.current.value, 'GET');
+        const response = await APINoBody('/users/profiles_glimpse/' + searchField.current.value, 'GET');
         const data = await response.json();
         setProfiles(Object.values(data));
       } 
@@ -44,7 +31,7 @@ export default function Discover() {
   
   return (
     <>
-    {!showModal
+    {!showProfileModal
       ? 
         fetchingProfile
         ?
@@ -58,15 +45,15 @@ export default function Discover() {
               ref={searchField}
               type={'search'}
               id={'textFieldDiscover'}
-              label={"Search by username"}
+              label={'Search by username'}
               onInput={() => {debouncedGlimpseProfile()}}
               ></md-outlined-text-field>
             </div>
             <div className='col-12 d-flex justify-content-center my-3'>
-              <md-chip-set type="filter" single-select>
-                <md-filter-chip label="Profiles" selected></md-filter-chip>
-                <md-filter-chip label="Hashtags" disabled></md-filter-chip>
-                <md-filter-chip label="Captions" disabled></md-filter-chip>
+              <md-chip-set type='filter' single-select>
+                <md-filter-chip label='Profiles' selected disabled></md-filter-chip>
+                <md-filter-chip label='Hashtags' disabled></md-filter-chip>
+                <md-filter-chip label='Captions' disabled></md-filter-chip>
               </md-chip-set>
             </div>
             {profiles.length == 0
@@ -77,44 +64,7 @@ export default function Discover() {
                 </span>
               </div>
             :
-              profiles.map((profile, index) => (
-              <div key={index}>
-                <div
-                  className='position-relative rounded-4' 
-                  role='button' 
-                  key={index}
-                  onClick={() => {getProfile({
-                    user_id: profile.user_id,
-                    setFetchingProfile: setFetchingProfile,
-                    setProfile: setProfile,
-                    setShowModal: setShowModal,
-                    showModal: showModal,
-                    setProfileData: setProfileData}
-                  )}}
-                >
-                  <md-ripple></md-ripple>
-                  <div className='row'>
-                    <div className='col-2 text-center mt-3'>
-                      <img
-                        style={{ width: '60px', height: '60px', borderRadius: '150px'  }}
-                        src={profile.profile_picture ? profile.profile_picture : noUserImage}
-                        alt='Glimpse profile'
-                      />
-                    </div>
-
-                    <div className='col-10 d-flex align-items-center -start mt-3 h5 text-break'>
-                      <span>{profile.username}</span>
-                    </div>
-
-                  </div>
-
-                  <div className='offset-2 my-2'>
-                    <span>{profile.description}</span>
-                  </div>
-                <md-divider></md-divider>
-                </div>
-              </div>
-              ))
+            <RenderGlimpse profiles={profiles}/>
             }
           </>
       : 

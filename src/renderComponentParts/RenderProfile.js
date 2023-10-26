@@ -1,23 +1,23 @@
 import React, { useContext, useReducer } from 'react';
-import { MainFeedContext, MyProfileContext, RenderProfileContext } from '../MainFeed';
+import { StateContext } from '../MainFeed';
 import RenderPosts from './RenderPosts';
 import noUserImage from '../common/noUser.jpg';
-import { followUnfollow } from '../common/profileFuncs';
+import { followUnfollow, getFollows } from '../common/profileFuncs';
+import { displayProfilesDialog } from '../MyProfile/MyProfileFollows';
 
 
 export default function RenderProfile({ renderProfile }) {
-  const { profile, setProfile } = useContext(RenderProfileContext)
-
-  const forceUpdate = useReducer(x => x + 1, 0)[1]
 
   const { 
-    profileData, setProfileData
-  } = useContext(MyProfileContext)
-
-  const {
-    windowWidth, setWindowWidth,
+    profile, setProfile,
+    followers, setFollowers,
+    following, setFollowing,
+    setProfileData,
+    windowWidth,
     activeComponent, setActiveComponent
-  } = useContext(MainFeedContext)
+  } = useContext(StateContext)
+
+  const forceUpdate = useReducer(x => x + 1, 0)[1]
 
   const myProfile = renderProfile.user_id == localStorage.getItem('ArsenicUserID');
 
@@ -29,7 +29,7 @@ export default function RenderProfile({ renderProfile }) {
 
   return (
     // Shows the container in different dimensions depending on how big the screen of the user is
-    <div>
+    <>
 
       {/* Holds the profile picture and username so that they are displayed on the same row */}
       <div className='row'>
@@ -62,29 +62,46 @@ export default function RenderProfile({ renderProfile }) {
                 </md-filled-button>
               :
                 <md-filled-button onClick={() => {
-                  renderProfile.followers = renderProfile.follows ? renderProfile.followers - 1 : renderProfile.followers + 1
+                  renderProfile.followers = renderProfile.is_following ? renderProfile.followers - 1 : renderProfile.followers + 1
                   followUnfollow({ profile, setProfile }).then(() => {
                     forceUpdate()
                   }) 
                 }}
+                style={renderProfile.is_following ? {'--md-filled-button-container-color': '#A9A9A9'} : null}
                 >
-                  {renderProfile.follows ? "Unfollow" : "Follow"}
+                  {renderProfile.is_following ? 'Unfollow' : 'Follow'}
                 </md-filled-button>
               }
             </div>
           </div>
           <div className='row'>
             <span
-            className='col-6 d-flex justify-content-center align-items-center text-center mt-3 followTextSize clickable'
+              className='col-6 d-flex justify-content-center align-items-center text-center mt-3 followTextSize'
             >
+              <span
+                className='clickable'
+                onClick={() => {
+                  getFollows({following, setFollowing, followers, setFollowers, profile_id: renderProfile.user_id});
+                  document.getElementById('viewFollowing').show();
+                }}
+              >
               {renderProfile.following ? renderProfile.following : 0}<br/>
-              Following
+                Following
+              </span>
             </span>
             <span
-            className='col-6 d-flex align-items-center text-center mt-3 followTextSize clickable'
+              className='col-6 d-flex align-items-center text-center mt-3 followTextSize'
             >
-            {renderProfile.followers ? renderProfile.followers : 0}<br/>
-              Followers
+              <span
+                className='clickable'
+                onClick={() => {
+                  getFollows({following, setFollowing, followers, setFollowers, profile_id: renderProfile.user_id});
+                  document.getElementById('viewFollowers').show();
+                }}
+              >
+                {renderProfile.followers ? renderProfile.followers : 0}<br/>
+                Followers
+              </span>
             </span>
           </div>
         </div>
@@ -97,13 +114,13 @@ export default function RenderProfile({ renderProfile }) {
       </div>
       <md-divider inset></md-divider>
 
-      {renderProfile.privacy == 0 || myProfile || renderProfile.follows ? 
+      {renderProfile.privacy == 0 || myProfile || renderProfile.is_following ? 
         // The container holds all posts, if there are none, shows a texting stating so
         <div className='row'>
           {renderProfile.posts.length == 0 ?
           ( 
             <span className='text-center my-5 py-5'>
-              No posts
+              Posts will show up here
             </span>
           )
 
@@ -123,7 +140,24 @@ export default function RenderProfile({ renderProfile }) {
           </span>
         </div>
       }
-    </div>
 
+      {displayProfilesDialog(
+        'viewFollowing',
+        'Following',
+        following,
+        'You are not following anyone yet',
+        'This profile is not following anyone yet',
+        myProfile ? true : false
+      )}
+
+      {displayProfilesDialog(
+        'viewFollowers',
+        'Followers',
+        followers,
+        'You have no followers yet',
+        'This profile does not have any followers yet',
+        myProfile ? true : false
+      )}
+    </>
   );
 }

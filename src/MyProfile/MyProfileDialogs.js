@@ -14,7 +14,8 @@ export function displayProfileDialogs(
   {
     return (
       <md-dialog id={id}>
-        <span slot='headline'>{header}</span>
+
+        <span className='d-flex justify-content-center' slot='headline'>{header}</span>
         <form id='form' method='dialog' slot='content'>
 
           {/* Holds the below 2 button at both end of the dialog and on one row */}

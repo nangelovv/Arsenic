@@ -2,24 +2,40 @@ import { useInput } from './common/elemFuncs';
 import { APINoAuth } from './common/APICalls';
 import React, { useState, useEffect } from 'react';
 import logo from './common/logo.png'
+import { has } from 'lodash';
 
 
 export default function LoginRegisterComponent() {
   const [showRegister, setShowRegister] = useState(false)
 
   // The below variables call the above function 'useInput' where the each of these text fields is initiated
-  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null, required: true});
-  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters', required: true});
-  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null, required: true});
-  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null, required: true});
-  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true});
-  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true});
+  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null, required: true, minlength: 8, maxlength: 50, id: 'startPageFields'});
+  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters', required: true, minlength: 4, maxlength: 30, id: 'startPageFields'});
+  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
+  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
+  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true, minlength: 8, maxlength: 30, id: 'startPageFields'});
+  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true, minlength: 8, maxlength: 30, id: 'startPageFields'});
+
+  async function sha256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+  
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+  
+    // Convert the hash bytes to a hexadecimal string
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
+  }
 
   // This function makes the call to the server with the necessary login or register data
   async function sendData() {
 
     // If an internal server error (500) occur (the server is down), the try-catch block catches it
     try{
+      
+      const hashedPassword = await sha256(password);
       // Checks if the extra register fields were shown, if not a login API request is send instead of register
       if (showRegister){
 
@@ -32,7 +48,7 @@ export default function LoginRegisterComponent() {
         // Prepare the data that will be sent to the server
         const body = JSON.stringify({
           email: email,
-          password: password,
+          password: hashedPassword,
           username: username,
           first_name: firstName,
           last_name: lastName,
@@ -56,7 +72,7 @@ export default function LoginRegisterComponent() {
         // Prepare the data that will be sent to the server
         const body = JSON.stringify({
           email_username: username,
-          password: password
+          password: hashedPassword
         })
       
         const response = await APINoAuth('/users/', 'POST', body)
@@ -103,9 +119,7 @@ export default function LoginRegisterComponent() {
   }, [email, username, firstName, lastName, password, password1]);
 
   return (
-
-    // Keeps the container, text and logo centered and rounded
-    <div className='text-center col-sm-4 container py-3 rounded-3 borders-color centerLoginRegister'>
+    <div className='text-center col-lg-4 container py-3 rounded-3 borders-color centerLoginRegister'>
       <img
         style={{ width: '60px', height: '60px' }}
         src={logo}
@@ -139,16 +153,15 @@ export default function LoginRegisterComponent() {
 
       <div className='d-flex align-items-center justify-content-evenly'>
 
-      <md-text-button onClick={() => {setShowRegister(!showRegister)}}>
-        {showRegister ? 'Already have an account?' : "Don't have an account?"}
-      </md-text-button>
+        <md-text-button onClick={() => {setShowRegister(!showRegister)}}>
+          {showRegister ? 'Already have an account?' : "Don't have an account?"}
+        </md-text-button>
 
-      {/* When the button is pressed a call to the server is made if the data is correct */}
-      <md-filled-button onClick={() => {sendData()}}>
-        {showRegister ? 'Submit' : 'Enter'}
-      </md-filled-button>
-</div>
-
+        {/* When the button is pressed a call to the server is made if the data is correct */}
+        <md-filled-button onClick={() => {sendData()}}>
+          {showRegister ? 'Submit' : 'Enter'}
+        </md-filled-button>
+      </div>
     </div>
   );
 }

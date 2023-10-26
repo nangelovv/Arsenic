@@ -2,7 +2,7 @@ import TestComponent from './LoginRegisterComponent';
 import MainFeed from './MainFeed';
 
 
-function App() {
+export default function App() {
 
   // Access the token and date value from the localStorage
   const token = localStorage.getItem('ArsenicToken');
@@ -37,6 +37,3 @@ function App() {
     )
   }
 }
-
-
-export default App;

@@ -3,7 +3,7 @@ import { API_URL } from '../config';
 
 // The token value from the localStorage is taken and being concatenated with 'Bearer' which 
 // is then sent as an Authorization header in the API call
-let token = localStorage.getItem('ArsenicToken');
+export let token = localStorage.getItem('ArsenicToken');
 
 var bearer = 'Bearer ' + token;
 

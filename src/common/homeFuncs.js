@@ -1,4 +1,4 @@
-import { APINoBody } from "./APICalls"
+import { APINoBody } from './APICalls'
 
 
 // This function makes the call to the API and sorts all the posts that have been received so far

@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { debounce } from 'lodash';
-import { RecommendedContext } from '../MainFeed';
+import { StateContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
 import { fetchData } from '../common/homeFuncs'
 
 
 export default function Recommended() {
-
-  const {
+  const { 
     recommendedPosts, setRecommendedPosts,
     recommendedNoPosts, setRecommendedNoPosts
-  } = useContext(RecommendedContext)
+  } = useContext(StateContext)
 
   // Holds the state of whether a request is currently in progress
   const [isFetching, setIsFetching] = useState(false);

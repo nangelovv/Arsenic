@@ -46,7 +46,6 @@ import '@material/web/labs/segmentedbuttonset/outlined-segmented-button-set';
 
 import '@material/web/menu/menu';
 import '@material/web/menu/menu-item';
-import '@material/web/menu/sub-menu-item';
 
 import '@material/web/progress/circular-progress'
 import '@material/web/progress/linear-progress'
@@ -61,7 +60,8 @@ import '@material/web/select/select-option';
 
 import '@material/web/switch/switch';
 
-import '@material/web/tabs/tab';
+import '@material/web/tabs/primary-tab';
+import '@material/web/tabs/secondary-tab';
 import '@material/web/tabs/tabs';
 
 import '@material/web/textfield/filled-text-field';
@@ -70,5 +70,6 @@ import '@material/web/textfield/outlined-text-field';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+  // eslint-disable-next-line
   <App/>
 );

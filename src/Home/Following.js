@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { debounce } from 'lodash';
-import { FollowingContext } from '../MainFeed';
+import { StateContext } from '../MainFeed';
 import RenderPosts from '../renderComponentParts/RenderPosts';
 import { fetchData } from '../common/homeFuncs'
 
 
 export default function Following() {
+
   const {
     followingPosts, setFollowingPosts,
     followingNoPosts, setFollowingNoPosts
-  } = useContext(FollowingContext)
+  } = useContext(StateContext)
 
   // Holds the state of whether a request is currently in progress
   const [isFetching, setIsFetching] = useState(false);
@@ -75,7 +76,7 @@ export default function Following() {
 
   return (
     // Recommended side, render the data received from the back-end for this side
-    <div>
+    <>
 
       {/* Iterate through all of the the posts that have been received and render each one in its own container */}
       {<RenderPosts posts={followingPosts}/>}
@@ -84,11 +85,11 @@ export default function Following() {
       {followingNoPosts == 99999 &&
         <div className='text-center my-3 py-3'>
           <span>
-            No more posts to show
+            {followingPosts.length != 0 ? 'No more posts to show' : 'No posts to show'}
           </span>
         </div>
       }
-    </div>
+    </>
   );
 };
 

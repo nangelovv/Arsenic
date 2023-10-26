@@ -1,6 +1,3 @@
-import { APINoBody } from '../common/APICalls';
-
-
 // This function takes as parameters an event from an input element and function which saves the state 
 // of the image after it has been converted to a URL which can be displayed
 export async function handleFileChange(event, imagePreviewFunction) {
@@ -21,8 +18,8 @@ export async function cropToSquare(imageUrl, setImagePreview) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
 
       // Determine the size of the square (choose the smaller dimension)
       const size = Math.min(img.width, img.height);
@@ -41,8 +38,8 @@ export async function cropToSquare(imageUrl, setImagePreview) {
       // Convert the canvas image to a Blob
       canvas.toBlob((blob) => {
         // Create a new File object from the Blob
-        const croppedFile = new File([blob], "profile_image.jpg", {
-          type: "image/jpeg",
+        const croppedFile = new File([blob], 'profile_image.jpg', {
+          type: 'image/jpeg',
           lastModified: Date.now(),
         });
 
@@ -50,10 +47,10 @@ export async function cropToSquare(imageUrl, setImagePreview) {
 
         // Resolve the Promise with the cropped file
         resolve(croppedFile);
-      }, "image/jpeg");
+      }, 'image/jpeg');
     };
     img.onerror = () => {
-      reject(new Error("Failed to load the image."));
+      reject(new Error('Failed to load the image.'));
     };
     img.src = imageUrl;
   });
