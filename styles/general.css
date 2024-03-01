@@ -26,7 +26,7 @@
     --md-outlined-text-field-container-shape-end-start:	8px;
     --md-outlined-text-field-container-shape-end-end:	8px;
   }
-  #startPageFields {
+  #startPageFields, #passwordTextBox {
     width: 250px;
   }
 }
