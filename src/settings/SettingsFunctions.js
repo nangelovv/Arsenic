@@ -1,19 +1,15 @@
-import { APINoBody } from "./common/APICalls";
+import { APINoBody } from "../common/APICalls";
 
 
-// Changes the state of 'newMode' variable to the opposite of what it was and sets the new darkMode state in the storage
-export async function handleThemeSwitch({darkMode, setDarkMode}) {
-  const newMode = darkMode ? null : true
+// Toggles the 'darkMode' state and updates the corresponding setting in localStorage
+export async function handleThemeSwitch({ darkMode, setDarkMode }) {
+  const newMode = !darkMode;
   setDarkMode(newMode);
 
-  if (newMode) {
-    window.localStorage.setItem('dark_mode', true);
-    window.localStorage.removeItem('light_mode');
-  } else {
-    window.localStorage.setItem('light_mode', true);
-    window.localStorage.removeItem('dark_mode');
-  }
-};
+  const modeKey = newMode ? 'dark_mode' : 'light_mode';
+  window.localStorage.setItem(modeKey, true);
+  window.localStorage.removeItem(newMode ? 'light_mode' : 'dark_mode');
+}
 
 // Deletes the token and date from the localStorage
 export async function logOut() {

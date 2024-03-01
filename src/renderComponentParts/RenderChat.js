@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react'
 import noUserImage from '../common/noUser.jpg';
-import { StateContext } from '../MainFeed';
+import { StateContext } from '../mainNav';
 import RenderMessages from './RenderMessages';
 import { token } from '../common/APICalls';
+import { useInput } from '../common/elemFuncs';
 import { getProfile } from '../common/profileFuncs';
 const { v4: uuidv4 } = require('uuid');
 
@@ -22,6 +23,8 @@ export default function RenderChat() {
     allChatsMessages, setAllChatsMessages,
     currentChatInfo
   } = useContext(StateContext)
+
+  const [messageBox, messageBoxInput] = useInput({ type: 'text', placeholder: 'Type a new message...', id: 'messageField', hideIcon: false, activeIcon: 'send', onClickFunc: sendMessage});
 
   function sendMessage(event) {
     // if (socket.readyState != 1) {
@@ -171,15 +174,7 @@ export default function RenderChat() {
         }
         style={{background: 'var(--primary-color)'}}
       >
-        <md-outlined-text-field
-          type='text'
-          label='Type a new message...'
-          id='messageField'
-        >
-          <md-icon-button slot='trailing-icon' onClick={(e) => {sendMessage(e)}}>
-            <md-icon>send</md-icon>
-          </md-icon-button>
-        </md-outlined-text-field>
+        {messageBoxInput}
       </div>
     </>
   )

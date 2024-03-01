@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { debounce } from 'lodash';
-import { StateContext } from '../MainFeed';
-import RenderPosts from '../renderComponentParts/RenderPosts';
-import { fetchData } from '../common/homeFuncs'
+import { StateContext } from '../../mainNav';
+import RenderPosts from '../../posts/RenderPosts';
+import { fetchData } from '../../common/homeFuncs'
 
 
 export default function Following() {

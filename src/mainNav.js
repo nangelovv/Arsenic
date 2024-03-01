@@ -1,21 +1,15 @@
 import React, { useState, useEffect, useRef, createContext } from 'react';
 import { argbFromHex, themeFromSourceColor, applyTheme } from '@material/material-color-utilities';
-import Home from './Home/Home';
-import MyProfile from './MyProfile/MyProfile';
-import Messages from './Messages/Messages';
-import Discover from './Discover/Discover';
+import Home from './pages/Home/Home';
+import MyProfile from './pages/MyProfile/MyProfile';
+import Messages from './pages/Messages/messages';
+import Discover from './pages/Discover/Discover';
 import logo from './common/logo.png'
 import { getProfile, getChats } from './common/profileFuncs';
-import { API_URL } from './config';
-import { token } from './common/APICalls';
-import Settings from './Settings';
-import { displayProfilesDialog } from './MyProfile/MyProfileFollows';
-
-
-const afterProtocol = API_URL.split("://")[1];
-function openSocket() {
-  return new WebSocket('ws://' + afterProtocol + '/' + token);
-}
+import Settings from './settings/Settings';
+import ProfileFollows from './pages/MyProfile/MyProfileFollows';
+import NavigationButton from './navigationButton';
+import { openSocket } from './pages/Messages/socket';
 
 
 // WHOLE MAIN FEED WILL BE REWRITTEN ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
@@ -101,7 +95,7 @@ export default function MainFeed() {
     return () => {
       handleActiveTab()
       window.removeEventListener('resize', handleResize);
-      socket.close()
+      // socket.close()
     };
   }, []);
 
@@ -211,6 +205,15 @@ export default function MainFeed() {
     }
   };
 
+  // Navigation Buttons Configuration
+const navigationButtons = [
+  { label: 'Home', icon: 'home', onClick: () => removeProfileOverlay('Home') },
+  { label: 'Discover', icon: 'search', onClick: () => removeProfileOverlay('Discover') },
+  { label: 'My Profile', icon: 'person', onClick: () => removeProfileOverlay('MyProfile') },
+  { label: 'Messages', icon: 'message', onClick: () => removeProfileOverlay('Messages') },
+  { label: 'Settings', icon: 'settings', onClick: () => document.getElementById('settingsDialog').show() },
+];
+
   return (
     <StateContext.Provider value={{
       socket, setSocket,
@@ -239,109 +242,52 @@ export default function MainFeed() {
       allChatsMessages, setAllChatsMessages,
       currentChatInfo, setCurrentChatInfo
       }}>
-      {/* In a future version, there would only be a Nav Drawer for the site, once the element in MD3 is functional */}
       {/* Based on the size of the screen the page is being viewed on, either the Nav Drawer shows up or the Nav Bar */}
-      {windowWidth > 900 ?
-      <nav className='row'>
-
-        {/* Makes the NavDrawer only 2 columns of the whole screen, span to the bottom of the page and be always fixed on it */}
+      <nav className={windowWidth > 900 ? 'row' : 'fixed-bottom'}>
+      {windowWidth > 900 ? (
         <div className='col-2 fixed-top border-end vh-100'>
-
-          {/* Holds the name and logo of the site centered, but equally spaced */}
+          {/* Logo and site name */}
           <div className='my-3 h3 mx-auto col-12 d-flex align-items-center justify-content-evenly'>
-            <img
-              alt='Logo'
-              style={{ width: '50px', height: '50px' }}
-              src={logo}
-            />
+            <img alt='Logo' style={{ width: '50px', height: '50px' }} src={logo} />
             <span>Arsenic</span>
           </div>
 
-          {/* Each of the below divs hold a button for a component, which when pressed renders that component, 
-          except for 'Settings', which opens the settings dialog. The divs keep all of the buttons centered 
-          and equally spaced */}
-          <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Home')}>
-            <md-icon slot='icon'>home</md-icon>
-              Home
-            </md-text-button>
-          </div>
-          <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Discover')}>
-              <md-icon slot='icon'>search</md-icon>
-              Discover
-            </md-text-button>
-          </div>
-          <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('MyProfile')}>
-              <md-icon slot='icon'>person</md-icon>
-              My Profile
-            </md-text-button>
-          </div>
-          <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => removeProfileOverlay('Messages')}>
-              <md-icon slot='icon'>message</md-icon>
-              Messages
-            </md-text-button>
-          </div>
-          <div className='text-center my-3'>
-            <md-text-button id='navButtons' onClick={() => {document.getElementById('settingsDialog').show()}}>
-              <md-icon slot='icon'>settings</md-icon>
-              Settings
-            </md-text-button>
-          </div>
+          {/* Navigation buttons */}
+          {navigationButtons.map((button, index) => (
+            <NavigationButton key={index} {...button} />
+          ))}
         </div>
-      </nav>
-      :
-        // Keeps the navBar always at the bottom of the page
-        <nav className='fixed-bottom'>
-          <md-navigation-bar ref={navBar} className='navBar'>
-
-            {/* Each of the below navigation-tabs renders the component its connected to, except for 'Settings', 
-            which opens the settings dialog. The divs keep all of the buttons centered and equally spaced */}
-            <md-navigation-tab label={'Home'} onClick={() => removeProfileOverlay('Home')}>
-              <md-icon slot='activeIcon'>home</md-icon>
-              <md-icon slot='inactiveIcon'>home</md-icon>
+      ) : (
+        <md-navigation-bar ref={navBar} className='navBar' >
+          {/* Navigation tabs */}
+          {navigationButtons.map((button, index) => (
+            <md-navigation-tab key={index} label={button.label} onClick={button.onClick}>
+              <md-icon slot='active-icon'>{button.icon}</md-icon>
+              <md-icon slot="inactive-icon">{button.icon}</md-icon>
             </md-navigation-tab>
-
-            <md-navigation-tab label={'Discover'} onClick={() => removeProfileOverlay('Discover')}>
-              <md-icon slot='activeIcon'>search</md-icon>
-              <md-icon slot='inactiveIcon'>search</md-icon>
-            </md-navigation-tab>
-
-            <md-navigation-tab label={'My Profile'} onClick={() => removeProfileOverlay('MyProfile')}>
-              <md-icon slot='activeIcon'>person</md-icon>
-              <md-icon slot='inactiveIcon'>person</md-icon>
-            </md-navigation-tab>
-
-            <md-navigation-tab label={'Messages'} onClick={() => removeProfileOverlay('Messages')}>
-              <md-icon slot='activeIcon'>message</md-icon>
-              <md-icon slot='inactiveIcon'>message</md-icon>
-            </md-navigation-tab>
-
-            <md-navigation-tab label={'Settings'} onClick={() => {document.getElementById('settingsDialog').show()}}>
-              <md-icon slot='activeIcon'>settings</md-icon>
-              <md-icon slot='inactiveIcon'>settings</md-icon>
-            </md-navigation-tab>
-
-          </md-navigation-bar>
-        </nav>
-      }
-
-      <Settings/>
-
-      {/* Depending on the whether the navBar or navDrawer is currently shown the other component will be 
-      either 'fullscreen' or only partial */}
-      <main className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>{renderComponent()}</main>
-
-      {displayProfilesDialog(
-        'viewLikes',
-        'Likes',
-        likes,
-        'This post has not been seen by anyone yet',
-        'This post has not been seen by anyone yet',
-        false
+          ))}
+        </md-navigation-bar>
       )}
+    </nav>
+
+      {/* Main content */}
+      <main className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>
+        {/* Render active component */}
+        {renderComponent()}
+      </main>
+
+      {/* Settings dialog */}
+      <Settings />
+
+      {/* Display profiles dialog */}
+      <ProfileFollows
+        id='viewLikes'
+        header='Likes'
+        profiles={likes}
+        noFollows='This post has not been seen by anyone yet'
+        alternativeNoFollows='This post has not been seen by anyone yet'
+        myProfile={false}
+      />
     </StateContext.Provider>
   )
 }

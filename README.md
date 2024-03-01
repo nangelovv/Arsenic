@@ -1,36 +1,38 @@
 Arsenic
 
-Arsenic is a new social media which will eventually combine all the best practises and features of all of the rest social medias.
+Arsenic is a new social media which will eventually combine all the best practises and features of all other social medias.
 
 
 
-For v1.0.0 the following components will be finished and functional with no major bugs present:
+Roadmap and v2.0.0 goals
 
-1) Home (combines Recommended and Following tabs) - Recommended will be the default one when logging in for the first time.
+1) Home (combines Recommended and Following tabs) - no features are planned for this component in the next release.
 
-2) Discover - here users will be able to search for users to follow and maybe at a later date for particular words in post captions.
+2) Discover - finish the filtering chips and add the filtering of hashtags and captions.
 
-3) My Profile - here users will be able to edit their profiles and create and edit posts.
+3) My Profile - rewrite the code for the profile component by improving the abstraction, simplifying the code and optimizing the weak parts of the component.
 
-4) Messages - here users will be able to exchange messages with other users
+4) Messages - finish the info button in the chats and finish the user search when creating a new chat.
 
-5) Settings - users shpuld be able to edit some basic setttings and manage their accounts.
+5) Settings - add the private setting (making profiles private).
 
-6) Login / Register - anybody should be able to register and later login if the fields are correctly filled.
+6) Login / Register - add forgotten details button for forgotten password or username.
+
+7) Overall - files restructuring, code restructuring, optimizations, bug fixes and improvements.
 
 
 
-CURRENR STATUS OF COMPONENTS
+CURRENR STATUS OF GOAL COMPONENTS:
 
-🟥 - Not started (No working code is currently present in the repository)
+🟥 - Not started
 
-🟨 - In progress (Is working but everything could be revamped at any point)
+🟨 - In progress
 
-🟩 - Stable (Fully functuonal, no major or breakint changes will be introduced until v1.0.0)
+🟩 - Stable
 
-1) Home - 🟩
-2) Discover - 🟩
-3) My profile - 🟨
-4) Messages - 🟨
-5) Settings - 🟨
-6) Login / Register - 🟩
+1) 🟩 - Home
+2) 🟥 - Discover
+3) 🟥 - My profile
+4) 🟥 - Messages (not functional on production server)
+5) 🟥 - Settings
+6) 🟥 - Login / Register

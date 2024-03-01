@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { StateContext } from '../MainFeed';
+import { StateContext } from '../mainNav';
 import noUserImage from '../common/noUser.jpg';
 const { v4: uuidv4 } = require('uuid');
 

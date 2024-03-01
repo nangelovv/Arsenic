@@ -1,8 +1,12 @@
-import { useInput } from './common/elemFuncs';
-import { APINoAuth } from './common/APICalls';
+import { useInput } from '../../common/elemFuncs';
+import { APINoAuth } from '../../common/APICalls';
 import React, { useState, useEffect } from 'react';
-import logo from './common/logo.png'
-import { has } from 'lodash';
+import logo from '../../common/logo.png'
+
+const changePasswordType = (e) => {
+  e.target.parentNode.type = e.target.selected ? 'text' : 'password';
+  e.preventDefault()
+}
 
 
 export default function LoginRegisterComponent() {
@@ -13,8 +17,8 @@ export default function LoginRegisterComponent() {
   const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters', required: true, minlength: 4, maxlength: 30, id: 'startPageFields'});
   const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
   const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
-  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true, minlength: 8, maxlength: 30, id: 'startPageFields'});
-  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true, minlength: 8, maxlength: 30, id: 'startPageFields'});
+  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true, minlength: 8, maxlength: 30, id: 'passwordTextBox', isToggle: true, hideIcon: false, onClickFunc: changePasswordType});
+  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true, minlength: 8, maxlength: 30, id: 'startPageFields', isToggle: true, hideIcon: false});
 
   async function sha256(str) {
     const encoder = new TextEncoder();
@@ -31,9 +35,9 @@ export default function LoginRegisterComponent() {
 
   // This function makes the call to the server with the necessary login or register data
   async function sendData() {
-
     // If an internal server error (500) occur (the server is down), the try-catch block catches it
     try{
+      const password = document.getElementById('passwordTextBox').value
       
       const hashedPassword = await sha256(password);
       // Checks if the extra register fields were shown, if not a login API request is send instead of register

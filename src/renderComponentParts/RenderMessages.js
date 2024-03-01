@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react'
-import { StateContext } from '../MainFeed';
+import { StateContext } from '../mainNav';
 
 
 export default function RenderMessages() {

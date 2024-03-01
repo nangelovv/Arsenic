@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StateContext } from '../MainFeed';
-import RenderChats from '../renderComponentParts/RenderChats';
-import RenderChat from '../renderComponentParts/RenderChat';
-import RenderChatUsers from '../renderComponentParts/RenderChatUsers';
-import { getChatSuggestions } from '../common/profileFuncs';
-import RenderProfile from '../renderComponentParts/RenderProfile';
+import { StateContext } from '../../mainNav';
+import RenderChats from '../../renderComponentParts/RenderChats';
+import RenderChat from '../../renderComponentParts/RenderChat';
+import RenderChatUsers from '../../renderComponentParts/RenderChatUsers';
+import { getChatSuggestions } from '../../common/profileFuncs';
+import RenderProfile from '../../renderComponentParts/RenderProfile';
 
 
 export default function Messages() {
@@ -36,12 +36,12 @@ export default function Messages() {
     }
   }, [newMessage])
 
-  useEffect(() => {
-    // Listen for messages
-    socket.addEventListener("message", (event) => {
-      setNewMessage(JSON.parse(event.data))
-    });
-  }, []);
+  // useEffect(() => {
+  //   // Listen for messages
+  //   socket.addEventListener("message", (event) => {
+  //     setNewMessage(JSON.parse(event.data))
+  //   });
+  // }, []);
   
   return (
     <>
@@ -49,6 +49,7 @@ export default function Messages() {
       (!showChatModal 
       ? 
         <>
+          <span className='fs-2 d-flex justify-content-center my-3' style={{color: '#DC143C'}}>Our Messsages servers are currently unavailable</span>
           <span className='fs-2 d-flex justify-content-center my-3'>Messages</span>
           {Object.keys(chatsGlimpse).length === 0
           ?
@@ -63,7 +64,6 @@ export default function Messages() {
           
           <div className={windowWidth > 900 ? 'newPostButton' : 'newPostButtonMobile'}>
 
-            {/* When pressed, the newPost dialog is opened */}
             <md-branded-fab
               size='small'
               aria-label='Chat'
@@ -76,7 +76,7 @@ export default function Messages() {
                 document.getElementById('newChat').show()
               }}
             >
-              <md-icon slot='icon'>search</md-icon>
+              <md-icon slot='icon'>add</md-icon>
             </md-branded-fab>
           </div>
         </>

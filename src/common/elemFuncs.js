@@ -1,3 +1,4 @@
+import { each } from 'lodash';
 import { useState } from 'react';
 
 
@@ -11,7 +12,12 @@ export function useInput({
   required = null,
   minlength = -1,
   maxlength = -1,
-  func = () => {}
+  onKeyPressfunc = () => {},
+  onClickFunc = () => {},
+  isToggle = null,
+  hideIcon = true,
+  activeIcon = 'visibility',
+  inactiveIcon = 'visibility_off',
   }) {
 
   const [value, setValue] = useState(null);
@@ -26,9 +32,17 @@ export function useInput({
     maxlength={maxlength}
     required={required}
     supporting-text={supportingText}
-    onKeyPress={() => {func()}}
+    onKeyPress={() => {onKeyPressfunc()}}
     onInput={e => setValue(e.target.value)}
-    >
+    >  
+      <md-icon-button
+      toggle={isToggle}
+      slot='trailing-icon'
+      class={hideIcon && 'd-none'}
+      onClick={(e) => {onClickFunc(e)}}>
+        <md-icon>{activeIcon}</md-icon>
+        <md-icon slot='selected'>{inactiveIcon}</md-icon>
+      </md-icon-button>
     </md-outlined-text-field>
   );
 

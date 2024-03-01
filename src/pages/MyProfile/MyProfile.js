@@ -1,11 +1,11 @@
 import imageCompression from 'browser-image-compression';
 import React, { useEffect, useState, useContext } from 'react';
-import { APIBody } from '../common/APICalls';
-import { displayProfileDialogs } from './MyProfileDialogs';
+import { APIBody } from '../../common/APICalls';
+import ProfileDialogs from './MyProfileDialogs';
 import { cropToSquare } from './MyProfileFunctions';
-import { useInput } from '../common/elemFuncs';
-import { StateContext } from '../MainFeed';
-import RenderProfile from '../renderComponentParts/RenderProfile';
+import { useInput } from '../../common/elemFuncs';
+import { StateContext } from '../../mainNav';
+import RenderProfile from '../../renderComponentParts/RenderProfile';
 
 
 export default function MyProfile() {
@@ -174,29 +174,27 @@ export default function MyProfile() {
         </md-branded-fab>
       </div>
 
-      {/* This calls a function which returns the newPost dialog as an element if the FAB button is pressed */}
-      {displayProfileDialogs(
-        'newPost',
-        'Make new post',
-        'filePostInput',
-        'Post',
-        uploadPost,
-        setPostImagePreview,
-        setNewPostCaption,
-        postImagePreview
-      )}
+      <ProfileDialogs
+        id='newPost'
+        header='Make new post'
+        inputID='filePostInput'
+        actionButton='Post'
+        buttonFunc={uploadPost}
+        imageSetter={setPostImagePreview}
+        captionDescription={setNewPostCaption}
+        inputPreview={postImagePreview}
+      />
 
-      {/* This calls a function which returns the editProfile dialog as an element if the Edit button is pressed */}
-      {displayProfileDialogs(
-        'editProfile',
-        'Edit profile',
-        'fileEditInput',
-        'Save',
-        updateProfile,
-        setProfileImagePreview,
-        setEditProfileDescription,
-        profileImagePreview
-      )}
+      <ProfileDialogs
+        id='editProfile'
+        header='Edit profile'
+        inputID='fileEditInput'
+        actionButton='Save'
+        buttonFunc={updateProfile}
+        imageSetter={setProfileImagePreview}
+        captionDescription={setEditProfileDescription}
+        inputPreview={profileImagePreview}
+      />
     </>
   );
 }

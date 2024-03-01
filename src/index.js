@@ -37,6 +37,10 @@ import '@material/web/iconbutton/filled-tonal-icon-button';
 import '@material/web/iconbutton/outlined-icon-button';
 import '@material/web/iconbutton/icon-button';
 
+import '@material/web/labs/badge/badge';
+import '@material/web/labs/card/elevated-card';
+import '@material/web/labs/card/filled-card';
+import '@material/web/labs/card/outlined-card';
 import '@material/web/labs/navigationbar/navigation-bar';
 import '@material/web/labs/navigationdrawer/navigation-drawer';
 import '@material/web/labs/navigationdrawer/navigation-drawer-modal';

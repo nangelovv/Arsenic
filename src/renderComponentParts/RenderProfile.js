@@ -1,9 +1,9 @@
 import React, { useContext, useReducer } from 'react';
-import { StateContext } from '../MainFeed';
-import RenderPosts from './RenderPosts';
+import { StateContext } from '../mainNav';
+import RenderPosts from '../posts/RenderPosts';
 import noUserImage from '../common/noUser.jpg';
 import { followUnfollow, getFollows } from '../common/profileFuncs';
-import { displayProfilesDialog } from '../MyProfile/MyProfileFollows';
+import ProfileFollows from '../pages/MyProfile/MyProfileFollows';
 
 
 export default function RenderProfile({ renderProfile }) {
@@ -141,23 +141,23 @@ export default function RenderProfile({ renderProfile }) {
         </div>
       }
 
-      {displayProfilesDialog(
-        'viewFollowing',
-        'Following',
-        following,
-        'You are not following anyone yet',
-        'This profile is not following anyone yet',
-        myProfile ? true : false
-      )}
+      <ProfileFollows
+        id='viewFollowing'
+        header='Following'
+        profiles={following}
+        noFollows='You are not following anyone yet'
+        alternativeNoFollows='This profile is not following anyone yet'
+        myProfile={myProfile ? true : false}
+      />
 
-      {displayProfilesDialog(
-        'viewFollowers',
-        'Followers',
-        followers,
-        'You have no followers yet',
-        'This profile does not have any followers yet',
-        myProfile ? true : false
-      )}
+      <ProfileFollows
+        id='viewFollowers'
+        header='Followers'
+        profiles={followers}
+        noFollows='You have no followers yet'
+        alternativeNoFollows='This profile does not have any followers yet'
+        myProfile={myProfile ? true : false}
+      />
     </>
   );
 }

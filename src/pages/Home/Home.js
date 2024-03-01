@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StateContext } from '../MainFeed';
-import RenderProfile from '../renderComponentParts/RenderProfile';
+import { StateContext } from '../../mainNav';
+import RenderProfile from '../../renderComponentParts/RenderProfile';
 import Following from './Following';
 import Recommended from './Recommended';
 

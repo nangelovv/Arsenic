@@ -1,9 +1,9 @@
-import { APINoBody } from '../common/APICalls';
+import { APINoBody } from '../../common/APICalls';
 import React, { useRef, useContext } from 'react';
-import RenderProfile from '../renderComponentParts/RenderProfile';
+import RenderProfile from '../../renderComponentParts/RenderProfile';
 import { debounce } from 'lodash';
-import { StateContext } from '../MainFeed';
-import RenderGlimpse from '../renderComponentParts/RenderGlimpse';
+import { StateContext } from '../../mainNav';
+import RenderGlimpse from '../../renderComponentParts/RenderGlimpse';
 
 
 export default function Discover() {

@@ -1,5 +1,5 @@
-import TestComponent from './LoginRegisterComponent';
-import MainFeed from './MainFeed';
+import LoginRegisterComponent from './pages/LoginPage/LoginRegisterComponent';
+import MainFeed from './mainNav';
 
 
 export default function App() {
@@ -26,7 +26,7 @@ export default function App() {
   // else the MainFeed pages are rendered
   if (ExpiredToken) {
     return (
-      <TestComponent/>
+      <LoginRegisterComponent/>
     );
   }
   else {

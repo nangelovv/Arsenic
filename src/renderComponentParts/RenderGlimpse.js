@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react'
 import { getProfile } from '../common/profileFuncs';
-import { StateContext } from '../MainFeed';
+import { StateContext } from '../mainNav';
 import noUserImage from '../common/noUser.jpg';
 import { followUnfollow } from '../common/profileFuncs';
 
