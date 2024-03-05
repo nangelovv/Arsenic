@@ -4,17 +4,17 @@ Arsenic is a new social media which will eventually combine all the best practis
 
 
 
-In v1.0.0 the following components are be finished and functional with no major bugs present:
+Roadmap and v2.0.0 goals
 
-1) Home (combines Recommended and Following tabs) - Recommended is the default tab when logging in for the first time.
+1) Home - no features are planned for this component in the next release.
 
-2) Discover - here users are be able to search for users to follow and maybe at a later date for particular words in post captions.
+2) Discover - finish the filtering chips and add the filtering of hashtags and captions.
 
-3) My Profile - here users are be able to edit their profiles, create and edit posts.
+3) My Profile - rewrite the code for the profile component by improving the abstraction, simplifying the code and optimizing the weak parts of the component.
 
-4) Messages - here users are be able to exchange messages with other users.
+4) Messages - finish the info button in the chats and finish the user search when creating a new chat.
 
-5) Settings - users are currently able to edit some basic theming setttings.
+5) Settings - add the private setting (making profiles private).
 
 6) Login / Register - add forgotten details button for forgotten password or username.
 
@@ -30,9 +30,10 @@ CURRENR STATUS OF GOAL COMPONENTS:
 
 🟩 - Stable
 
-1) Home - 🟩
-2) Discover - 🟩
-3) My profile - 🟩
-4) Messages - 🟩
-5) Settings - 🟩
-6) Login / Register - 🟩
+1) 🟩 - Home
+2) 🟥 - Discover
+3) 🟥 - My profile
+4) 🟥 - Messages (not functional on production server)
+5) 🟥 - Settings
+6) 🟥 - Login / Register
+7) 🟨 - Overall

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { debounce } from 'lodash';
 import { StateContext } from '../../mainNav';
-import RenderPosts from '../../posts/RenderPosts';
-import { fetchData } from '../../common/homeFuncs'
+import RenderPosts from '../../posts/posts';
+import { fetchData } from './homeFuncs'
 
 
 export default function Recommended() {
@@ -65,7 +65,6 @@ export default function Recommended() {
     }
   };
 
-
   // Checks if the user has reached the bottom of the page, if so 'callFetchData' is called
   function handleScroll() {
     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
@@ -76,8 +75,7 @@ export default function Recommended() {
 
   return (
     // Recommended side, render the data received from the back-end for this side
-    <div>
-      <div id='testing'></div>
+    <>
       {/* Iterate through all of the the posts that have been received and render each one in its own container */}
       {<RenderPosts posts={recommendedPosts}/>}
 
@@ -89,7 +87,7 @@ export default function Recommended() {
           </span>
         </div>
       }
-    </div>
+    </>
   );
 };
 

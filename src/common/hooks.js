@@ -1,18 +1,16 @@
-import { each } from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 // This function is called from the below variables, first its sets the value of the input field as null 
 // and then returns both the value and the field element itself
 export function useInput({
-  placeholder = '',
+  label = '',
   id = 'NoID',
   type = 'text',
   supportingText = null,
   required = null,
   minlength = -1,
   maxlength = -1,
-  onKeyPressfunc = () => {},
   onClickFunc = () => {},
   isToggle = null,
   hideIcon = true,
@@ -22,17 +20,32 @@ export function useInput({
 
   const [value, setValue] = useState(null);
 
+  useEffect(() => {
+    function handleKeyDown(e) {
+      // 13 is the keyCode for 'Enter' on the keyboard
+      if (e.keyCode === 13) {
+        e.preventDefault();
+        onClickFunc(e);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onClickFunc]);
+
   const input = (
     <md-outlined-text-field
     type={type}
     value={value}
-    label={placeholder} 
+    label={label} 
     id={id}
     minlength={minlength}
     maxlength={maxlength}
     required={required}
     supporting-text={supportingText}
-    onKeyPress={() => {onKeyPressfunc()}}
     onInput={e => setValue(e.target.value)}
     >  
       <md-icon-button

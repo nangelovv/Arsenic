@@ -1,13 +1,12 @@
 import React, { useContext, useReducer } from 'react';
 import { StateContext } from '../mainNav';
-import RenderPosts from '../posts/RenderPosts';
+import RenderPosts from '../posts/posts';
 import noUserImage from '../common/noUser.jpg';
 import { followUnfollow, getFollows } from '../common/profileFuncs';
-import ProfileFollows from '../pages/MyProfile/MyProfileFollows';
+import ProfileFollows from '../pages/MyProfile/myProfileFollows';
 
 
 export default function RenderProfile({ renderProfile }) {
-
   const { 
     profile, setProfile,
     followers, setFollowers,
@@ -28,9 +27,7 @@ export default function RenderProfile({ renderProfile }) {
   }
 
   return (
-    // Shows the container in different dimensions depending on how big the screen of the user is
     <>
-
       {/* Holds the profile picture and username so that they are displayed on the same row */}
       <div className='row'>
         <div className='col-4 justify-content-center align-items-center text-center mt-3'>
@@ -51,7 +48,7 @@ export default function RenderProfile({ renderProfile }) {
           <div className='row'>
             {/* The containers holds the username, if the username is too long, breaks the text on the next line */}
             <div className='col-8 d-flex align-items-center mt-3 h3 text-break'>
-              <span>{renderProfile.username}</span>
+              <span tabIndex={0}>{renderProfile.username}</span>
             </div>
 
             {/* When pressed, the 'editProfile' dialog is opened */}
@@ -63,7 +60,9 @@ export default function RenderProfile({ renderProfile }) {
               :
                 <md-filled-button onClick={() => {
                   renderProfile.followers = renderProfile.is_following ? renderProfile.followers - 1 : renderProfile.followers + 1
-                  followUnfollow({ profile, setProfile }).then(() => {
+                  followUnfollow(profile.is_following, profile.user_id).then(() => {
+                    profile.is_following = !profile.is_following
+                    setProfile(profile)
                     forceUpdate()
                   }) 
                 }}
@@ -79,6 +78,7 @@ export default function RenderProfile({ renderProfile }) {
               className='col-6 d-flex justify-content-center align-items-center text-center mt-3 followTextSize'
             >
               <span
+                tabIndex={0}
                 className='clickable'
                 onClick={() => {
                   getFollows({following, setFollowing, followers, setFollowers, profile_id: renderProfile.user_id});
@@ -93,6 +93,7 @@ export default function RenderProfile({ renderProfile }) {
               className='col-6 d-flex align-items-center text-center mt-3 followTextSize'
             >
               <span
+                tabIndex={0}
                 className='clickable'
                 onClick={() => {
                   getFollows({following, setFollowing, followers, setFollowers, profile_id: renderProfile.user_id});
@@ -115,24 +116,15 @@ export default function RenderProfile({ renderProfile }) {
       <md-divider inset></md-divider>
 
       {renderProfile.privacy == 0 || myProfile || renderProfile.is_following ? 
-        // The container holds all posts, if there are none, shows a texting stating so
-        <div className='row'>
-          {renderProfile.posts.length == 0 ?
-          ( 
-            <span className='text-center my-5 py-5'>
-              Posts will show up here
-            </span>
-          )
-
+      
+          renderProfile.posts.length == 0 ?
+            <div className='row'>
+              <span className='text-center my-5 py-5'>
+                Posts will show up here
+              </span>
+            </div>
           :
-
-          (
-
-          // Iterate through all of the the profile posts (if there are any) that have been received 
-          // and render each one in its own container
             <RenderPosts posts={renderProfile.posts} myProfile={myProfile}/>
-          )}
-        </div>
       :
         <div className='row'>
           <span className='text-center my-5 py-5'>

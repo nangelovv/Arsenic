@@ -1,4 +1,4 @@
-import LoginRegisterComponent from './pages/LoginPage/LoginRegisterComponent';
+import LoginRegisterComponent from './pages/LoginPage/loginRegister';
 import MainFeed from './mainNav';
 
 

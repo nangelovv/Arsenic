@@ -1,15 +1,18 @@
 // This function takes as parameters an event from an input element and function which saves the state 
 // of the image after it has been converted to a URL which can be displayed
-export async function handleFileChange(event, imagePreviewFunction) {
+export async function handleFileChange(event, setImagePreview) {
 
   // Get file from the element that called the function
   const file = event.target.files[0];
 
    // Create object URL
-  const imageUrl = URL.createObjectURL(file);
+  let imageUrl = URL.createObjectURL(file);
 
   // Call the cropToSquare function
-  cropToSquare(imageUrl, imagePreviewFunction);
+  if (document.getElementById('editProfile').open){
+    return await cropToSquare(imageUrl, setImagePreview)
+  }
+  setImagePreview(imageUrl);
 }
 
 

@@ -1,6 +1,5 @@
 import { APINoBody } from '../../common/APICalls';
 import React, { useRef, useContext } from 'react';
-import RenderProfile from '../../renderComponentParts/RenderProfile';
 import { debounce } from 'lodash';
 import { StateContext } from '../../mainNav';
 import RenderGlimpse from '../../renderComponentParts/RenderGlimpse';
@@ -8,9 +7,8 @@ import RenderGlimpse from '../../renderComponentParts/RenderGlimpse';
 
 export default function Discover() {
   const {
-    profile,
     profiles, setProfiles,
-    showProfileModal, fetchingProfile
+    fetchingProfile, setFetchingProfile
   } = useContext(StateContext)
 
   const searchField = useRef()
@@ -19,6 +17,7 @@ export default function Discover() {
   const debouncedGlimpseProfile = useRef(debounce(glimpseProfile, 600)).current;
 
   async function glimpseProfile() {
+    setFetchingProfile(true)
     if (searchField.current.value) {
       try {
         const response = await APINoBody('/users/profiles_glimpse/' + searchField.current.value, 'GET');
@@ -27,48 +26,45 @@ export default function Discover() {
       } 
       catch (err) { return }
     }
+    setFetchingProfile(false)
   }
   
   return (
     <>
-    {!showProfileModal
-      ? 
-        fetchingProfile
-        ?
-          <div className='text-center my-5 py-5'>
-            <md-circular-progress indeterminate four-color></md-circular-progress>
+    {fetchingProfile
+      ?
+        <div className='text-center my-5 py-5'>
+          <md-circular-progress indeterminate four-color></md-circular-progress>
+        </div>
+      :
+        <>
+          <div className='col-12 text-center my-3'>
+            <md-outlined-text-field
+            ref={searchField}
+            type={'search'}
+            id={'textFieldDiscover'}
+            label={'Search by username'}
+            onInput={() => {debouncedGlimpseProfile()}}
+            ></md-outlined-text-field>
           </div>
-        :
-          <>
-            <div className='col-12 text-center my-3'>
-              <md-outlined-text-field
-              ref={searchField}
-              type={'search'}
-              id={'textFieldDiscover'}
-              label={'Search by username'}
-              onInput={() => {debouncedGlimpseProfile()}}
-              ></md-outlined-text-field>
+          <div className='col-12 d-flex justify-content-center my-3'>
+            <md-chip-set type='filter' single-select>
+              <md-filter-chip label='Profiles' selected disabled></md-filter-chip>
+              <md-filter-chip label='Hashtags' disabled></md-filter-chip>
+              <md-filter-chip label='Captions' disabled></md-filter-chip>
+            </md-chip-set>
+          </div>
+          {profiles.length == 0
+          ?
+            <div className='col-12 text-center my-5 py-5'>
+              <span onClick={() => {searchField.current.focused = true}}>
+                Search for a profile
+              </span>
             </div>
-            <div className='col-12 d-flex justify-content-center my-3'>
-              <md-chip-set type='filter' single-select>
-                <md-filter-chip label='Profiles' selected disabled></md-filter-chip>
-                <md-filter-chip label='Hashtags' disabled></md-filter-chip>
-                <md-filter-chip label='Captions' disabled></md-filter-chip>
-              </md-chip-set>
-            </div>
-            {profiles.length == 0
-            ?
-              <div className='col-12 text-center my-5 py-5'>
-                <span onClick={() => {searchField.current.focused = true}}>
-                  Search for a profile
-                </span>
-              </div>
-            :
-            <RenderGlimpse profiles={profiles}/>
-            }
-          </>
-      : 
-        <RenderProfile renderProfile={profile}/>
+          :
+          <RenderGlimpse profiles={profiles}/>
+          }
+        </>
       }
     </>
   )

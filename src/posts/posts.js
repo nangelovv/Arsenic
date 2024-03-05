@@ -1,35 +1,33 @@
 import React, { useContext, useReducer, useState } from 'react';
-import { transformTime } from '../common/postFuncs';
-import { APINoBody } from '../common/APICalls';
 import noUserImage from '../common/noUser.jpg';
-import { StateContext } from '../mainNav';
+import { APINoBody } from '../common/APICalls';
+import { transformTime } from '../common/commonFuncs';
+import { getComments, postComment } from './postsFuncs';
 import { getLikes, getProfile } from '../common/profileFuncs';
-import CommentSection from '../renderComponentParts/RenderCommentSection';
-import { getComments, postComment } from './postFuncs';
+import { StateContext } from '../mainNav';
+import CommentsDialog from './comments/commentsDialog';
+const { v4: uuidv4 } = require('uuid');
 
 
 export default function RenderPosts({ posts = {}, myProfile = false }) {
   const {
     setProfile,
-    likes,
-    setLikes,
-    comments,
-    setComments,
-    setProfileData,
-    postMenuVisibility,
-    setPostMenuVisibility,
-    showProfileModal,
-    setShowProfileModal,
+    likes, setLikes,
+    comments, setComments,
+    profileData, setProfileData,
+    postMenuVisibility, setPostMenuVisibility,
     setFetchingProfile,
+    activeComponent, setActiveComponent
   } = useContext(StateContext);
+  
+  const [currentPostID, setCurrentPostID] = useState(null);
 
-  const [currentPostComments, setCurrentPostComments] = useState(null);
 
   const fontVariation = "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24";
 
   const forceUpdate = useReducer((x) => x + 1, 0)[1];
 
-  const toggleMenu = (index) => {
+  function toggleMenu(index) {
     setPostMenuVisibility((prevState) => {
       const updatedState = [...prevState];
       if (updatedState[index]) {
@@ -42,21 +40,46 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
     });
   };
 
-  function updatePost({ endpoint, verb }) {
-    try {
-      APINoBody(endpoint, verb).then(
-        (response) => {
-          if (response.ok) {
-            forceUpdate()
-          }
-        }
-      );
-    } catch (err) {
-      return;
+  function handleProfileClick(user_id) {
+    getProfile({
+      user_id: user_id,
+      setFetchingProfile: setFetchingProfile,
+      setProfile: setProfile,
+      profileData: profileData,
+      setProfileData: setProfileData,
+      setActiveComponent: setActiveComponent,
+      activeComponent: activeComponent
+    });
+  };
+
+  function addNewComment(event) {
+    const newComment = {
+      post_id: currentPostID,
+      comment: document.getElementById('commentInput').value,
+      date: Date.now(),
+      comment_id: uuidv4(),
+      profile_picture: profileData.profile_picture,
+      user_id: profileData.user_id,
+      username: profileData.username
     }
+
+    setComments((prevState) => {
+      const updatedState = [...prevState];
+      updatedState.push(newComment)
+      return updatedState
+    })
   }
 
-  return posts.map((post, index) => (
+  function submitComment(e) {
+    const newComment = document.getElementById('commentInput')
+    if (!newComment.value) return
+    addNewComment();
+    postComment(currentPostID);
+    newComment.value = ''
+  }
+
+  return <>
+  {posts.map((post, index) => (
     <React.Fragment key={post.post_id}>
       <div className='col-12 py-2'>
         <div className='col-10 offset-1'>
@@ -80,7 +103,7 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
                     <md-menu-item
                       onClick={() => {
                         post.hide_comments = post.hide_comments ? null : true;
-                        updatePost({ endpoint: '/comments/' + post.post_id, verb: 'PUT' });
+                        APINoBody('/comments/' + post.post_id, 'PUT')
                       }}
                     >
                       <div slot='headline'>
@@ -92,7 +115,7 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
                     <md-menu-item
                       onClick={() => {
                         post.hide_likes = post.hide_likes ? null : true;
-                        updatePost({ endpoint: '/likes/' + post.post_id, verb: 'PUT' });
+                        APINoBody('/likes/' + post.post_id, 'PUT')
                       }}
                     >
                       <div slot='headline'>
@@ -103,7 +126,7 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
                     </md-menu-item>
                     <md-menu-item
                       onClick={() => {
-                        updatePost({ endpoint: '/posts/' + post.post_id, verb: 'DELETE' });
+                        APINoBody('/posts/' + post.post_id, 'DELETE')
                       }}
                     >
                       <div slot='headline'>Delete post</div>
@@ -116,36 +139,17 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
           <div className='row'>
             <div className='col-2 d-flex align-items-center justify-content-evenly'>
               <img
+                tabIndex={0}
                 className='rounded-5 clickable'
                 style={{ width: '60px', height: '60px' }}
                 src={post.profile_picture || noUserImage}
                 alt='Profile'
-                onClick={() => {
-                  getProfile({
-                    user_id: post.user_id,
-                    setFetchingProfile: setFetchingProfile,
-                    setProfile: setProfile,
-                    setShowProfileModal: setShowProfileModal,
-                    showProfileModal: showProfileModal,
-                    setProfileData: setProfileData,
-                  });
-                }}
+                onClick={() => handleProfileClick(post.user_id)}
               />
             </div>
             <div className='row col-8 ms-1 d-flex align-items-center'>
-              <div
-                onClick={() => {
-                  getProfile({
-                    user_id: post.user_id,
-                    setFetchingProfile: setFetchingProfile,
-                    setProfile: setProfile,
-                    setShowProfileModal: setShowProfileModal,
-                    showProfileModal: showProfileModal,
-                    setProfileData: setProfileData,
-                  });
-                }}
-              >
-                <span className='fs-5 clickable'>{post.username}</span>
+              <div onClick={() => handleProfileClick(post.user_id)}>
+                <span className='fs-5 clickable' tabIndex={0}>{post.username}</span>
               </div>
               {transformTime(post.date)}
             </div>
@@ -153,14 +157,14 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
               {post.text && post.text}
             </span>
           </div>
-          <div className='col-10 mx-auto'>
-            {post.image_one ? (
+          <div className='col-10 mx-auto d-flex align-items-center justify-content-center'>
+            {post.image_one && (
               <img
-                alt='Post profile'
+                alt='Posted picture'
                 className='img-fluid col-12 rounded-3'
                 src={post.image_one}
               />
-            ) : null}
+            )}
           </div>
           <span className='col-sm-3 d-flex align-items-end justify-content-evenly mt-2'>
             <md-icon-button
@@ -184,6 +188,7 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
               </span>
             </md-icon-button>
             <span
+              tabIndex={0}
               className={post.hide_likes ? 'd-none' : 'h5 clickable'}
               onClick={() => {
                 getLikes({ likes, setLikes, post_id: post.post_id });
@@ -195,7 +200,8 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
             <md-icon-button
               disabled={post.hide_comments ? true : null}
               onClick={() => {
-                getComments(post.post_id, comments, setComments, setCurrentPostComments);
+                setCurrentPostID(post.post_id)
+                getComments(post.post_id, comments, setComments);
                 document.getElementById('commentsDialog').show();
               }}
             >
@@ -204,9 +210,11 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
               </span>
             </md-icon-button>
             <span
+              tabIndex={0}
               className={post.hide_comments ? 'd-none' : 'h5 clickable'}
               onClick={() => {
-                getComments(post.post_id, comments, setComments, setCurrentPostComments);
+                setCurrentPostID(post.post_id)
+                getComments(post.post_id, comments, setComments);
                 document.getElementById('commentsDialog').show();
               }}
             >
@@ -216,36 +224,8 @@ export default function RenderPosts({ posts = {}, myProfile = false }) {
         </div>
       </div>
       <md-divider></md-divider>
-      <md-dialog id={'commentsDialog'} style={{ height: '100%', width: '100%' }}>
-        <span className='d-flex justify-content-center' slot='headline'>
-          Comments section
-        </span>
-        <form method='dialog' slot='content'>
-          <CommentSection
-            comments={comments}
-            currentPostComments={currentPostComments}
-            getProfile={getProfile}
-            transformTime={transformTime}
-            setFetchingProfile={setFetchingProfile}
-            setProfile={setProfile}
-            setShowProfileModal={setShowProfileModal}
-            showProfileModal={showProfileModal}
-            setProfileData={setProfileData}
-          />
-        </form>
-        <div className='d-flex justify-content-center' slot='actions'>
-          <md-outlined-text-field label={'Type new comment'} id={'commentInput'}>
-            <md-icon-button
-              slot='trailing-icon'
-              onClick={() => {
-                postComment(post.post_id);
-              }}
-            >
-              <md-icon>send</md-icon>
-            </md-icon-button>
-          </md-outlined-text-field>
-        </div>
-      </md-dialog>
     </React.Fragment>
-  ));
+  ))}
+  <CommentsDialog currentPostID={currentPostID} submitComment={submitComment}/>
+  </>
 }

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react'
-import { StateContext } from '../mainNav';
+import React, { useContext, useEffect, useState } from 'react'
+import { StateContext } from '../../../mainNav';
 
 
-export default function RenderMessages() {
+export default function CurrentChatMessages() {
   const {
     allChatsMessages,
     currentChatInfo,
@@ -15,13 +15,13 @@ export default function RenderMessages() {
       const element = document.getElementById(allChatsMessages[currentChatInfo.chat_id][len - 1].message_id)
       // Scroll to the bottom when the component is first rendered
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(element.id).scrollIntoView({behavior: "instant"});
       }
     }
   }, [allChatsMessages]);
 
   return (
-    <section style={{marginBottom: '70px', marginTop: '70px'}}>
+    <section style={{marginBottom: '70px', marginTop: '70px'}} id='messagesContainer'>
       {allChatsMessages[currentChatInfo.chat_id]?.map((message, index) => (
         <div className='row' key={index} id={message.message_id}>
           <div className='col-12'>

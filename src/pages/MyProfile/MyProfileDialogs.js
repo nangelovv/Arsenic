@@ -1,5 +1,5 @@
 import React from 'react';
-import { handleFileChange } from './MyProfileFunctions';
+import { handleFileChange } from './myProfileFunctions';
 
 export default function ProfileDialogs({ id, header, inputID, actionButton, buttonFunc, imageSetter, captionDescription, inputPreview }) {
   return (

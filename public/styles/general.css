@@ -3,14 +3,9 @@
   --md-outlined-text-field-container-shape-start-end:	4px;
   --md-outlined-text-field-container-shape-end-start:	4px;
   --md-outlined-text-field-container-shape-end-end:	4px;
-  --md-outlined-segmented-button-shape-start-start: 100px;
-  --md-outlined-segmented-button-shape-start-end: 100px;
-  --md-outlined-segmented-button-shape-end-end: 100px;
-  --md-outlined-segmented-button-shape-end-start: 100px;
   --md-dialog-container-color: var(--secondary-color);
   --md-navigation-bar-container-color: var(--primary-color);
   --md-navigation-bar-container-height: 70px;
-  --md-outlined-segmented-button-container-height: 40px;
   --md-menu-container-color: var(--secondary-color);
   --md-menu-item-container-color: var(--secondary-color);
   --md-fab-branded-container-color: var(--md-sys-color-secondary-container);
@@ -26,9 +21,13 @@
     --md-outlined-text-field-container-shape-end-start:	8px;
     --md-outlined-text-field-container-shape-end-end:	8px;
   }
-  #startPageFields, #passwordTextBox {
+  #usernameField, #emailField, #firstNameField, #lastNameField, #passwordField, #password2Field {
     width: 250px;
   }
+}
+
+md-outlined-text-field {
+  text-align: start;
 }
 
 .bodyStyles {
@@ -71,3 +70,6 @@ span, time {
   max-width: calc(100% / 1.5);
 }
 
+.standardPriority {
+  z-index: 0;
+}

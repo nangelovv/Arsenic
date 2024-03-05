@@ -1,18 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StateContext } from '../../mainNav';
-import RenderChats from '../../renderComponentParts/RenderChats';
-import RenderChat from '../../renderComponentParts/RenderChat';
-import RenderChatUsers from '../../renderComponentParts/RenderChatUsers';
-import { getChatSuggestions } from '../../common/profileFuncs';
-import RenderProfile from '../../renderComponentParts/RenderProfile';
+import ChatsGlimpse from './Chats/chatsGlimpse';
+import CurrentChat from './Chats/currentChat';
+import { getChatSuggestions, getChat } from '../../common/profileFuncs';
+const { v4: uuidv4 } = require('uuid');
 
 
 export default function Messages() {
   const {
-    socket,
+    // socket,
     profile,
     windowWidth,
-    showProfileModal,
     showChatModal, setShowChatModal,
     chatsGlimpse,
     currentChatInfo, setCurrentChatInfo,
@@ -22,6 +20,23 @@ export default function Messages() {
 
   const [newMessage, setNewMessage] = useState({})
   const [chatSuggestion, setChatSuggestion] = useState([])
+
+  function chatGlimpse(chat) {
+    setCurrentChatInfo(chat);
+    setShowChatModal(true);
+    getChat({
+      chatID: chat.chat_id,
+      allChatsMessages: allChatsMessages,
+      setAllChatsMessages: setAllChatsMessages,
+      messageIDs: messageIDs,
+      setMessageIDs: setMessageIDs
+    })
+  }
+
+  function chatSuggestionsGlimpse() {
+    document.getElementById('newChat').close();
+    setCurrentChatInfo({...profile, chat_id: uuidv4(), })
+  }
 
   useEffect(() => {
     if (newMessage.chat_id in allChatsMessages && !(newMessage.message_id in messageIDs)) {
@@ -45,11 +60,9 @@ export default function Messages() {
   
   return (
     <>
-      {!showProfileModal ?
-      (!showChatModal 
+      {!showChatModal 
       ? 
         <>
-          <span className='fs-2 d-flex justify-content-center my-3' style={{color: '#DC143C'}}>Our Messsages servers are currently unavailable</span>
           <span className='fs-2 d-flex justify-content-center my-3'>Messages</span>
           {Object.keys(chatsGlimpse).length === 0
           ?
@@ -59,7 +72,11 @@ export default function Messages() {
               </span>
             </div>
           :
-            <RenderChats/>
+            <ChatsGlimpse
+              profiles={Object.values(chatsGlimpse).sort((a, b) => parseInt(b.last_updated) - parseInt(a.last_updated))}
+              onClickFunc={chatGlimpse}
+              defaultSecondLine={false}
+            />
           }
           
           <div className={windowWidth > 900 ? 'newPostButton' : 'newPostButtonMobile'}>
@@ -81,10 +98,7 @@ export default function Messages() {
           </div>
         </>
       :
-        <RenderChat chatInfo={currentChatInfo}/>
-      )
-      :
-      <RenderProfile renderProfile={profile}/>
+        <CurrentChat chatInfo={currentChatInfo}/>
       }
 
       <md-dialog id={'newChat'} style={{height: '100%', width: '100%'}}>
@@ -115,7 +129,10 @@ export default function Messages() {
             </md-chip-set>
           </div>
 
-          <RenderChatUsers profiles={chatSuggestion}/>
+          <ChatsGlimpse
+            profiles={chatSuggestion}
+            onClickFunc={chatSuggestionsGlimpse}
+          />
 
         </form>
       </md-dialog>

@@ -1,4 +1,4 @@
-import { useInput } from '../../common/elemFuncs';
+import { useInput } from '../../common/hooks';
 import { APINoAuth } from '../../common/APICalls';
 import React, { useState, useEffect } from 'react';
 import logo from '../../common/logo.png'
@@ -13,12 +13,12 @@ export default function LoginRegisterComponent() {
   const [showRegister, setShowRegister] = useState(false)
 
   // The below variables call the above function 'useInput' where the each of these text fields is initiated
-  const [email, emailInput] = useInput({ type: 'email', placeholder: 'E-mail', supportingText: null, required: true, minlength: 8, maxlength: 50, id: 'startPageFields'});
-  const [username, usernameInput] = useInput({ type: 'text', placeholder: 'Username', supportingText: 'Must be at least 4 characters', required: true, minlength: 4, maxlength: 30, id: 'startPageFields'});
-  const [firstName, firstNameInput] = useInput({ type: 'text', placeholder: 'First name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
-  const [lastName, lastNameInput] = useInput({ type: 'text', placeholder: 'Last name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'startPageFields'});
-  const [password, passwordInput] = useInput({ type: 'password', placeholder: 'Password', supportingText: 'Must be at least 8 characters', required: true, minlength: 8, maxlength: 30, id: 'passwordTextBox', isToggle: true, hideIcon: false, onClickFunc: changePasswordType});
-  const [password1, password1Input] = useInput({ type: 'password', placeholder: 'Repeat password', supportingText: 'Must match the above password', required: true, minlength: 8, maxlength: 30, id: 'startPageFields', isToggle: true, hideIcon: false});
+  const [email, emailInput] = useInput({ type: 'email', label: 'E-mail', supportingText: null, required: true, minlength: 8, maxlength: 50, id: 'emailField' });
+  const [username, usernameInput] = useInput({ type: 'text', label: 'Username', supportingText: 'Must be at least 4 characters', required: true, minlength: 4, maxlength: 30, id: 'usernameField', onClickFunc: sendData });
+  const [firstName, firstNameInput] = useInput({ type: 'text', label: 'First name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'firstNameField' });
+  const [lastName, lastNameInput] = useInput({ type: 'text', label: 'Last name', supportingText: null, required: true, minlength: 2, maxlength: 50, id: 'lastNameField' });
+  const [password, passwordInput] = useInput({ type: 'password', label: 'Password', supportingText: 'Must be at least 8 characters', required: true, minlength: 8, maxlength: 30, id: 'passwordField', isToggle: true, hideIcon: false, onClickFunc: changePasswordType });
+  const [password1, password1Input] = useInput({ type: 'password', label: 'Repeat password', supportingText: 'Must match the above password', required: true, minlength: 8, maxlength: 30, id: 'password2Field', isToggle: true, hideIcon: false });
 
   async function sha256(str) {
     const encoder = new TextEncoder();
@@ -34,10 +34,10 @@ export default function LoginRegisterComponent() {
   }
 
   // This function makes the call to the server with the necessary login or register data
-  async function sendData() {
+  async function sendData(event) {
     // If an internal server error (500) occur (the server is down), the try-catch block catches it
     try{
-      const password = document.getElementById('passwordTextBox').value
+      const password = document.getElementById('passwordField').value
       
       const hashedPassword = await sha256(password);
       // Checks if the extra register fields were shown, if not a login API request is send instead of register
@@ -63,6 +63,7 @@ export default function LoginRegisterComponent() {
         // If the response from the server is successful (200), the login fields are shown, else an alert message is shown
         if (response.ok) {
           setShowRegister(false)
+          event.preventDefault()
         } else {
           alert('Invalid register data, please try again.');
         }
@@ -105,22 +106,6 @@ export default function LoginRegisterComponent() {
 
     catch(err) {return}
   }
-
-  // Adds the listener for the keydown event and listens for that event if any of the values in the textfields change
-  useEffect(() => {
-    function handleKeyDown(e) {
-
-      // #13 is the keyCode for 'Enter' on the keyboard
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        sendData();
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [email, username, firstName, lastName, password, password1]);
 
   return (
     <div className='text-center col-lg-4 container py-3 rounded-3 borders-color centerLoginRegister'>
@@ -165,6 +150,9 @@ export default function LoginRegisterComponent() {
         <md-filled-button onClick={() => {sendData()}}>
           {showRegister ? 'Submit' : 'Enter'}
         </md-filled-button>
+      </div>
+      <div className={true ? 'd-none' : 'd-flex align-items-center justify-content-evenly'}>
+        <md-text-button>Forgotten password?</md-text-button>
       </div>
     </div>
   );

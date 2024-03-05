@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef, createContext } from 'react';
 import { argbFromHex, themeFromSourceColor, applyTheme } from '@material/material-color-utilities';
-import Home from './pages/Home/Home';
-import MyProfile from './pages/MyProfile/MyProfile';
+import Home from './pages/Home/home';
+import MyProfile from './pages/MyProfile/myProfile';
 import Messages from './pages/Messages/messages';
-import Discover from './pages/Discover/Discover';
+import Discover from './pages/Discover/discover';
+import RenderProfile from './renderComponentParts/RenderProfile';
 import logo from './common/logo.png'
 import { getProfile, getChats } from './common/profileFuncs';
-import Settings from './settings/Settings';
-import ProfileFollows from './pages/MyProfile/MyProfileFollows';
+import Settings from './settings/settings';
+import ProfileFollows from './pages/MyProfile/myProfileFollows';
 import NavigationButton from './navigationButton';
-import { openSocket } from './pages/Messages/socket';
+// import { openSocket } from './pages/Messages/socket';
 
 
 // WHOLE MAIN FEED WILL BE REWRITTEN ONCE NAVIGATION DRAWER FROM MD3 IS FUNCTIONAL (the whole return statement)
@@ -18,7 +19,7 @@ import { openSocket } from './pages/Messages/socket';
 export const StateContext = createContext()
 
 export default function MainFeed() {
-  const [socket, setSocket] = useState(openSocket());
+  // const [socket, setSocket] = useState(openSocket());
 
   const [fetchingProfile, setFetchingProfile] = useState(false);
   const [postMenuVisibility, setPostMenuVisibility] = useState([]);
@@ -48,7 +49,6 @@ export default function MainFeed() {
   const [darkMode, setDarkMode] = useState(window.localStorage.getItem('dark_mode') === 'true' || null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showChatModal, setShowChatModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
   const [isPrivate, setIsPrivate] = useState(null);
 
   // Get the theme from a hex color
@@ -60,14 +60,14 @@ export default function MainFeed() {
 
   var navBar = useRef()
 
-  function reconnectSocket() {
-    if (socket.readyState == 3) {
-      const newSocket = openSocket();
-      setSocket(newSocket);
-    }
-  }
+  // function reconnectSocket() {
+  //   if (socket.readyState == 3) {
+  //     const newSocket = openSocket();
+  //     setSocket(newSocket);
+  //   }
+  // }
 
-  socket.onclose = (e) => {setTimeout(reconnectSocket, 2000);};
+  // socket.onclose = (e) => {setTimeout(reconnectSocket, 2000);};
 
   // Sets the listener for the 'resize' event
   useEffect(() => {
@@ -101,6 +101,7 @@ export default function MainFeed() {
 
   // Set the active component in localStorage whenever it changes
   useEffect(() => {
+    if (activeComponent == 'OtherProfile') {return}
     localStorage.setItem('activeComponent', activeComponent);
     handleActiveTab()
   }, [activeComponent]);
@@ -117,17 +118,14 @@ export default function MainFeed() {
       setIsPrivate(profileData.privacy ? true : null)
     }
     // If no profile data is present in the profileData variable, the getProfile function is called
-    else {
-      getProfile({
+    else {getProfile({
         user_id: localStorage.getItem('ArsenicUserID'),
         setFetchingProfile: setFetchingProfile,
         setProfile: setProfile,
-        setShowProfileModal: setShowProfileModal,
-        showProfileModal: showProfileModal,
         profileData: profileData,
         setProfileData: setProfileData,
         activeComponent: activeComponent,
-        useEffectCall: true}
+        setActiveComponent: setActiveComponent}
       )
     }
   }, [profileData]);
@@ -164,7 +162,6 @@ export default function MainFeed() {
 
   function removeProfileOverlay(component) {
     setActiveComponent(component);
-    setShowProfileModal(false);
     setFetchingProfile(false);
   }
 
@@ -183,6 +180,9 @@ export default function MainFeed() {
         case 'Messages':
           navBar.current.activeIndex = 3
           break
+        case 'OtherProfile':
+          navBar.current.activeIndex = 1
+          break
         default:
           navBar.current.activeIndex = 0
       }
@@ -200,6 +200,8 @@ export default function MainFeed() {
         return <MyProfile/>;
       case 'Messages':
         return <Messages/>;
+      case 'OtherProfile':
+        return <RenderProfile renderProfile={profile} />;
       default:
         return <Home/>;
     }
@@ -216,7 +218,7 @@ const navigationButtons = [
 
   return (
     <StateContext.Provider value={{
-      socket, setSocket,
+      // socket, setSocket,
       profile, setProfile,
       followers, setFollowers,
       following, setFollowing,
@@ -226,7 +228,6 @@ const navigationButtons = [
       postMenuVisibility, setPostMenuVisibility,
       profiles, setProfiles,
       showChatModal, setShowChatModal,
-      showProfileModal, setShowProfileModal,
       recommendedPosts, setRecommendedPosts,
       recommendedNoPosts, setRecommendedNoPosts,
       followingPosts, setFollowingPosts,
@@ -242,39 +243,38 @@ const navigationButtons = [
       allChatsMessages, setAllChatsMessages,
       currentChatInfo, setCurrentChatInfo
       }}>
-      {/* Based on the size of the screen the page is being viewed on, either the Nav Drawer shows up or the Nav Bar */}
-      <nav className={windowWidth > 900 ? 'row' : 'fixed-bottom'}>
-      {windowWidth > 900 ? (
-        <div className='col-2 fixed-top border-end vh-100'>
-          {/* Logo and site name */}
-          <div className='my-3 h3 mx-auto col-12 d-flex align-items-center justify-content-evenly'>
-            <img alt='Logo' style={{ width: '50px', height: '50px' }} src={logo} />
-            <span>Arsenic</span>
-          </div>
+        <div className='row'>
+          <nav className={windowWidth > 900 && 'col-3'}>
+            {windowWidth > 900 
+              ?
+              <div className='col-2 fixed-top border-end vh-100'>
+                {/* Logo and site name */}
+                <div className='my-3 h3 mx-auto col-12 d-flex align-items-center justify-content-evenly'>
+                  <img alt='Logo' style={{ width: '50px', height: '50px' }} src={logo} />
+                  <span>Arsenic</span>
+                </div>
 
-          {/* Navigation buttons */}
-          {navigationButtons.map((button, index) => (
-            <NavigationButton key={index} {...button} />
-          ))}
+                {/* Navigation buttons */}
+                {navigationButtons.map((button, index) => (
+                  <NavigationButton key={index} {...button} />
+                ))}
+              </div>
+             :
+              <md-navigation-bar ref={navBar} class='fixed-bottom'>
+                {/* Navigation tabs */}
+                {navigationButtons.map((button, index) => (
+                  <md-navigation-tab key={index} label={button.label} onClick={button.onClick}>
+                    <md-icon slot='active-icon'>{button.icon}</md-icon>
+                    <md-icon slot="inactive-icon">{button.icon}</md-icon>
+                  </md-navigation-tab>
+                ))}
+              </md-navigation-bar>
+            }
+          </nav>
+          <main className={windowWidth > 900 ? 'col-8' : 'col-12 mb-5 pb-3'}>
+              {renderComponent()}
+          </main>
         </div>
-      ) : (
-        <md-navigation-bar ref={navBar} className='navBar' >
-          {/* Navigation tabs */}
-          {navigationButtons.map((button, index) => (
-            <md-navigation-tab key={index} label={button.label} onClick={button.onClick}>
-              <md-icon slot='active-icon'>{button.icon}</md-icon>
-              <md-icon slot="inactive-icon">{button.icon}</md-icon>
-            </md-navigation-tab>
-          ))}
-        </md-navigation-bar>
-      )}
-    </nav>
-
-      {/* Main content */}
-      <main className={windowWidth > 900 ? 'col-8 offset-3' : 'col-12 mb-5 pb-3'}>
-        {/* Render active component */}
-        {renderComponent()}
-      </main>
 
       {/* Settings dialog */}
       <Settings />

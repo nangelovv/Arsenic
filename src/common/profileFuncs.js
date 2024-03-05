@@ -7,19 +7,22 @@ var likeDataPostID
 export async function getProfile({
   user_id, 
   setFetchingProfile, 
-  setProfile, 
-  setShowProfileModal, 
-  showProfileModal, 
+  setProfile,
   profileData = null, 
   setProfileData, 
   activeComponent = null,
-  useEffectCall = null }) {
-
-  if (profileData && activeComponent == 'MyProfile') {
-    return
-  }
+  setActiveComponent }) {
   
   setFetchingProfile(true)
+
+  const currentUserID = localStorage.getItem('ArsenicUserID')
+
+  if (user_id == currentUserID) {
+    if (activeComponent != 'MyProfile' && profileData) {
+      setActiveComponent('MyProfile')
+      return
+    }
+  }
 
   // If an internal server error (500) occurs (the server is down), the try-catch block catches it
   try {
@@ -35,34 +38,21 @@ export async function getProfile({
       data.posts.sort((a, b) => b.date - a.date);
 
       if (data.user_id == localStorage.getItem('ArsenicUserID')) {
-        setProfileData(data);
+        return setProfileData(data);
       }
       setProfile(data);
-      setFetchingProfile(false)
-
-      if (!useEffectCall) {
-        setShowProfileModal(!showProfileModal)
-      }
-      
+      setActiveComponent('OtherProfile')
     }
   }
   catch(err) {return}
+  setFetchingProfile(false)
 }
 
 
-export async function followUnfollow({ profile, setProfile }) {
-
-  var verb = profile.is_following ? 'DELETE' : 'POST'
-
+export async function followUnfollow(is_following, user_id) {
+  var verb = is_following ? 'DELETE' : 'POST'
   try {
-    
-    const response = await APINoBody('/follows/' + profile.user_id, verb)
-
-    if (response.ok) {
-      profile.is_following = !profile.is_following
-      setProfile(profile)
-      }
-      
+    const response = await APINoBody('/follows/' + user_id, verb)
     }
   catch(err) {return} 
 }

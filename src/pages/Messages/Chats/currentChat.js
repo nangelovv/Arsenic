@@ -1,30 +1,30 @@
 import React, { useContext, useEffect } from 'react'
-import noUserImage from '../common/noUser.jpg';
-import { StateContext } from '../mainNav';
-import RenderMessages from './RenderMessages';
-import { token } from '../common/APICalls';
-import { useInput } from '../common/elemFuncs';
-import { getProfile } from '../common/profileFuncs';
+import noUserImage from '../../../common/noUser.jpg';
+import { StateContext } from '../../../mainNav';
+import CurrentChatMessages from './currentChatMessages';
+import { token } from '../../../common/APICalls';
+import { useInput } from '../../../common/hooks';
+import { getProfile } from '../../../common/profileFuncs';
 const { v4: uuidv4 } = require('uuid');
 
 
-export default function RenderChat() {
+export default function CurrentChat() {
 
   const {
-    socket,
+    // socket,
     setProfile,
-    setProfileData,
+    profileData, setProfileData,
     setFetchingProfile,
     setCurrentChatInfo,
     chatsGlimpse, setChatsGlimpse,
     windowWidth,
     setShowChatModal,
-    showProfileModal, setShowProfileModal,
     allChatsMessages, setAllChatsMessages,
+    activeComponent, setActiveComponent,
     currentChatInfo
   } = useContext(StateContext)
 
-  const [messageBox, messageBoxInput] = useInput({ type: 'text', placeholder: 'Type a new message...', id: 'messageField', hideIcon: false, activeIcon: 'send', onClickFunc: sendMessage});
+  const [messageBox, messageBoxInput] = useInput({ type: 'text', label: 'Type a new message...', id: 'messageField', hideIcon: false, activeIcon: 'send', inactiveIcon: 'send', onClickFunc: sendMessage});
 
   function sendMessage(event) {
     // if (socket.readyState != 1) {
@@ -84,34 +84,31 @@ export default function RenderChat() {
 
     }
 
-    socket.send(JSON.stringify(newMessage));
+    // socket.send(JSON.stringify(newMessage));
 
     document.getElementById('messageField').value = ''
     event.preventDefault();
   }
 
-    // Adds the listener for the keydown event and listens for that event if any of the values in the textfields change
-    useEffect(() => {
-      function handleKeyDown(e) {
   
-        // #13 is the keyCode for 'Enter' on the keyboard
-        if (e.keyCode === 13) {
-          e.preventDefault();
-          sendMessage(e);
-        }
-      }
-      document.addEventListener('keydown', handleKeyDown);
-      return () => {
-        document.removeEventListener('keydown', handleKeyDown);
-      };
-    }, []);
+  function handleProfileClick(user_id) {
+    getProfile({
+      user_id: user_id,
+      setFetchingProfile: setFetchingProfile,
+      profileData: profileData,
+      setProfile: setProfile,
+      setProfileData: setProfileData,
+      setActiveComponent: setActiveComponent,
+      activeComponent: activeComponent
+    })
+  };
 
   return (
     <>
       <div
         className={windowWidth > 900
-          ? 'col-8 offset-3 d-flex justify-content-center align-items-center fixed-top py-2' 
-          : 'col-12 d-flex justify-content-center align-items-center fixed-top py-2'
+          ? 'col-8 offset-3 d-flex justify-content-center align-items-center fixed-top py-2 standardPriority' 
+          : 'col-12 d-flex justify-content-center align-items-center fixed-top py-2 standardPriority'
         }
         style={{background: 'var(--primary-color)'}}
       >
@@ -122,40 +119,28 @@ export default function RenderChat() {
             </span>
           </md-icon-button>
           <img
+            tabIndex={0}
             alt='Profile'
             className='img-fluid clickable' 
             style={{ width: '60px', height: '60px', borderRadius: '60px' }} 
             src={currentChatInfo.profile_picture ? currentChatInfo.profile_picture : noUserImage}
-            onClick={() => {getProfile({
-              user_id: currentChatInfo.user_id,
-              setFetchingProfile: setFetchingProfile,
-              setProfile: setProfile,
-              setShowProfileModal: setShowProfileModal,
-              showProfileModal: showProfileModal,
-              setProfileData: setProfileData}
-            )}}
+            onClick={() => {handleProfileClick(currentChatInfo.user_id)}}
           />
         </div>
         
         <div className='row col'>
-          <div className='col-sm-10 col-9'>
-            <div>
+          <div className='col-sm-10 col-9 d-flex flex-column justify-content-evenly'>
+            <div className='row'>
               <span
+                tabIndex={0}
                 className='clickable'
-                onClick={() => {getProfile({
-                  user_id: currentChatInfo.user_id,
-                  setFetchingProfile: setFetchingProfile,
-                  setProfile: setProfile,
-                  setShowProfileModal: setShowProfileModal,
-                  showProfileModal: showProfileModal,
-                  setProfileData: setProfileData}
-                )}}
+                onClick={() => {handleProfileClick(currentChatInfo.user_id)}}
               >
                 {currentChatInfo.username}
               </span>
             </div>
-            <span>{currentChatInfo.profile_description}</span>
-          </div>
+            <span className={!currentChatInfo.profile_description && 'd-none'}>{currentChatInfo.profile_description}</span>
+            </div>
           
           <span className='col-sm-2 col-3 d-flex justify-content-center align-items-center'>
             <md-icon-button disabled><span><md-icon>info</md-icon></span></md-icon-button>
@@ -163,14 +148,14 @@ export default function RenderChat() {
         </div>
       </div>
       <md-divider></md-divider>
-      <RenderMessages/>
+      <CurrentChatMessages/>
 
       <div
         className={windowWidth > 900 
         ? 
-          'col-8 offset-3 d-flex justify-content-center align-items-center fixed-bottom p-2'
+          'col-8 offset-3 d-flex justify-content-center align-items-center fixed-bottom p-2 standardPriority'
         : 
-          'col-12 d-flex justify-content-center align-items-center fixed-bottom p-2'
+          'col-12 d-flex justify-content-center align-items-center fixed-bottom p-2 standardPriority'
         }
         style={{background: 'var(--primary-color)'}}
       >

@@ -1,11 +1,11 @@
-import { APINoBody } from './APICalls'
+import { APINoBody } from '../../common/APICalls'
 
 
 // This function makes the call to the API and sorts all the posts that have been received so far
 export async function fetchData({posts, postsSetter, timer, timerSetter, endpoint, uniques}) {
 
   if (timer > 5000) {return}
-  // If an internal server error (500) occur (the server is down), the try-catch block catches it
+  // If an internal server error (500) occurs (the server is down), the try-catch block catches it
   try {
     const postsPerPage = 30 * 1.0     // This number should always match the back-end
     var page = Math.ceil((posts.length / postsPerPage)) + 1

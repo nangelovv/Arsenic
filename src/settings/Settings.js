@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StateContext } from '../mainNav';
-import { handleThemeSwitch, logOut, changePrivateSetting } from './SettingsFunctions';
+import { handleThemeSwitch, logOut, changePrivateSetting } from './settingsFuncs';
 
 export default function Settings() {
   const { 

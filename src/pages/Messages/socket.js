@@ -11,6 +11,6 @@ const afterProtocol = API_URL.split("://")[1];
 
 // UNCOMMENT THIS BEFORE SETTING LIVE
 
-export function openSocket() {
-  return {}
-}
+// export function openSocket() {
+//   return {}
+// }

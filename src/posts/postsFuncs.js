@@ -24,8 +24,7 @@ export const postComment = async (post_id) => {
   }
 };
 
-export const getComments = async (post_id, comments, setComments, setCurrentPostComments) => {
-  setCurrentPostComments(post_id);
+export const getComments = async (post_id, comments, setComments) => {
 
   if (comments.some((each) => each.post_id === post_id)) return;
 
