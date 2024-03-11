@@ -33,9 +33,10 @@ export default function Messages() {
     })
   }
 
-  function chatSuggestionsGlimpse() {
+  function chatSuggestionsGlimpse(chat) {
     document.getElementById('newChat').close();
-    setCurrentChatInfo({...profile, chat_id: uuidv4(), })
+    setCurrentChatInfo({...chat, chat_id: uuidv4() })
+    setShowChatModal(true);
   }
 
   useEffect(() => {
@@ -103,13 +104,6 @@ export default function Messages() {
 
       <md-dialog id={'newChat'} style={{height: '100%', width: '100%'}}>
         <form method='dialog' slot='content'>
-                  
-          {/* This button closes the dialog */}
-          <md-icon-button>
-            <span>
-              <md-icon>arrow_back</md-icon>
-            </span>
-          </md-icon-button>
 
           <div className='col-12 text-center my-3'>
             <md-outlined-text-field
@@ -133,7 +127,6 @@ export default function Messages() {
             profiles={chatSuggestion}
             onClickFunc={chatSuggestionsGlimpse}
           />
-
         </form>
       </md-dialog>
     </>

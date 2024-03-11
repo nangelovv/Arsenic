@@ -139,7 +139,7 @@ export default function CurrentChat() {
                 {currentChatInfo.username}
               </span>
             </div>
-            <span className={!currentChatInfo.profile_description && 'd-none'}>{currentChatInfo.profile_description}</span>
+            <span className={!currentChatInfo.profile_description ? 'd-none' : ''}>{currentChatInfo.profile_description}</span>
             </div>
           
           <span className='col-sm-2 col-3 d-flex justify-content-center align-items-center'>

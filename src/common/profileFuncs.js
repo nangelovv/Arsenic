@@ -38,10 +38,12 @@ export async function getProfile({
       data.posts.sort((a, b) => b.date - a.date);
 
       if (data.user_id == localStorage.getItem('ArsenicUserID')) {
-        return setProfileData(data);
+        setProfileData(data);
       }
-      setProfile(data);
-      setActiveComponent('OtherProfile')
+      else {
+        setProfile(data);
+        setActiveComponent('OtherProfile')
+      }
     }
   }
   catch(err) {return}

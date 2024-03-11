@@ -30,15 +30,11 @@ export default function Home() {
         </div>
         <md-divider></md-divider>
 
-        {fetchingProfile
+        {parseInt(activeSide) == 0
         ?
-          <div className='text-center my-5 py-5'><md-circular-progress indeterminate four-color></md-circular-progress></div>
+          <Following/>
         :
-          parseInt(activeSide) == 0
-          ?
-            <Following/>
-          :
-            <Recommended/>
+          <Recommended/>
         }
       </>
   );

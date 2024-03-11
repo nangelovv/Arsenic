@@ -29,8 +29,8 @@ export default function RenderGlimpse({ profiles }) {
     profiles.map((currentProfile, index) => (
       <React.Fragment key={index}>
         <section
-          className='position-relative rounded-4 p-2' 
-          role='button' 
+          className='position-relative rounded-4 py-3'
+          onClick={(e) => {e.currentTarget.parentNode.parentNode.open = null}}
         >
           <md-ripple></md-ripple>
           <div className='row'>
@@ -57,9 +57,7 @@ export default function RenderGlimpse({ profiles }) {
                   <div className='row'>
                     <span className='d-flex align-items-center fs-5 text-break'>{currentProfile.username}</span>
                   </div>
-                  <div className='row'>
-                    <span>{currentProfile.profile_description}</span>
-                  </div>
+                  <span>{currentProfile.profile_description}</span>
                 </div>
               </div>
             </div>
@@ -72,11 +70,10 @@ export default function RenderGlimpse({ profiles }) {
                 {currentProfile.is_following ? 'Unfollow' : 'Follow'}
               </md-filled-button>
             </div>
-
           </div>
         </section>
         <md-divider inset></md-divider>
-        </React.Fragment>
-      ))
+      </React.Fragment>
+    ))
   )
 }

@@ -20,7 +20,9 @@ export default function Following() {
 
   // Fetch initial data
   useEffect(() => {
-    callFetchData();
+    if (followingPosts.length === 0) {
+      callFetchData();
+    }
   }, []);
 
   // This useEffect hook adds the scroll event listener and the scroll call restricter
@@ -32,18 +34,13 @@ export default function Following() {
     // Add event listener to detect scroll position
     window.addEventListener('scroll', debouncedHandleScroll);
     return () => {
-
-      // Clean up the event listener when component unmounts
       window.removeEventListener('scroll', debouncedHandleScroll);
     };
   }, []);
 
-  // Function to call fetchData after a 3-second delay
+  // Function to call fetchData after a delay
   function callFetchData() {
     if (!isFetching) {
-
-      // 'isFetching' is set to 'true' and the function 'fetchData' is called only if 2 seconds have 
-      // passed since the last request, if an error occurs during the call 'isFetching' is set to false
       setIsFetching(true);
       const endpoint = '/posts/following/'
       fetchData({
@@ -55,7 +52,7 @@ export default function Following() {
         uniques: uniquePosts
       })
         .then(() => {
-          // Wait for 2 seconds before allowing a new request
+          // Wait for a few seconds before allowing a new request
           setTimeout(() => {
             setIsFetching(false);
           }, followingNoPosts);
@@ -75,19 +72,23 @@ export default function Following() {
   };
 
   return (
-    // Recommended side, render the data received from the back-end for this side
     <>
+      {isFetching & followingPosts.length === 0
+        ? 
+          <div className='text-center my-5 py-5'>
+            <md-circular-progress indeterminate four-color></md-circular-progress>
+          </div>
+        : 
+        <>
+          {<RenderPosts posts={followingPosts}/>}
 
-      {/* Iterate through all of the the posts that have been received and render each one in its own container */}
-      {<RenderPosts posts={followingPosts}/>}
-
-      {/* Notifies the user if there are no more posts to show in the bottom of the page */}
-      {followingNoPosts == 99999 &&
-        <div className='text-center my-3 py-3'>
-          <span>
-            {followingPosts.length != 0 ? 'No more posts to show' : 'No posts to show'}
-          </span>
-        </div>
+          {followingNoPosts == 99999 &&
+          <div className='text-center my-3 py-3'>
+            <span>
+              {followingPosts.length != 0 ? 'No more posts to show' : 'No posts to show'}
+            </span>
+          </div>}
+        </>
       }
     </>
   );

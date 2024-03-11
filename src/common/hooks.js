@@ -51,7 +51,7 @@ export function useInput({
       <md-icon-button
       toggle={isToggle}
       slot='trailing-icon'
-      class={hideIcon && 'd-none'}
+      class={hideIcon ? 'd-none' : ''}
       onClick={(e) => {onClickFunc(e)}}>
         <md-icon>{activeIcon}</md-icon>
         <md-icon slot='selected'>{inactiveIcon}</md-icon>

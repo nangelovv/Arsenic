@@ -19,7 +19,9 @@ export default function Recommended() {
 
   // Fetch initial data
   useEffect(() => {
-    callFetchData();
+    if (recommendedPosts.length === 0) {
+      callFetchData();
+    }
   }, []);
 
   // This useEffect hook adds the scroll event listener and the scroll call restricter
@@ -74,18 +76,24 @@ export default function Recommended() {
   };
 
   return (
-    // Recommended side, render the data received from the back-end for this side
     <>
-      {/* Iterate through all of the the posts that have been received and render each one in its own container */}
-      {<RenderPosts posts={recommendedPosts}/>}
-
-      {/* Notifies the user if there are no more posts to show in the bottom of the page */}
-      {recommendedNoPosts == 99999 &&
-        <div className='text-center my-3 py-3'>
-          <span>
-            No more posts to show
-          </span>
+      {isFetching & recommendedPosts.length === 0
+      ? 
+        <div className='text-center my-5 py-5'>
+          <md-circular-progress indeterminate four-color></md-circular-progress>
         </div>
+      : 
+        <>
+          <RenderPosts posts={recommendedPosts}/>
+
+          {recommendedNoPosts == 99999 &&
+            <div className='text-center my-3 py-3'>
+              <span>
+                No more posts to show
+              </span>
+            </div>
+          }
+        </>
       }
     </>
   );

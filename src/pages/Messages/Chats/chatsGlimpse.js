@@ -9,8 +9,7 @@ export default function ChatsGlimpse({ profiles = [], onClickFunc, defaultSecond
     profiles?.map((chat, index) => (
       <React.Fragment key={index}>
         <section
-          className='position-relative rounded-4 py-2' 
-          role='button'
+          className='position-relative rounded-4 py-3'
           onClick={() => {onClickFunc(chat)}}
         >
           <md-ripple></md-ripple>
@@ -24,23 +23,23 @@ export default function ChatsGlimpse({ profiles = [], onClickFunc, defaultSecond
                     alt='Glimpse profile'
                   />
                 </div>
-
-                <span className='col d-flex align-items-center fs-5 text-break' tabIndex={0}>{chat.username}</span>
-
+                <div className='col d-flex flex-column justify-content-evenly'>
+                  <div className='row'>
+                    <span className='col d-flex align-items-center fs-5 text-break' tabIndex={0}>{chat.username}</span>
+                  </div>
+                  <span>
+                    {defaultSecondLine
+                      ? chat.profile_description
+                      : <>{chat.last_message.substring(0, 50)} &#9702; {transformTime(chat.last_updated)}</>
+                    }
+                  </span>
+                </div>
               </div>
-
-              <span className='offset-2 my-2'>
-                {defaultSecondLine
-                  ? chat.profile_description
-                  : <>{chat.last_message.substring(0, 50)} &#9702; {transformTime(chat.last_updated)}</>
-                }
-              </span>
-
             </div>
           </div>
         </section>
         <md-divider inset></md-divider>
-        </React.Fragment>
-      ))
+      </React.Fragment>
+    ))
   )
 }
