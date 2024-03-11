@@ -9,7 +9,7 @@ export default function ChatsGlimpse({ profiles = [], onClickFunc, defaultSecond
     profiles?.map((chat, index) => (
       <React.Fragment key={index}>
         <section
-          className='position-relative rounded-4 py-3'
+          className='position-relative rounded-4 py-3 clickable'
           onClick={() => {onClickFunc(chat)}}
         >
           <md-ripple></md-ripple>

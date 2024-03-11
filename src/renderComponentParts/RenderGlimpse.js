@@ -29,7 +29,7 @@ export default function RenderGlimpse({ profiles }) {
     profiles.map((currentProfile, index) => (
       <React.Fragment key={index}>
         <section
-          className='position-relative rounded-4 py-3'
+          className='position-relative rounded-4 py-3 clickable'
           onClick={(e) => {e.currentTarget.parentNode.parentNode.open = null}}
         >
           <md-ripple></md-ripple>
