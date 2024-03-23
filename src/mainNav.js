@@ -7,7 +7,7 @@ import Discover from './pages/Discover/discover';
 import RenderProfile from './renderComponentParts/RenderProfile';
 import logo from './common/logo.png'
 import { getProfile, getChats } from './common/profileFuncs';
-import Settings from './settings/settings';
+import Settings from './settings/settingsDialog';
 import ProfileFollows from './pages/MyProfile/myProfileFollows';
 import NavigationButton from './navigationButton';
 // import { openSocket } from './pages/Messages/socket';

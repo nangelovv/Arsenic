@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StateContext } from '../../mainNav';
-import ChatsGlimpse from './Chats/chatsGlimpse';
+import RenderGlimpse from '../../renderComponentParts/RenderGlimpse';
 import CurrentChat from './Chats/currentChat';
 import { getChatSuggestions, getChat } from '../../common/profileFuncs';
 const { v4: uuidv4 } = require('uuid');
@@ -73,11 +73,18 @@ export default function Messages() {
               </span>
             </div>
           :
-            <ChatsGlimpse
-              profiles={Object.values(chatsGlimpse).sort((a, b) => parseInt(b.last_updated) - parseInt(a.last_updated))}
-              onClickFunc={chatGlimpse}
-              defaultSecondLine={false}
-            />
+            Object.values(chatsGlimpse).sort((a, b) => parseInt(b.last_updated) - parseInt(a.last_updated))?.map((profile, index) => (
+              <RenderGlimpse
+                key={index}
+                onClickFunc={chatGlimpse} 
+                user_id={profile.user_id}
+                username={profile.username}
+                profilePicture={profile.profile_picture}
+                secondLine = {profile.last_message}
+                time = {profile.last_updated}
+                object={profile}
+              />
+            ))
           }
           
           <div className={windowWidth > 900 ? 'newPostButton' : 'newPostButtonMobile'}>
@@ -122,11 +129,18 @@ export default function Messages() {
               <md-filter-chip label='Messages' disabled></md-filter-chip>
             </md-chip-set>
           </div>
-
-          <ChatsGlimpse
-            profiles={chatSuggestion}
-            onClickFunc={chatSuggestionsGlimpse}
+          
+          {chatSuggestion?.map((profile, index) => (
+            <RenderGlimpse
+            key={index}
+            onClickFunc={chatSuggestionsGlimpse} 
+            user_id={profile.user_id}
+            username={profile.username}
+            profilePicture={profile.profile_picture}
+            secondLine = {profile.profile_description}
+            object={profile}
           />
+          ))}
         </form>
       </md-dialog>
     </>

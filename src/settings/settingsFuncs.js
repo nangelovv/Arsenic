@@ -17,6 +17,9 @@ export async function logOut() {
   date.setTime(date.getTime() - 60000 * 99999999);
   localStorage.setItem('ArsenicExpiration', date);
   window.location.reload();
+  if (window.google.accounts) {
+    window.google.accounts.id.cancel()
+  }
 }
 
 // Will make the profile private once the functionality is added

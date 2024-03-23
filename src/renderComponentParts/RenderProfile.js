@@ -53,7 +53,8 @@ export default function RenderProfile({ renderProfile }) {
 
             {/* When pressed, the 'editProfile' dialog is opened */}
             <div className='col-4 d-flex align-items-center text-center mt-3'>
-              {(myProfile) ?
+              {(myProfile)
+              ?
                 <md-filled-button onClick={() => {document.getElementById('editProfile').show()}}>
                 Edit Profile
                 </md-filled-button>

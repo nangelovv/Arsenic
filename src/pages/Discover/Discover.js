@@ -2,13 +2,17 @@ import { APINoBody } from '../../common/APICalls';
 import React, { useRef, useContext } from 'react';
 import { debounce } from 'lodash';
 import { StateContext } from '../../mainNav';
-import RenderGlimpse from '../../renderComponentParts/RenderGlimpse';
+import RenderGlimpse from '../../renderComponentParts/RenderGlimpse'
+import { getProfile } from '../../common/profileFuncs';
 
 
 export default function Discover() {
   const {
     profiles, setProfiles,
-    fetchingProfile, setFetchingProfile
+    fetchingProfile, setFetchingProfile,
+    profileData, setProfileData,
+    profile, setProfile,
+    activeComponent, setActiveComponent
   } = useContext(StateContext)
 
   const searchField = useRef()
@@ -27,6 +31,18 @@ export default function Discover() {
       catch (err) { setFetchingProfile(false) }
     }
     setFetchingProfile(false)
+  }
+
+  async function callGetProfile(object) {
+    getProfile({
+      user_id: object.user_id,
+      setFetchingProfile: setFetchingProfile,
+      setProfile: setProfile,
+      profileData: profileData,
+      setProfileData: setProfileData,
+      setActiveComponent: setActiveComponent,
+      activeComponent: activeComponent
+    })
   }
   
   return (
@@ -61,7 +77,19 @@ export default function Discover() {
             </span>
           </div>
         :
-        <RenderGlimpse profiles={profiles}/>
+        profiles?.map((profile, index) => (
+        <RenderGlimpse
+          key={index}
+          onClickFunc={callGetProfile} 
+          user_id={profile.user_id}
+          username={profile.username}
+          profilePicture={profile.profile_picture}
+          secondLine = {profile.profile_description}
+          time = {null}
+          actionButton = {true}
+          isFollowing = {profile.is_following}
+          object={profile}
+        />))
       }
     </>
   )

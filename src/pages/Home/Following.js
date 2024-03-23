@@ -51,16 +51,17 @@ export default function Following() {
         endpoint: endpoint,
         uniques: uniquePosts
       })
-        .then(() => {
-          // Wait for a few seconds before allowing a new request
-          setTimeout(() => {
-            setIsFetching(false);
-          }, followingNoPosts);
-        })
-        .catch((err) => {
-          return setIsFetching(false);
-        });
+      .then(() => {
+        // Wait for a few seconds before allowing a new request
+        setTimeout(() => {
+          setIsFetching(false);
+        }, followingNoPosts);
+      })
+      .catch((err) => {
+        return setIsFetching(false);
+      });
     }
+    return setIsFetching(false);
   };
 
   // Checks if the user has reached the bottom of the page, if so 'callFetchData' is called
@@ -73,7 +74,7 @@ export default function Following() {
 
   return (
     <>
-      {isFetching & followingPosts.length === 0
+      {isFetching & followingPosts.length === 0 & followingNoPosts != 99999
         ? 
           <div className='text-center my-5 py-5'>
             <md-circular-progress indeterminate four-color></md-circular-progress>
