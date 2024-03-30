@@ -1,7 +1,7 @@
 {
   "homepage": "http://nangelovv.github.io/Arsenic",
   "name": "react-code",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "private": true,
   "dependencies": {
     "@material/material-color-utilities": "^0.2.7",
@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "browser-image-compression": "^2.0.2",
+    "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.0",

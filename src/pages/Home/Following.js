@@ -61,7 +61,6 @@ export default function Following() {
         return setIsFetching(false);
       });
     }
-    return setIsFetching(false);
   };
 
   // Checks if the user has reached the bottom of the page, if so 'callFetchData' is called
